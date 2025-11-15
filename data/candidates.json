@@ -40,11 +40,15 @@
         "summary": "OpenAI、ChatGPTで複数ユーザーによるグループチャット機能の試験提供を開始    CodeZine"
       }
     ],
-    "status": "pending",
+    "status": "generated",
     "createdAt": "2025-11-15T06:43:03Z",
-    "updatedAt": "2025-11-15T06:43:03Z",
+    "updatedAt": "2025-11-15T07:03:55.709Z",
     "topicKey": "line不要chatgptにクルーフチャット機能か搭載友人や同僚と同しチャットて会話か可能ai搭載の新時代のチャット体験を徹底解説",
-    "notes": "手動追加: Googleニュースで最新情報を調査した候補"
+    "notes": "手動追加: Googleニュースで最新情報を調査した候補",
+    "generatedAt": "2025-11-15T07:03:55.709Z",
+    "postDate": "2025-11-15",
+    "slug": "2025-11-15-chatgpt",
+    "outputFile": "posts/2025-11-15-chatgpt.html"
   },
   {
     "id": "yt-M04rk7XOw84",

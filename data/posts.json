@@ -27,14 +27,34 @@
     "slug": "2025-11-15-linechatgptai"
   },
   {
-    "title": "ChatGPTの新機能でグループチャットが進化",
+    "title": "ChatGPTのグループチャット機能で業務効率を劇的に向上させる方法",
     "date": "2025-11-15",
-    "summary": "ChatGPTにグループチャット機能が追加され、AIを活用した新しいチャット体験が可能になりました。",
+    "summary": "ChatGPTの新しいグループチャット機能を活用することで、チームのコミュニケーションを効率化し、生産性を向上させる方法を解説します。",
     "tags": [
-      "ChatGPT",
-      "AIチャット",
-      "グループチャット",
-      "AI技術"
+      {
+        "slug": "chatgpt",
+        "label": "ChatGPT",
+        "category": "ツール",
+        "style": "accent-purple"
+      },
+      {
+        "slug": "tag-2",
+        "label": "グループチャット",
+        "category": "その他",
+        "style": "accent-neutral"
+      },
+      {
+        "slug": "productivity",
+        "label": "業務効率化",
+        "category": "ユースケース",
+        "style": "accent-lime"
+      },
+      {
+        "slug": "ai",
+        "label": "AI活用",
+        "category": "その他",
+        "style": "accent-neutral"
+      }
     ],
     "url": "posts/2025-11-15-chatgpt.html",
     "slug": "2025-11-15-chatgpt"
