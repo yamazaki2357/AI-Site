@@ -3,7 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI情報ブログ</title>
+  <meta name="description" content="AI・機械学習の最新情報を自動収集・分析。YouTubeチャンネルから注目トピックを抽出し、深掘りした記事を毎日2回自動更新。">
+  <meta name="keywords" content="AI, 機械学習, ChatGPT, Claude, LLM, 自動化, GitHub Actions">
+  <meta name="author" content="AI情報ブログ">
+
+  <!-- Open Graph / SNS共有 -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="AI情報ブログ - 最新AI情報を自動収集">
+  <meta property="og:description" content="注目YouTubeチャンネルからAI最新情報を自動収集・分析して記事化">
+  <meta property="og:image" content="assets/img/logo.png">
+
+  <!-- パフォーマンス最適化 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+  <title>AI情報ブログ - 最新AI情報を自動収集・分析</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -44,15 +58,15 @@
     <section id="posts" class="inner">
       <div class="section-header">
         <h2>最新記事</h2>
-        <p>最新の投稿から順に表示します。</p>
       </div>
       <ul id="post-list" class="post-grid" aria-live="polite">
         <li class="post-card skeleton">
           <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
           <div class="skeleton-line short"></div>
         </li>
       </ul>
-      <p id="post-error" role="status" class="sr-only"></p>
+      <p id="post-error" role="status" aria-live="assertive"></p>
     </section>
 
     <section id="workflow" class="inner info-panel">
