@@ -5,7 +5,13 @@
       "Bash(curl:*)",
       "Bash(node -c:*)",
       "Bash(find:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: ヘッダー・フッター共通化とOGP・ファビコン設定\n\n- components.jsで全ページのヘッダー・フッター統一管理\n- OGP（Open Graph）設定を全ページに追加\n- Twitter Card設定を追加\n- ファビコン（SVG）を全ページに設定\n- 自動生成記事テンプレートも対応\n- メタタグ設定ガイド（META_TAGS_TEMPLATE.md）を追加\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git stash:*)",
+      "Bash(git restore:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: OGP画像をogp-default.svgに変更\n\n- 全ページのOGP画像をlogo.svgからogp-default.svgに変更\n- 1200x630pxの最適化されたOGP専用画像を使用\n- SNS共有時の表示品質を向上\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
