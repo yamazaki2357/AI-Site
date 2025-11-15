@@ -187,6 +187,26 @@ const compileArticleHtml = (article, meta, options = {}) => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${article.title} | AI情報ブログ</title>
   <meta name="description" content="${article.summary ?? ''}">
+
+  <!-- ファビコン -->
+  <link rel="icon" type="image/svg+xml" href="${normalizedAssetBase}assets/img/logo.svg">
+  <link rel="apple-touch-icon" href="${normalizedAssetBase}assets/img/logo.svg">
+
+  <!-- Open Graph / SNS共有 -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="${article.title} | AI情報ブログ">
+  <meta property="og:description" content="${article.summary ?? ''}">
+  <meta property="og:image" content="${normalizedAssetBase}assets/img/logo.svg">
+  <meta property="og:site_name" content="AI情報ブログ">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="article:published_time" content="${dateParts.dotted}T00:00:00+09:00">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${article.title} | AI情報ブログ">
+  <meta name="twitter:description" content="${article.summary ?? ''}">
+  <meta name="twitter:image" content="${normalizedAssetBase}assets/img/logo.svg">
+
   <link rel="stylesheet" href="${cssHref}">
 </head>
 <body class="article-page">
