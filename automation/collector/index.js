@@ -6,7 +6,6 @@
  */
 
 const path = require('path');
-const fs = require('fs');
 const { readJson, writeJson, ensureDir } = require('../lib/io');
 const slugify = require('../lib/slugify');
 const { extractText } = require('../lib/text');
@@ -95,6 +94,7 @@ const normalizeSource = (source) => ({
 });
 
 const runCollector = async () => {
+  console.log('[collector] ステージ開始: YouTubeフィードの巡回を開始します。');
   ensureDir(path.dirname(candidatesPath));
   ensureDir(cacheDir);
 
@@ -106,14 +106,19 @@ const runCollector = async () => {
     throw new Error('data/sources.json に監視対象が設定されていません。');
   }
 
+  console.log(`[collector] 監視対象チャンネル数: ${sources.length}件`);
+
   let newCandidatesCount = 0;
   let fetchedEntries = 0;
   const updatedCandidates = [...existingCandidates];
   const errors = [];
 
-  for (const source of sources) {
+  for (const [index, source] of sources.entries()) {
     const normalizedSource = normalizeSource(source);
     try {
+      console.log(
+        `[collector] (${index + 1}/${sources.length}) ${normalizedSource.name} のchannelIdを取得します`,
+      );
       const channelId = await fetchChannelId(normalizedSource, channelCache);
       const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
       const response = await fetch(feedUrl, {
@@ -125,6 +130,9 @@ const runCollector = async () => {
       const xml = await response.text();
       const entries = parseEntries(xml).filter((entry) => withinAgeLimit(entry.publishedAt));
       fetchedEntries += entries.length;
+      console.log(
+        `[collector] ${normalizedSource.name}: ${entries.length}件のエントリを取得（直近${VIDEO_MAX_AGE_DAYS}日以内）`,
+      );
 
       entries.slice(0, NEW_ENTRY_LIMIT).forEach((entry) => {
         const candidateId = `yt-${entry.videoId}`;
@@ -150,8 +158,14 @@ const runCollector = async () => {
           notes: `自動抽出: ${normalizedSource.name} の最新動画から抽出`,
         });
         newCandidatesCount += 1;
+        console.log(
+          `[collector] 新規候補を追加: ${normalizedSource.name} / ${entry.title} (candidateId: ${candidateId})`,
+        );
       });
     } catch (error) {
+      console.warn(
+        `[collector] ${normalizedSource.name} の処理でエラーが発生しました: ${error.message}`,
+      );
       errors.push({
         source: normalizedSource.name,
         message: error.message,
@@ -167,6 +181,23 @@ const runCollector = async () => {
   });
 
   writeJson(candidatesPath, updatedCandidates);
+
+  if (errors.length === sources.length) {
+    const fatalError = new Error('全てのソース取得に失敗したため collector を中断しました。');
+    fatalError.details = errors;
+    console.error('[collector] 致命的エラー: 全ソースで取得に失敗しました。');
+    throw fatalError;
+  }
+
+  if (errors.length > 0) {
+    console.log(
+      `[collector] 一部のソースでエラーが発生しました（${errors.length}件）。pipeline-status.json を確認してください。`,
+    );
+  }
+
+  console.log(
+    `[collector] 完了: 新規${newCandidatesCount}件 / 総候補${updatedCandidates.length}件（取得エントリ${fetchedEntries}件）`,
+  );
 
   return {
     checkedSources: sources.length,
