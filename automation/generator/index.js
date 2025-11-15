@@ -167,7 +167,7 @@ const requestArticleDraft = async (apiKey, candidate, searchResults) => {
   const sourceUrl = resolveSourceUrl(candidate.source);
   const promptSourceUrl = sourceUrl || 'URL不明';
   const payload = {
-    model: 'gpt-4o-mini',
+    model: 'gpt-4o',
     temperature: 0.4,
     response_format: { type: 'json_object' },
     messages: [
