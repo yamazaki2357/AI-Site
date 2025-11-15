@@ -11,7 +11,8 @@
       "Bash(git pull:*)",
       "Bash(git stash:*)",
       "Bash(git restore:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: OGP画像をogp-default.svgに変更\n\n- 全ページのOGP画像をlogo.svgからogp-default.svgに変更\n- 1200x630pxの最適化されたOGP専用画像を使用\n- SNS共有時の表示品質を向上\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: OGP画像をogp-default.svgに変更\n\n- 全ページのOGP画像をlogo.svgからogp-default.svgに変更\n- 1200x630pxの最適化されたOGP専用画像を使用\n- SNS共有時の表示品質を向上\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

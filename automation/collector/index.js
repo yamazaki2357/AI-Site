@@ -231,7 +231,21 @@ const fetchChannelVideos = async (channelId, apiKey) => {
   const response = await fetch(`${YOUTUBE_API_BASE}/search?${params.toString()}`);
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`YouTube API error ${response.status}: ${errorText.slice(0, 200)}`);
+    let quotaExceeded = false;
+    let errorMessage = errorText.slice(0, 200);
+    try {
+      const errorPayload = JSON.parse(errorText);
+      errorMessage = errorPayload?.error?.message || errorMessage;
+      const reasons = errorPayload?.error?.errors;
+      quotaExceeded = Array.isArray(reasons) && reasons.some((entry) => entry.reason === 'quotaExceeded');
+    } catch {
+      // ignore JSON parse errors and fall back to raw text
+    }
+    if (response.status === 403 && quotaExceeded) {
+      console.warn(`[collector] quota exceeded: スキップします (channel=${channelId})`);
+      return null;
+    }
+    throw new Error(`YouTube API error ${response.status}: ${errorMessage}`);
   }
   const payload = await response.json();
   const items = Array.isArray(payload.items) ? payload.items : [];
@@ -261,7 +275,7 @@ const runCollector = async () => {
     throw new Error('data/sources.json に監視対象が設定されていません。');
   }
 
-  const updatedCandidates = [...existingCandidates];
+  let updatedCandidates = [...existingCandidates];
   const summaryItems = [];
   const errors = [];
   let newCandidatesCount = 0;
@@ -285,6 +299,12 @@ const runCollector = async () => {
 
     try {
       const videos = await fetchChannelVideos(normalizedSource.channelId, apiKey);
+      if (!Array.isArray(videos)) {
+        console.log(
+          `[collector] ${normalizedSource.name}: YouTube API制限によりこのチャンネルの処理をスキップしました。`,
+        );
+        continue;
+      }
       const freshVideos = videos
         .filter((video) => withinWindow(video.publishedAt))
         .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
