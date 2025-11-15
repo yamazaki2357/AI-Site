@@ -24,6 +24,8 @@ const ARTICLE_FETCH_TIMEOUT_MS = 8000;
 const ARTICLE_TEXT_MAX_LENGTH = 12000;
 const SUMMARY_MIN_LENGTH = 300;
 const SUMMARY_MAX_LENGTH = 500;
+const CLEANUP_PROCESSED_DAYS = 14;
+const MAX_PENDING_CANDIDATES = 30;
 
 const USER_AGENT =
   'AIInfoBlogCollector/1.0 (+https://github.com/yamazaki/AI-information-blog)';
@@ -362,6 +364,41 @@ const runCollector = async () => {
     const bTime = new Date(b.video?.publishedAt || 0).getTime();
     return bTime - aTime;
   });
+
+  // クリーンアップ: 処理済み候補を14日後に削除
+  const now = Date.now();
+  const cleanupCutoff = now - CLEANUP_PROCESSED_DAYS * 24 * 60 * 60 * 1000;
+  const beforeCleanup = updatedCandidates.length;
+
+  updatedCandidates = updatedCandidates.filter((candidate) => {
+    if (candidate.status === 'pending') return true;
+    const updatedTime = new Date(candidate.updatedAt || candidate.createdAt).getTime();
+    return !Number.isNaN(updatedTime) && updatedTime >= cleanupCutoff;
+  });
+
+  const cleanedCount = beforeCleanup - updatedCandidates.length;
+  if (cleanedCount > 0) {
+    console.log(`[collector] 処理済み候補を${cleanedCount}件削除しました（${CLEANUP_PROCESSED_DAYS}日以上経過）。`);
+  }
+
+  // クリーンアップ: pending候補を30件に制限
+  const pendingCandidates = updatedCandidates.filter((c) => c.status === 'pending');
+  const processedCandidates = updatedCandidates.filter((c) => c.status !== 'pending');
+
+  if (pendingCandidates.length > MAX_PENDING_CANDIDATES) {
+    const beforeLimit = pendingCandidates.length;
+    const limitedPending = pendingCandidates
+      .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+      .slice(0, MAX_PENDING_CANDIDATES);
+    updatedCandidates = [...processedCandidates, ...limitedPending];
+    updatedCandidates.sort((a, b) => {
+      const aTime = new Date(a.video?.publishedAt || 0).getTime();
+      const bTime = new Date(b.video?.publishedAt || 0).getTime();
+      return bTime - aTime;
+    });
+    const limitedCount = beforeLimit - limitedPending.length;
+    console.log(`[collector] pending候補を${limitedCount}件削除しました（上限${MAX_PENDING_CANDIDATES}件を超過）。`);
+  }
 
   writeJson(candidatesPath, updatedCandidates);
 
