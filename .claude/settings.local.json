@@ -13,7 +13,12 @@
       "Bash(git restore:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfix: OGP画像をogp-default.svgに変更\n\n- 全ページのOGP画像をlogo.svgからogp-default.svgに変更\n- 1200x630pxの最適化されたOGP専用画像を使用\n- SNS共有時の表示品質を向上\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(node automation/generator/index.js:*)",
+      "Bash(python3:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []
