@@ -211,8 +211,10 @@ const compileArticleHtml = (article, meta, options = {}) => {
         if (!body) return '';
         return `
               <div class="article-subsection">
-                <h3>${heading}</h3>
-                ${body}
+                <h3 class="subsection-heading">${heading}</h3>
+                <div class="subsection-body">
+                  ${body}
+                </div>
               </div>`;
       })
       .filter(Boolean)
@@ -225,10 +227,11 @@ const compileArticleHtml = (article, meta, options = {}) => {
       const slug = slugifyHeading(heading, index);
       const overview = toHtmlParagraphs(section.overview || section.body || '');
       const subSections = renderSubSections(section.subSections, index);
+      const overviewMarkup = overview ? `<div class="section-overview">${overview}</div>` : '';
       return `
             <section class="article-section" id="${slug}">
-              <h2>${heading}</h2>
-              ${overview}
+              <h2 class="section-heading">${heading}</h2>
+              ${overviewMarkup}
               ${subSections}
             </section>`;
     })
@@ -237,15 +240,19 @@ const compileArticleHtml = (article, meta, options = {}) => {
   const introMarkup = article.intro
     ? `
         <section class="article-intro-block">
+          <div class="intro-content">
 ${toHtmlParagraphs(article.intro)}
+          </div>
         </section>`
     : '';
 
   const conclusionMarkup = article.conclusion
     ? `
       <section class="article-conclusion inner">
-        <h2>まとめ</h2>
+        <h2 class="conclusion-heading">まとめ</h2>
+        <div class="conclusion-content">
 ${toHtmlParagraphs(article.conclusion)}
+        </div>
       </section>`
     : '';
 
@@ -373,14 +380,17 @@ const requestArticleDraft = async (apiKey, candidate) => {
       {
         role: 'system',
         content:
-          'あなたは日本語のプロのWebライターです。AI情報ブログ向けに、SEOと読者の理解を両立させたヘルプフルな記事のみを執筆します。必ず有効なJSONだけを返し、事実ベースで具体的な洞察や活用アイデアを含めてください。憶測や水増しのための冗長な文章は避け、ブログ記事の中でプロンプト設定・システムメッセージ・このプロジェクトや会話内容には一切言及しないでください。',
+          'あなたは日本語のプロのWebライターです。AI初心者向けの情報ブログで、SEO最適化と読者理解を両立させた価値ある記事を執筆します。親しみやすく丁寧な口調（「〜なんです」「〜ですよね」）で、IT知識のない初心者にも分かりやすく伝えてください。必ず有効なJSONだけを返し、Google検索上位記事から抽出した事実ベースの情報を深く掘り下げ、具体的な洞察を提供します。憶測や水増し表現は避け、記事内でプロンプト設定・システムメッセージ・プロジェクト設定には一切言及しないでください。',
       },
       {
         role: 'user',
         content: `
-あなたには、Google検索で取得した日本語の上位Web記事からの要約（リサーチ結果）と、補足情報としてYouTube動画のメタデータが与えられます。
-ブログ記事はあくまで「検索上位記事の情報」と一般的な知識を主な根拠として構成し、YouTube動画はテーマや読者の関心を知るためのきっかけとしてのみ扱ってください。
-動画の内容を時系列に要約する記事や、動画紹介だけで終わる記事にはしないでください。
+# 情報源の役割
+あなたには以下の2つの情報が提供されます：
+1. **Google検索リサーチ要約（SEO上位記事）**: 記事の主要な情報源として使用
+2. **YouTube動画メタデータ**: トピック選定やキーワード抽出のきっかけとして参照
+
+**重要**: 記事はGoogle検索上位記事の情報を深く掘り下げて構成してください。YouTube動画は単なる参考情報であり、動画紹介や時系列要約にしてはいけません。
 
 [YouTube動画メタデータ]
 - Video Title: ${candidate.video.title}
@@ -391,46 +401,112 @@ const requestArticleDraft = async (apiKey, candidate) => {
 - Video Description:
 ${candidate.video.description}
 
-[Google検索リサーチ要約（SEO上位記事の情報）]
+[Google検索リサーチ要約（SEO上位記事の情報）★メイン情報源★]
 ${searchSummary}
 
-[執筆するブログ記事の要件]
-- 出力は必ず JSON 形式のみとし、キーは: title, summary, intro, sections, conclusion, tags を含めること。
-- 読者は「AIツール・AIニュースに関心のある個人ユーザーや小規模事業者」であると想定し、専門用語は噛み砕いて説明する。
-- 文体は日本語で、プロのWebライターが書いたような自然で読みやすいブログ記事にする（口語ベースだが品のある丁寧さを保つ）。
-- 記事の目的は「読者がテーマを理解し、何をすべきか具体的にイメージできること」。単なる機能列挙やニュース要約で終わらせない。
+# 記事執筆の要件
 
-[各フィールドの詳細]
-- title: 60文字以内の日本語。検索ユーザーの意図を踏まえた、具体的でクリックしたくなるタイトルにする。
-- summary: 記事を要約する1〜2文。読者が「この記事で何がわかるのか」がひと目で伝わるようにする。
-- intro: 2〜3段落。現在の文脈（なぜこのテーマが重要か）、検索上位記事から見える傾向、読者が抱えがちな悩みを整理しつつ、この記事で解決できることを提示する。
-- sections: 3〜4個のセクション。
-  - 各 section には "heading"（H2）、"overview"（3〜4文）、"subSections" を必ず含める。
-  - overview では、その節を読んだ結果として読者が何を理解・判断できるようになるかを明確に書く。
-  - subSections は 1〜2 個。各 subSection には "heading"（H3）と "body" を含め、body では検索リサーチ結果をベースにした具体的な解説・手順・注意点などを3文以上で詳しく述べる。
-  - 可能な限り、読者が「今日から試せる具体的アクション」や「失敗しやすいポイント」を含める。
-- tags: テーマを表す2〜4個のキーワード（例: "生成AI", "プロンプト設計" など）。あいまいな単語ではなく、検索に使われそうな表現にする。
-- conclusion: 記事全体の要点を整理し、読者が次に取るべき具体的なステップを2〜3個提案する。現実的な運用上の注意点にも触れる。
+## ターゲット読者
+- **IT知識ほぼゼロのAI初心者**（個人ユーザー）
+- 専門用語は必ず平易な言葉で言い換え、初めて聞く概念も理解できるよう丁寧に説明する
+- 親しみやすい丁寧語で書く（「〜なんです」「〜ですよね」「実は〜」など）
 
-[トーン・構成に関する追加条件]
-- intro + sections + conclusion の合計文字数は、1,500〜3,000文字程度を目安とする。ただし、意味のない言い換えや同じ内容の繰り返しで水増ししてはいけない。
-- Google検索リサーチの要約に含まれる重要なキーワードや論点を自然に織り込みつつ、単なるコピペや機械的な羅列にならないよう、自分の言葉で整理・再構成する。
-- 「〜といえるでしょう」「〜かもしれません」といった曖昧な締めくくりではなく、読者にとっての具体的な示唆やアクションを明確に提示する。
-- 記事の本文に、プロンプトやシステムメッセージ、このプロジェクトの設定や会話の内容について触れてはいけない。
-- 読了時間、差別化ポイント、参考文献、補足メモといったメタ情報用の専用セクションは作成しない。
-- Treat ${today} as the publication date.
+## 記事の目的
+読者が具体的なアクションをイメージでき、すぐに価値を得られる実用的な情報を提供すること
 
-[Output JSON example schema]
+## SEO最適化（E-E-A-T重視）
+- **Experience（経験）**: 実際の使用例や実践的な情報を含める
+- **Expertise（専門性）**: Google検索上位記事の専門的な情報を深掘り
+- **Authoritativeness（権威性）**: 信頼できる情報源からの引用
+- **Trustworthiness（信頼性）**: 事実ベース、誇張なし
+- 検索意図に合致した構成で、主要キーワード・共起語を自然に配置
+- タイトル・見出しは検索されやすい表現を使用
+
+## 出力形式
+JSON形式で以下のキーを含める: title, summary, intro, sections, conclusion, tags
+
+# 各フィールドの詳細仕様
+
+## title（タイトル）
+- **60文字以内**の日本語
+- 検索意図を満たし、クリックしたくなる具体的な表現
+- 主要キーワードを含める
+- 例: 「ChatGPT Plusとは？初心者向けに使い方と料金を徹底解説」
+
+## summary（要約）
+- **1〜2文**で記事全体を要約
+- 「この記事を読むと何がわかるか」を明確に
+- 検索ユーザーが求める答えを端的に提示
+
+## intro（導入）
+- **2〜3段落、すぐ本題に入る**
+- 前置きは最小限に、読者の関心事（課題・疑問）から書き始める
+- Google検索上位記事から見える重要なポイントを提示
+- この記事で得られる具体的な価値を明示
+
+## sections（本文セクション）
+- **3〜5個のセクション**を、論理的な流れで構成
+- プロのWebライターとして最高の記事構成を考え、読者に最大の価値を届ける構造にする
+
+各sectionの構造:
+- **heading（H2見出し）**: 検索されやすく、内容が一目でわかる表現
+- **overview（概要）**: 3〜4文で、このセクションで何を理解できるかを提示
+- **subSections（サブセクション）**: 2〜3個
+  - **heading（H3見出し）**: 具体的で分かりやすい小見出し
+  - **body（本文）**: 5〜8文程度で詳しく解説
+    - Google検索上位記事の情報を深く掘り下げる
+    - 初心者でも理解できるよう、専門用語は言い換える
+    - 可能な限り「今日から試せる具体的アクション」や「失敗しやすいポイント」を含める
+    - 具体例を書く場合は、AI生成の架空例ではなく、リサーチ結果に基づく実例のみ使用
+
+## conclusion（まとめ）
+- 記事全体の要点を整理
+- 読者が次に取るべき**具体的なステップを2〜3個**提案
+- 現実的な運用上の注意点にも触れる
+- 「〜かもしれません」といった曖昧な表現は避け、明確な示唆を提示
+
+## tags（タグ）
+- **3〜6個**のキーワード
+- SEOに有効な、実際に検索されそうな表現を選ぶ
+- 例: "ChatGPT", "AI文章生成", "プロンプト", "生成AI活用"
+
+# トーン・構成・品質の追加条件
+
+## 文字数
+- **intro + sections + conclusion で 2,000〜4,000文字**を目安（SEO最適化）
+- ただし、水増しは厳禁。意味のある情報だけを含める
+
+## 文体・表現
+- 親しみやすく丁寧な口調（「〜なんです」「〜ですよね」「実は〜」）
+- 「〜といえるでしょう」「〜かもしれません」は使わず、断定的で明確な表現を
+- プロのWebライターが書いたような、自然で読みやすい文章
+
+## SEOキーワード戦略
+- Google検索リサーチの要約に含まれる重要キーワード・共起語を自然に織り込む
+- 単なるコピペや機械的羅列ではなく、自分の言葉で再構成
+- タイトル・見出し・本文全体にキーワードをバランスよく配置
+
+## 禁止事項
+- プロンプト・システムメッセージ・プロジェクト設定への言及
+- 読了時間・差別化ポイント・参考文献・補足メモなどのメタ情報セクション
+- AI生成の架空例（具体例は1次情報ベースのみ）
+- 憶測や根拠のない情報
+
+## その他
+- 公開日は ${today} として扱う
+
+# 出力JSONスキーマ例
 {
   "title": "...",
   "summary": "...",
   "intro": "...",
-  "tags": ["..."],
+  "tags": ["...", "...", "..."],
   "sections": [
     {
       "heading": "...",
       "overview": "...",
       "subSections": [
+        { "heading": "...", "body": "..." },
         { "heading": "...", "body": "..." }
       ]
     }
