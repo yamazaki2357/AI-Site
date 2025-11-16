@@ -543,25 +543,8 @@ const runGenerator = async () => {
     : [];
   if (searchSummaries.length === 0) {
     console.log(
-      '[generator] Google検索の上位記事要約が存在しないため、この候補の生成をスキップします。',
+      '[generator] ⚠️ Google検索の上位記事要約がありませんが、動画情報のみで記事生成を試みます。',
     );
-    const now = new Date().toISOString();
-    const updatedCandidates = candidates.map((item) =>
-      item.id === candidate.id
-        ? {
-            ...item,
-            status: 'skipped',
-            skipReason: 'no-search-summaries',
-            updatedAt: now,
-          }
-        : item,
-    );
-    writeJson(candidatesPath, updatedCandidates);
-    return {
-      generated: false,
-      reason: 'no-search-summaries',
-      candidateId: candidate.id,
-    };
   }
 
   const enrichedCandidate = {
