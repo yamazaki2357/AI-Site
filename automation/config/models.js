@@ -4,6 +4,7 @@
  */
 
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
 
 // キーワード抽出
 const KEYWORD_EXTRACTION = {
@@ -28,6 +29,7 @@ const ARTICLE_GENERATION = {
 
 module.exports = {
   OPENAI_API_URL,
+  YOUTUBE_API_BASE,
   KEYWORD_EXTRACTION,
   SUMMARY_GENERATION,
   ARTICLE_GENERATION,

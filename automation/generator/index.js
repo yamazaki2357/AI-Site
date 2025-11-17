@@ -10,8 +10,9 @@ const path = require('path');
 const { readJson, writeJson } = require('../lib/io');
 const slugify = require('../lib/slugify');
 const { GENERATOR } = require('../config/constants');
-const { OPENAI_API_URL, ARTICLE_GENERATION } = require('../config/models');
+const { ARTICLE_GENERATION } = require('../config/models');
 const PROMPTS = require('../config/prompts');
+const { callOpenAI } = require('../lib/openai');
 
 const root = path.resolve(__dirname, '..', '..');
 const candidatesPath = path.join(root, 'data', 'candidates.json');
@@ -386,37 +387,25 @@ const requestArticleDraft = async (apiKey, candidate) => {
   const searchSummary = formatSearchSummaries(candidate.searchSummaries);
   const searchQuery = extractSearchQuery(candidate);
 
-  const payload = {
+  const messages = [
+    {
+      role: 'system',
+      content: PROMPTS.ARTICLE_GENERATION.system,
+    },
+    {
+      role: 'user',
+      content: PROMPTS.ARTICLE_GENERATION.user(candidate, searchSummary, searchQuery, today),
+    },
+  ];
+
+  const completion = await callOpenAI({
+    apiKey,
+    messages,
     model: ARTICLE_GENERATION.model,
     temperature: ARTICLE_GENERATION.temperature,
-    response_format: ARTICLE_GENERATION.response_format,
-    messages: [
-      {
-        role: 'system',
-        content: PROMPTS.ARTICLE_GENERATION.system,
-      },
-      {
-        role: 'user',
-        content: PROMPTS.ARTICLE_GENERATION.user(candidate, searchSummary, searchQuery, today),
-      },
-    ],
-  };
-
-  const response = await fetch(OPENAI_API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(payload),
+    responseFormat: ARTICLE_GENERATION.response_format,
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`OpenAI API error: ${response.status} ${errorText}`);
-  }
-
-  const completion = await response.json();
   const content = completion?.choices?.[0]?.message?.content;
   return parseCompletionContent(content);
 };

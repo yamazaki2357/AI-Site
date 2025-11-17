@@ -9,6 +9,86 @@
 YouTube動画 → Collector → Researcher → Generator → Publisher → 公開記事
 ```
 
+## 設定管理
+
+### config/ ディレクトリ構造
+
+プロジェクト全体の設定を一元管理するため、以下のファイルを使用しています：
+
+#### `automation/config/constants.js`
+ステージ固有の定数を定義します。
+
+```javascript
+COLLECTOR: {
+  MAX_PER_CHANNEL: 2,              // チャンネルごとの最大取得数
+  VIDEO_LOOKBACK_DAYS: 7,          // 動画取得の遡及日数
+  SEARCH_PAGE_SIZE: 10,            // YouTube検索ページサイズ
+  CLEANUP_PROCESSED_DAYS: 14,      // 処理済み候補のクリーンアップ日数
+  MAX_PENDING_CANDIDATES: 30,      // pending状態の候補の最大数
+}
+
+RESEARCHER: {
+  GOOGLE_TOP_LIMIT: 3,             // Google検索で取得する上位記事数
+  ARTICLE_FETCH_TIMEOUT_MS: 15000, // 記事本文取得のタイムアウト
+  ARTICLE_TEXT_MAX_LENGTH: 20000,  // 記事本文の最大文字数
+  SUMMARY_MIN_LENGTH: 500,         // 要約の最小文字数
+  SUMMARY_MAX_LENGTH: 800,         // 要約の最大文字数
+  USER_AGENT: '...',               // HTTPリクエストのUser-Agent
+}
+
+GENERATOR: {
+  DEDUPE_WINDOW_DAYS: 5,           // 重複判定のウィンドウ日数
+}
+
+RATE_LIMITS: {
+  KEYWORD_EXTRACTION_WAIT_MS: 500,
+  GOOGLE_SEARCH_WAIT_MS: 500,
+  CANDIDATE_PROCESSING_WAIT_MS: 1000,
+  SEARCH_RESULT_WAIT_MS: 500,
+}
+```
+
+#### `automation/config/models.js`
+OpenAI APIのモデルとパラメータを定義します。
+
+```javascript
+OPENAI_API_URL: 'https://api.openai.com/v1/chat/completions'
+YOUTUBE_API_BASE: 'https://www.googleapis.com/youtube/v3'
+
+KEYWORD_EXTRACTION: {
+  model: 'gpt-4o-mini',
+  temperature: 0.3,
+  max_tokens: 100,
+}
+
+SUMMARY_GENERATION: {
+  model: 'gpt-4o',
+  temperature: 0.3,
+  max_tokens: 800,
+}
+
+ARTICLE_GENERATION: {
+  model: 'gpt-4o',
+  temperature: 0.4,
+  response_format: { type: 'json_object' },
+}
+```
+
+#### `automation/config/prompts.js`
+全ステージのシステムプロンプトとユーザープロンプトを定義します。
+
+- `KEYWORD_EXTRACTION`: キーワード抽出用プロンプト
+- `SUMMARY_GENERATION`: 記事要約生成用プロンプト（必須要素4項目を明記）
+- `ARTICLE_GENERATION`: 記事生成用プロンプト（高度な技術背景を持つ読者向け）
+
+**設定の目的**:
+- 本番環境での値調整を容易に
+- ステージ間での設定の一貫性を確保
+- プロンプトのバージョン管理を明確化
+- リーダビリティの向上
+
+---
+
 ## ステージ構成
 
 ### 1. Collector (YouTube動画収集)

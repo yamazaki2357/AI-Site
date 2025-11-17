@@ -9,18 +9,15 @@
 const path = require('path');
 const { readJson, writeJson, ensureDir } = require('../lib/io');
 const slugify = require('../lib/slugify');
+const { COLLECTOR } = require('../config/constants');
+const { YOUTUBE_API_BASE } = require('../config/models');
 
 const root = path.resolve(__dirname, '..', '..');
 const sourcesPath = path.join(root, 'data', 'sources.json');
 const candidatesPath = path.join(root, 'data', 'candidates.json');
 const outputDir = path.join(root, 'automation', 'output', 'collector');
 
-const MAX_PER_CHANNEL = 2;
-const VIDEO_LOOKBACK_DAYS = 7;
-const SEARCH_PAGE_SIZE = 10;
-const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
-const CLEANUP_PROCESSED_DAYS = 14;
-const MAX_PENDING_CANDIDATES = 30;
+const { MAX_PER_CHANNEL, VIDEO_LOOKBACK_DAYS, SEARCH_PAGE_SIZE, CLEANUP_PROCESSED_DAYS, MAX_PENDING_CANDIDATES } = COLLECTOR;
 
 const createChannelUrl = (channelId) =>
   channelId ? `https://www.youtube.com/channel/${channelId}` : null;

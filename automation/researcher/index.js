@@ -13,8 +13,9 @@ const { extractSearchKeywords } = require('../lib/extractKeywords');
 const { searchTopArticles } = require('../lib/googleSearch');
 const { decodeHtmlEntities } = require('../lib/text');
 const { RESEARCHER, RATE_LIMITS } = require('../config/constants');
-const { OPENAI_API_URL, SUMMARY_GENERATION } = require('../config/models');
+const { SUMMARY_GENERATION } = require('../config/models');
 const PROMPTS = require('../config/prompts');
+const { callOpenAI, extractContent } = require('../lib/openai');
 
 const root = path.resolve(__dirname, '..', '..');
 const candidatesPath = path.join(root, 'data', 'candidates.json');
@@ -71,37 +72,26 @@ const generateAISummary = async (articleText, title, snippet, apiKey) => {
   }
 
   try {
-    const payload = {
+    const messages = [
+      {
+        role: 'system',
+        content: PROMPTS.SUMMARY_GENERATION.system,
+      },
+      {
+        role: 'user',
+        content: PROMPTS.SUMMARY_GENERATION.user(title, articleText),
+      },
+    ];
+
+    const completion = await callOpenAI({
+      apiKey,
+      messages,
       model: SUMMARY_GENERATION.model,
       temperature: SUMMARY_GENERATION.temperature,
-      max_tokens: SUMMARY_GENERATION.max_tokens,
-      messages: [
-        {
-          role: 'system',
-          content: PROMPTS.SUMMARY_GENERATION.system,
-        },
-        {
-          role: 'user',
-          content: PROMPTS.SUMMARY_GENERATION.user(title, articleText),
-        },
-      ],
-    };
-
-    const response = await fetch(OPENAI_API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify(payload),
+      maxTokens: SUMMARY_GENERATION.max_tokens,
     });
 
-    if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
-    }
-
-    const completion = await response.json();
-    const summary = completion?.choices?.[0]?.message?.content?.trim() || '';
+    const summary = extractContent(completion);
 
     if (summary.length >= SUMMARY_MIN_LENGTH) {
       return summary;
