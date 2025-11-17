@@ -81,6 +81,22 @@
 
   if (!list) return;
 
+  const enhanceCardAccessibility = () => {
+    list.querySelectorAll('.post-card').forEach(card => {
+      if (card.dataset.accessibilityInit === 'true') return;
+      card.dataset.accessibilityInit = 'true';
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'article');
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const link = card.querySelector('a');
+          if (link) link.click();
+        }
+      });
+    });
+  };
+
   const formatDate = (isoString) => {
     if (!isoString) return '';
     const normalized = isoString.replaceAll('/', '-');
@@ -187,6 +203,8 @@
         });
       });
     }, 10);
+
+    enhanceCardAccessibility();
   };
 
   // スケルトンローダーの表示
@@ -225,119 +243,12 @@
     });
 })();
 
-// === 監視対象チャンネルの読み込み ===
-(function loadSources() {
-  const list = document.getElementById('source-list');
-  const counter = document.getElementById('source-count');
-  const errorLabel = document.getElementById('source-error');
-
-  if (!list || !counter) return;
-
-  const renderSources = (sources) => {
-    list.innerHTML = '';
-
-    sources.forEach((source, index) => {
-      const item = document.createElement('li');
-      item.className = 'source-card';
-      item.style.animationDelay = `${index * 0.05}s`;
-
-      const focus = Array.isArray(source.focus) ? source.focus.join(', ') : '';
-
-      item.innerHTML = `
-        <p class="source-meta">${source.platform ?? 'YouTube'}</p>
-        <h3>${source.name ?? 'No title'}</h3>
-        <a href="${source.url}" target="_blank" rel="noopener noreferrer">${source.url}</a>
-        <p class="source-meta">${focus}</p>
-      `;
-
-      list.appendChild(item);
-    });
-
-    // 追加後にアニメーション
-    setTimeout(() => {
-      const cards = list.querySelectorAll('.source-card');
-      cards.forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
-
-        requestAnimationFrame(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        });
-      });
-    }, 10);
-  };
-
-  // カウントアップアニメーション
-  const animateCounter = (target, end) => {
-    const duration = 1000;
-    const start = 0;
-    const startTime = performance.now();
-
-    const updateCounter = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // イージング関数（ease-out）
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const current = Math.floor(start + (end - start) * easeOut);
-
-      target.textContent = current;
-
-      if (progress < 1) {
-        requestAnimationFrame(updateCounter);
-      } else {
-        target.textContent = end;
-      }
-    };
-
-    requestAnimationFrame(updateCounter);
-  };
-
-  fetch('data/sources.json', { cache: 'no-cache' })
-    .then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
-    })
-    .then((sources) => {
-      renderSources(sources);
-      animateCounter(counter, sources.length);
-      if (errorLabel) errorLabel.textContent = '';
-    })
-    .catch((error) => {
-      console.error('監視対象の読み込みに失敗しました', error);
-      if (errorLabel) {
-        errorLabel.textContent = '監視対象リストの読み込みに失敗しました。';
-      }
-      list.innerHTML = '';
-      counter.textContent = '0';
-    });
-})();
-
 // === パフォーマンス最適化: Passive Event Listeners ===
 (function optimizeScrollPerformance() {
   // すべてのホバー効果をGPU加速
   const cards = document.querySelectorAll('.post-card, .workflow-card, .source-card');
   cards.forEach(card => {
     card.style.willChange = 'transform';
-  });
-})();
-
-// === アクセシビリティ: キーボードナビゲーション ===
-(function enhanceAccessibility() {
-  // カードにキーボード操作を追加
-  document.querySelectorAll('.post-card').forEach(card => {
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'article');
-
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const link = card.querySelector('a');
-        if (link) link.click();
-      }
-    });
   });
 })();
 
