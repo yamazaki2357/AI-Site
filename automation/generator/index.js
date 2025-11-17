@@ -9,6 +9,9 @@
 const path = require('path');
 const { readJson, writeJson } = require('../lib/io');
 const slugify = require('../lib/slugify');
+const { GENERATOR } = require('../config/constants');
+const { OPENAI_API_URL, ARTICLE_GENERATION } = require('../config/models');
+const PROMPTS = require('../config/prompts');
 
 const root = path.resolve(__dirname, '..', '..');
 const candidatesPath = path.join(root, 'data', 'candidates.json');
@@ -16,8 +19,7 @@ const postsJsonPath = path.join(root, 'data', 'posts.json');
 const topicHistoryPath = path.join(root, 'data', 'topic-history.json');
 const tagsConfigPath = path.join(root, 'data', 'tags.json');
 
-const API_URL = 'https://api.openai.com/v1/chat/completions';
-const DEDUPE_WINDOW_DAYS = 5;
+const { DEDUPE_WINDOW_DAYS } = GENERATOR;
 
 const createChannelUrl = (channelId) =>
   channelId ? `https://www.youtube.com/channel/${channelId}` : '';
@@ -381,161 +383,26 @@ const formatSearchSummaries = (summaries) => {
 
 const requestArticleDraft = async (apiKey, candidate) => {
   const today = new Date().toISOString().split('T')[0];
-  const focusText = (candidate.source.focus || []).join(' / ');
   const searchSummary = formatSearchSummaries(candidate.searchSummaries);
-  const sourceUrl = resolveSourceUrl(candidate.source);
-  const promptSourceUrl = sourceUrl || 'URL不明';
   const searchQuery = extractSearchQuery(candidate);
+
   const payload = {
-    model: 'gpt-4o',
-    temperature: 0.4,
-    response_format: { type: 'json_object' },
+    model: ARTICLE_GENERATION.model,
+    temperature: ARTICLE_GENERATION.temperature,
+    response_format: ARTICLE_GENERATION.response_format,
     messages: [
       {
         role: 'system',
-        content:
-          'あなたは日本語のプロのWebライターです。AI・テクノロジーに関心の高い読者向けの情報ブログで、SEO最適化と専門性を両立させた価値ある記事を執筆します。読者はYouTubeのテック系コンテンツを理解できる程度の技術リテラシーを持っています。丁寧ながらも洗練された口調で、技術的な詳細や実用的な洞察を提供してください。必ず有効なJSONだけを返し、Google検索上位記事から抽出した事実ベースの情報を深く掘り下げ、具体的な洞察を提供します。憶測や水増し表現は避け、記事内でプロンプト設定・システムメッセージ・プロジェクト設定には一切言及しないでください。',
+        content: PROMPTS.ARTICLE_GENERATION.system,
       },
       {
         role: 'user',
-        content: `
-# 情報源の役割
-あなたには以下の2つの情報が提供されます：
-1. **Google検索リサーチ要約（SEO上位記事）**: 記事の主要な情報源として使用
-2. **YouTube動画メタデータ**: トピック選定やキーワード抽出のきっかけとして参照
-
-**重要**: 記事はGoogle検索上位記事の情報を深く掘り下げて構成してください。YouTube動画は単なる参考情報であり、動画紹介や時系列要約にしてはいけません。
-
-[YouTube動画メタデータ]
-- Video Title: ${candidate.video.title}
-- Video URL: ${candidate.video.url}
-- Published At: ${candidate.video.publishedAt}
-- Channel: ${candidate.source.name} (${promptSourceUrl})
-- Channel Focus: ${focusText}
-- Video Description:
-${candidate.video.description}
-
-[Google検索リサーチ要約（SEO上位記事の情報）★メイン情報源★]
-検索クエリ: ${searchQuery}
-
-${searchSummary}
-
-# 記事執筆の要件
-
-## ターゲット読者
-- **AI・テクノロジーに関心が高く、YouTubeのテック系コンテンツを理解できる層**
-- 基本的なIT用語は理解している前提で、より深い技術的洞察を求めている
-- 専門用語は適切に使用し、必要に応じて補足説明を加える
-- 丁寧ながらも洗練された文体で書く（過度にカジュアルな表現は避ける）
-
-## 記事の目的
-読者が技術的な理解を深め、実践的な活用方法や業界動向を把握できる専門性の高い情報を提供すること
-
-## SEO最適化（E-E-A-T重視）
-- **Experience（経験）**: 実際の使用例や実践的な情報を含める
-- **Expertise（専門性）**: Google検索上位記事の専門的な情報を深掘り
-- **Authoritativeness（権威性）**: 信頼できる情報源からの引用
-- **Trustworthiness（信頼性）**: 事実ベース、誇張なし
-- 検索意図に合致した構成で、主要キーワード・共起語を自然に配置
-- タイトル・見出しは検索されやすい表現を使用
-
-## 出力形式
-JSON形式で以下のキーを含める: title, summary, intro, sections, conclusion, tags
-
-# 各フィールドの詳細仕様
-
-## title（タイトル）
-- **60文字以内**の日本語
-- 検索意図を満たし、技術的な価値が伝わる具体的な表現
-- 主要キーワードを含める
-- 例: 「ChatGPT Plusの実力を検証：有料プランの機能と活用シーン」
-
-## summary（要約）
-- **1〜2文**で記事全体を要約
-- 「この記事を読むと何がわかるか」を明確に
-- 検索ユーザーが求める答えを端的に提示
-
-## intro（導入）
-- **2〜3段落、すぐ本題に入る**
-- 技術的な背景や業界動向を簡潔に示し、読者の関心を引く
-- Google検索上位記事から見える重要なポイントや最新情報を提示
-- この記事で得られる具体的な技術的洞察や実践的な価値を明示
-
-## sections（本文セクション）
-- **3〜5個のセクション**を、論理的な流れで構成
-- プロのWebライターとして最高の記事構成を考え、読者に最大の価値を届ける構造にする
-
-各sectionの構造:
-- **heading（H2見出し）**: 検索されやすく、技術的な価値が伝わる表現
-- **overview（概要）**: 3〜4文で、このセクションで何を理解できるかを提示
-- **subSections（サブセクション）**: 2〜3個
-  - **heading（H3見出し）**: 具体的で技術的な小見出し
-  - **body（本文）**: 5〜8文程度で詳しく解説
-    - Google検索上位記事の情報を深く掘り下げ、技術的な詳細や実用的な洞察を提供
-    - 専門用語は適切に使用し、必要に応じて補足説明を加える
-    - 「実践的な活用方法」「技術的な制約」「ベストプラクティス」など、より深い情報を含める
-    - 具体例を書く場合は、AI生成の架空例ではなく、リサーチ結果に基づく実例のみ使用
-
-## conclusion（まとめ）
-- 記事全体の要点を整理し、技術的な意義や今後の展望に触れる
-- 読者が次に取るべき**具体的なステップを2〜3個**提案
-- 技術的な制約や運用上の注意点も明示する
-- 「〜かもしれません」といった曖昧な表現は避け、明確な示唆を提示
-
-## tags（タグ）
-- **3〜6個**のキーワード
-- SEOに有効な、実際に検索されそうな表現を選ぶ
-- 例: "ChatGPT", "AI文章生成", "プロンプト", "生成AI活用"
-
-# トーン・構成・品質の追加条件
-
-## 文字数
-- **intro + sections + conclusion で 2,000〜4,000文字**を目安（SEO最適化）
-- ただし、水増しは厳禁。意味のある情報だけを含める
-
-## 文体・表現
-- 丁寧ながらも洗練された口調（過度にカジュアルな「〜なんです」「〜ですよね」は避ける）
-- 「〜といえるでしょう」「〜かもしれません」は使わず、断定的で明確な表現を
-- プロのテックライターが書いたような、専門性と読みやすさを両立した文章
-
-## SEOキーワード戦略
-- Google検索リサーチの要約に含まれる重要キーワード・共起語を自然に織り込む
-- 単なるコピペや機械的羅列ではなく、自分の言葉で再構成
-- タイトル・見出し・本文全体にキーワードをバランスよく配置
-
-## 禁止事項
-- プロンプト・システムメッセージ・プロジェクト設定への言及
-- 読了時間・差別化ポイント・参考文献・補足メモなどのメタ情報セクション
-- AI生成の架空例（具体例は1次情報ベースのみ）
-- 憶測や根拠のない情報
-
-## その他
-- 公開日は ${today} として扱う
-
-# 出力JSONスキーマ例
-{
-  "title": "...",
-  "summary": "...",
-  "intro": "...",
-  "tags": ["...", "...", "..."],
-  "sections": [
-    {
-      "heading": "...",
-      "overview": "...",
-      "subSections": [
-        { "heading": "...", "body": "..." },
-        { "heading": "...", "body": "..." }
-      ]
-    }
-  ],
-  "conclusion": "..."
-}
-`,
+        content: PROMPTS.ARTICLE_GENERATION.user(candidate, searchSummary, searchQuery, today),
       },
     ],
   };
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(OPENAI_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -645,8 +512,33 @@ const runGenerator = async () => {
     searchSummaries,
   };
 
-  const article = await requestArticleDraft(apiKey, enrichedCandidate);
-  console.log(`[generator] OpenAI応答を受信: "${article.title}"`);
+  let article;
+  try {
+    article = await requestArticleDraft(apiKey, enrichedCandidate);
+    console.log(`[generator] OpenAI応答を受信: "${article.title}"`);
+  } catch (error) {
+    console.error(`[generator] ⚠️ 記事生成に失敗しました: ${error.message}`);
+    const now = new Date().toISOString();
+    const updatedCandidates = candidates.map((item) =>
+      item.id === candidate.id
+        ? {
+            ...item,
+            status: 'failed',
+            failReason: 'article-generation-error',
+            errorMessage: error.message,
+            updatedAt: now,
+          }
+        : item,
+    );
+    writeJson(candidatesPath, updatedCandidates);
+    return {
+      generated: false,
+      reason: 'article-generation-failed',
+      candidateId: candidate.id,
+      error: error.message,
+    };
+  }
+
   const normalizedTags = mapArticleTags(article.tags);
   const hydratedArticle = {
     ...article,

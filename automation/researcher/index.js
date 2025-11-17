@@ -12,19 +12,15 @@ const { readJson, writeJson } = require('../lib/io');
 const { extractSearchKeywords } = require('../lib/extractKeywords');
 const { searchTopArticles } = require('../lib/googleSearch');
 const { decodeHtmlEntities } = require('../lib/text');
+const { RESEARCHER, RATE_LIMITS } = require('../config/constants');
+const { OPENAI_API_URL, SUMMARY_GENERATION } = require('../config/models');
+const PROMPTS = require('../config/prompts');
 
 const root = path.resolve(__dirname, '..', '..');
 const candidatesPath = path.join(root, 'data', 'candidates.json');
 const outputDir = path.join(root, 'automation', 'output', 'researcher');
 
-const GOOGLE_TOP_LIMIT = 3;
-const ARTICLE_FETCH_TIMEOUT_MS = 8000;
-const ARTICLE_TEXT_MAX_LENGTH = 12000;
-const SUMMARY_MIN_LENGTH = 300;
-const SUMMARY_MAX_LENGTH = 500;
-
-const USER_AGENT =
-  'AIInfoBlogCollector/1.0 (+https://github.com/gray-desk/AI-information-blog)';
+const { GOOGLE_TOP_LIMIT, ARTICLE_FETCH_TIMEOUT_MS, ARTICLE_TEXT_MAX_LENGTH, SUMMARY_MIN_LENGTH, SUMMARY_MAX_LENGTH, USER_AGENT } = RESEARCHER;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -67,6 +63,54 @@ const fetchArticleText = async (url) => {
   } finally {
     clearTimeout(timeout);
   }
+};
+
+const generateAISummary = async (articleText, title, snippet, apiKey) => {
+  if (!articleText || articleText.length < 200) {
+    return '';
+  }
+
+  try {
+    const payload = {
+      model: SUMMARY_GENERATION.model,
+      temperature: SUMMARY_GENERATION.temperature,
+      max_tokens: SUMMARY_GENERATION.max_tokens,
+      messages: [
+        {
+          role: 'system',
+          content: PROMPTS.SUMMARY_GENERATION.system,
+        },
+        {
+          role: 'user',
+          content: PROMPTS.SUMMARY_GENERATION.user(title, articleText),
+        },
+      ],
+    };
+
+    const response = await fetch(OPENAI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
+
+    const completion = await response.json();
+    const summary = completion?.choices?.[0]?.message?.content?.trim() || '';
+
+    if (summary.length >= SUMMARY_MIN_LENGTH) {
+      return summary;
+    }
+  } catch (error) {
+    console.warn(`[researcher] AI要約生成に失敗: ${error.message}`);
+  }
+
+  return '';
 };
 
 const buildSummaryWithinRange = (text, fallback = '') => {
@@ -114,7 +158,7 @@ const buildSummaryWithinRange = (text, fallback = '') => {
   return summary.trim();
 };
 
-const summarizeSearchResult = async (item, index) => {
+const summarizeSearchResult = async (item, index, apiKey) => {
   const title = item.title || `検索結果${index + 1}`;
   const url = item.link;
   const snippet = item.snippet || '';
@@ -124,7 +168,17 @@ const summarizeSearchResult = async (item, index) => {
     bodyText = await fetchArticleText(url);
   }
 
-  const summary = buildSummaryWithinRange(bodyText, snippet);
+  // まずAI要約を試行
+  let summary = '';
+  if (bodyText && bodyText.length >= 200 && apiKey) {
+    summary = await generateAISummary(bodyText, title, snippet, apiKey);
+  }
+
+  // AI要約が失敗した場合はフォールバック
+  if (!summary || summary.length < SUMMARY_MIN_LENGTH) {
+    summary = buildSummaryWithinRange(bodyText, snippet);
+  }
+
   return {
     title,
     url,
@@ -133,12 +187,12 @@ const summarizeSearchResult = async (item, index) => {
   };
 };
 
-const fetchSearchSummaries = async (query, apiKey, cx) => {
-  if (!query || !apiKey || !cx) return [];
+const fetchSearchSummaries = async (query, googleApiKey, googleCx, openaiApiKey) => {
+  if (!query || !googleApiKey || !googleCx) return [];
   try {
     const res = await searchTopArticles({
-      apiKey,
-      cx,
+      apiKey: googleApiKey,
+      cx: googleCx,
       query,
       num: GOOGLE_TOP_LIMIT,
     });
@@ -146,8 +200,9 @@ const fetchSearchSummaries = async (query, apiKey, cx) => {
     const summaries = [];
     for (const [index, item] of items.entries()) {
       try {
-        const summaryEntry = await summarizeSearchResult(item, index);
+        const summaryEntry = await summarizeSearchResult(item, index, openaiApiKey);
         summaries.push(summaryEntry);
+        console.log(`[researcher] 要約完了 (${index + 1}/${items.length}): ${summaryEntry.title} - ${summaryEntry.summary.length}文字`);
       } catch (error) {
         console.warn(
           `[researcher] Google検索結果の要約作成に失敗 (${item?.link || 'unknown'}): ${error.message}`,
@@ -159,7 +214,7 @@ const fetchSearchSummaries = async (query, apiKey, cx) => {
           summary: item.snippet || '',
         });
       }
-      await sleep(150);
+      await sleep(RATE_LIMITS.SEARCH_RESULT_WAIT_MS);
     }
     return summaries;
   } catch (error) {
@@ -265,7 +320,7 @@ const runResearcher = async () => {
     }
 
     // レート制限対策
-    await sleep(500);
+    await sleep(RATE_LIMITS.KEYWORD_EXTRACTION_WAIT_MS);
 
     // Google検索
     let searchSummaries = [];
@@ -273,7 +328,7 @@ const runResearcher = async () => {
 
     try {
       console.log(`[researcher] Google検索: "${searchQuery}"`);
-      searchSummaries = await fetchSearchSummaries(searchQuery, googleApiKey, googleCx);
+      searchSummaries = await fetchSearchSummaries(searchQuery, googleApiKey, googleCx, openaiApiKey);
       const searchEndTime = Date.now();
       metrics.performance.googleSearchTimeMs.push(searchEndTime - searchStartTime);
 
@@ -323,7 +378,7 @@ const runResearcher = async () => {
     }
 
     // レート制限対策
-    await sleep(1000);
+    await sleep(RATE_LIMITS.CANDIDATE_PROCESSING_WAIT_MS);
   }
 
   // 更新されたcandidatesを保存

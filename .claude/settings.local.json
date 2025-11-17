@@ -20,7 +20,8 @@
       "Bash(xargs kill:*)",
       "Bash(git reset:*)",
       "Bash(gh run list:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(gh issue create:*)"
     ],
     "deny": [],
     "ask": []

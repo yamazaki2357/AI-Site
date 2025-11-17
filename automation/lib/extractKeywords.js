@@ -3,7 +3,9 @@
  * Google検索に適した簡潔なキーワードを抽出する
  */
 
-const API_URL = 'https://api.openai.com/v1/chat/completions';
+const { OPENAI_API_URL } = require('../config/models');
+const { KEYWORD_EXTRACTION } = require('../config/models');
+const PROMPTS = require('../config/prompts');
 
 /**
  * 動画タイトルと説明文からGoogle検索用のキーワードを抽出
@@ -21,41 +23,22 @@ const extractSearchKeywords = async (apiKey, title, description = '') => {
   }
 
   const payload = {
-    model: 'gpt-4o-mini',
-    temperature: 0.3,
+    model: KEYWORD_EXTRACTION.model,
+    temperature: KEYWORD_EXTRACTION.temperature,
+    max_tokens: KEYWORD_EXTRACTION.max_tokens,
     messages: [
       {
         role: 'system',
-        content:
-          'あなたはSEO専門家です。YouTube動画のタイトルと説明文から、Google検索に最適な簡潔なキーワードを抽出してください。不要な助詞や「〜しましょう」「〜です」などの表現は除去し、核となる技術用語・製品名・サービス名のみを抽出してください。',
+        content: PROMPTS.KEYWORD_EXTRACTION.system,
       },
       {
         role: 'user',
-        content: `以下のYouTube動画から、Google検索に適した簡潔なキーワード（20文字以内）を抽出してください。
-
-タイトル: ${title}
-説明文: ${description.slice(0, 500)}
-
-要件:
-- 核となる技術用語・製品名・サービス名のみを抽出
-- 「〜しましょう」「〜です」「〜とは」などの不要な表現は除去
-- 複数のキーワードがある場合はスペースで区切る
-- 20文字以内に収める
-- 日本語で出力
-
-例:
-入力: 「ChatGPT Plusの新機能を試してみましょう！」
-出力: 「ChatGPT Plus 新機能」
-
-入力: 「Gemini 2.0がついにリリース！性能を徹底比較」
-出力: 「Gemini 2.0 性能比較」
-
-キーワードのみを出力してください（説明や前置きは不要）:`,
+        content: PROMPTS.KEYWORD_EXTRACTION.user(title, description),
       },
     ],
   };
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(OPENAI_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
