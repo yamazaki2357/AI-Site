@@ -1,0 +1,34 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Output artifacts (日次レポート)
+automation/output/collector/*.json
+automation/output/researcher/*.json
+automation/output/generator/*.json
+
+# Keep directory structure
+!automation/output/collector/.gitkeep
+!automation/output/researcher/.gitkeep
+!automation/output/generator/.gitkeep
+
+# Pipeline status is kept for monitoring
+!automation/output/pipeline-status.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

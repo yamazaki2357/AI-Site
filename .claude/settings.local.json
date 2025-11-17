@@ -18,7 +18,9 @@
       "Bash(python3:*)",
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(gh run list:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

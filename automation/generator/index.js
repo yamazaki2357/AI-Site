@@ -351,6 +351,19 @@ const parseCompletionContent = (content) => {
   throw new Error('contentの形式を解析できませんでした');
 };
 
+const extractSearchQuery = (candidate) => {
+  // 新しい構造: { original, extracted, method }
+  if (candidate.searchQuery && typeof candidate.searchQuery === 'object') {
+    return candidate.searchQuery.extracted || candidate.searchQuery.original || '';
+  }
+  // 旧構造: 文字列
+  if (typeof candidate.searchQuery === 'string') {
+    return candidate.searchQuery;
+  }
+  // フォールバック
+  return candidate.video?.title || '';
+};
+
 const formatSearchSummaries = (summaries) => {
   if (!Array.isArray(summaries) || summaries.length === 0) {
     return '検索要約が取得できていません。';
@@ -372,6 +385,7 @@ const requestArticleDraft = async (apiKey, candidate) => {
   const searchSummary = formatSearchSummaries(candidate.searchSummaries);
   const sourceUrl = resolveSourceUrl(candidate.source);
   const promptSourceUrl = sourceUrl || 'URL不明';
+  const searchQuery = extractSearchQuery(candidate);
   const payload = {
     model: 'gpt-4o',
     temperature: 0.4,
@@ -402,6 +416,8 @@ const requestArticleDraft = async (apiKey, candidate) => {
 ${candidate.video.description}
 
 [Google検索リサーチ要約（SEO上位記事の情報）★メイン情報源★]
+検索クエリ: ${searchQuery}
+
 ${searchSummary}
 
 # 記事執筆の要件
@@ -577,12 +593,12 @@ const runGenerator = async () => {
   const posts = readJson(postsJsonPath, []);
   const topicHistory = readJson(topicHistoryPath, []);
 
-  const candidate = candidates.find((item) => item.status === 'pending');
+  const candidate = candidates.find((item) => item.status === 'researched');
   if (!candidate) {
-    console.log('[generator] pending状態の候補が存在しないため処理を終了します。');
+    console.log('[generator] researched状態の候補が存在しないため処理を終了します。');
     return {
       generated: false,
-      reason: 'no-pending-candidates',
+      reason: 'no-researched-candidates',
     };
   }
 
