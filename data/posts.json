@@ -37,7 +37,7 @@
     ],
     "url": "posts/2025-11-18-ai-driven-development.html",
     "slug": "2025-11-18-ai-driven-development",
-    "publishedAt": "2025-11-17T15:00:00.000Z"
+    "publishedAt": "2025-11-18T23:59:00.000Z"
   },
   {
     "title": "AI時代に淘汰されない人材になるための5つのステップ",
@@ -76,7 +76,8 @@
       }
     ],
     "url": "posts/2025-11-18-ai5.html",
-    "slug": "2025-11-18-ai5"
+    "slug": "2025-11-18-ai5",
+    "publishedAt": "2025-11-18T23:58:00.000Z"
   },
   {
     "title": "AI活用を0から学ぶ4つのステップ：初心者向け完全ガイド",
@@ -157,7 +158,8 @@
       }
     ],
     "url": "posts/2025-11-17-chatgpt.html",
-    "slug": "2025-11-17-chatgpt"
+    "slug": "2025-11-17-chatgpt",
+    "publishedAt": "2025-11-17T23:58:00.000Z"
   },
   {
     "title": "NotebookLMの最新アップデートでAIノート作成がさらに便利に！",

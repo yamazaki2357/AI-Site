@@ -58,8 +58,10 @@
   // === 目次の自動生成 ===
   const tocList = document.querySelector('[data-toc-list]');
   const headings = document.querySelectorAll('.post-article h2, .post-article h3, .article-content h2, .article-content h3');
+  let tocIndicatorElement = null;
 
   if (tocList && headings.length > 0) {
+    tocList.innerHTML = '';
     const slugify = (text) =>
       text
         .trim()
@@ -69,20 +71,50 @@
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '');
 
+    let h2Counter = 0;
+    let h3Counter = 0;
+
     headings.forEach((heading, index) => {
       const text = heading.textContent || `section-${index + 1}`;
       const slug = heading.id || slugify(text) || `section-${index + 1}`;
       heading.id = slug;
+      heading.classList.add('toc-target');
+
+      if (heading.tagName === 'H2') {
+        h2Counter += 1;
+        h3Counter = 0;
+      } else {
+        if (h2Counter === 0) {
+          h2Counter = 1;
+        }
+        h3Counter += 1;
+      }
+
+      const indexLabel = heading.tagName === 'H3'
+        ? `${h2Counter}.${h3Counter}`
+        : `${h2Counter}`;
 
       const item = document.createElement('li');
       item.dataset.sectionId = slug;
+      item.dataset.tocIndex = indexLabel;
       if (heading.tagName === 'H3') {
         item.classList.add('is-depth');
       }
 
       const anchor = document.createElement('a');
       anchor.href = `#${slug}`;
-      anchor.textContent = text.trim();
+      anchor.setAttribute('data-toc-link', 'true');
+
+      const number = document.createElement('span');
+      number.className = 'toc-index';
+      number.textContent = indexLabel;
+
+      const label = document.createElement('span');
+      label.className = 'toc-text';
+      label.textContent = text.trim();
+
+      anchor.appendChild(number);
+      anchor.appendChild(label);
       item.appendChild(anchor);
       tocList.appendChild(item);
     });
@@ -105,6 +137,7 @@
       });
     });
   } else if (tocList) {
+    tocList.innerHTML = '';
     const item = document.createElement('li');
     item.textContent = '目次はありません';
     tocList.appendChild(item);
@@ -168,6 +201,15 @@
     panel.appendChild(tocListElement);
     tocCard.appendChild(panel);
 
+    if (!tocIndicatorElement) {
+      const indicator = document.createElement('p');
+      indicator.className = 'toc-current-section';
+      indicator.dataset.currentSection = 'true';
+      indicator.textContent = '現在位置: -';
+      tocCard.insertBefore(indicator, panel);
+      tocIndicatorElement = indicator;
+    }
+
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'toc-toggle';
@@ -222,6 +264,20 @@
 
     const tocItems = Array.from(tocList.querySelectorAll('li[data-section-id]'));
     const sections = Array.from(headings);
+    const defaultIndicatorText = '現在位置: -';
+
+    function updateIndicator(item) {
+      if (!tocIndicatorElement) return;
+      if (!item) {
+        tocIndicatorElement.textContent = defaultIndicatorText;
+        return;
+      }
+      const link = item.querySelector('a[data-toc-link="true"]');
+      if (!link) return;
+      const index = link.querySelector('.toc-index')?.textContent || item.dataset.tocIndex || '';
+      const label = link.querySelector('.toc-text')?.textContent || link.textContent || '';
+      tocIndicatorElement.textContent = `現在位置: ${index ? `${index} ` : ''}${label.trim()}`;
+    }
 
     function updateActiveToc() {
       const scrollPosition = window.pageYOffset + 120; // ヘッダーオフセット
@@ -232,15 +288,35 @@
           activeSection = section;
         }
       });
+      if (!activeSection && sections.length > 0) {
+        activeSection = sections[0];
+      }
 
-      tocItems.forEach(item => item.classList.remove('active'));
+      tocItems.forEach(item => {
+        item.classList.remove('active');
+        const link = item.querySelector('a[data-toc-link="true"]');
+        if (link) {
+          link.removeAttribute('aria-current');
+        }
+      });
+
+      sections.forEach(section => section.classList.remove('toc-target-active'));
 
       if (activeSection) {
         const activeItem = tocItems.find(item => item.dataset.sectionId === activeSection.id);
         if (activeItem) {
           activeItem.classList.add('active');
+          const link = activeItem.querySelector('a[data-toc-link="true"]');
+          if (link) {
+            link.setAttribute('aria-current', 'true');
+          }
+          activeSection.classList.add('toc-target-active');
+          updateIndicator(activeItem);
+          return;
         }
       }
+
+      updateIndicator(null);
     }
 
     window.addEventListener('scroll', updateActiveToc, { passive: true });

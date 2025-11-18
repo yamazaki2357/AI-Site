@@ -746,6 +746,13 @@ body.article-page main {
   margin-top: var(--space-md);
 }
 
+.toc-current-section {
+  margin: 0 0 var(--space-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
 .toc-toggle {
   display: none;
   align-items: center;
@@ -775,7 +782,7 @@ body.article-page main {
 }
 
 .toc-list {
-  list-style: decimal inside;
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -783,7 +790,7 @@ body.article-page main {
 
 .toc-list li {
   transition: all var(--transition-fast);
-  padding: var(--space-xs) var(--space-sm);
+  padding: 0.35rem var(--space-sm);
   border-radius: var(--radius-sm);
 }
 
@@ -791,6 +798,7 @@ body.article-page main {
   background: rgba(255, 241, 247, 0.9);
   border-left: 3px solid var(--color-primary);
   padding-left: calc(var(--space-sm) + 3px);
+  transform: translateX(4px);
 }
 
 .toc-list a {
@@ -799,7 +807,9 @@ body.article-page main {
   font-size: 0.95rem;
   line-height: 1.5;
   transition: color var(--transition-fast);
-  display: block;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
 }
 
 .toc-list a:hover {
@@ -812,10 +822,56 @@ body.article-page main {
 }
 
 .toc-list li.is-depth {
-  padding-left: 1.5rem;
+  padding-left: calc(var(--space-md) + 0.5rem);
   font-size: 0.9rem;
   color: var(--text-tertiary);
-  list-style-type: circle;
+}
+
+.toc-index {
+  min-width: 2.4rem;
+  text-align: right;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.toc-list li.is-depth .toc-index {
+  min-width: 3rem;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.toc-list li.active .toc-index {
+  color: var(--color-primary);
+}
+
+.toc-text {
+  flex: 1;
+}
+
+.toc-target {
+  scroll-margin-top: 120px;
+}
+
+.toc-target.toc-target-active {
+  position: relative;
+  background: linear-gradient(90deg, rgba(255, 241, 247, 0.6), transparent 75%);
+  border-radius: var(--radius-sm);
+  padding-left: 0.35rem;
+}
+
+.toc-target.toc-target-active::before {
+  content: '';
+  position: absolute;
+  left: -0.75rem;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  width: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  box-shadow: 0 0 12px rgba(255, 116, 177, 0.4);
 }
 
 .article-note-text {
