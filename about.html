@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AI情報ブログの自動化パイプライン・技術スタック・運用方針について説明します。">
+  <meta name="description" content="AIに関する最新情報を毎日お届けするメディア。ChatGPTなど話題のAIサービスの使い方やニュースを、わかりやすく紹介しています。">
 
   <script src="assets/js/analytics.js"></script>
 
@@ -14,7 +14,7 @@
   <!-- Open Graph / SNS共有 -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="このサイトについて | AI情報ブログ">
-  <meta property="og:description" content="AI情報ブログの自動化パイプライン・技術スタック・運用方針について説明します。">
+  <meta property="og:description" content="AIに関する最新情報を毎日お届けするメディア。ChatGPTなど話題のAIサービスの使い方やニュースを、わかりやすく紹介しています。">
   <meta property="og:image" content="assets/img/ogp-default.svg">
   <meta property="og:site_name" content="AI情報ブログ">
   <meta property="og:locale" content="ja_JP">
@@ -22,7 +22,7 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="このサイトについて | AI情報ブログ">
-  <meta name="twitter:description" content="AI情報ブログの自動化パイプライン・技術スタック・運用方針について説明します。">
+  <meta name="twitter:description" content="AIに関する最新情報を毎日お届けするメディア。ChatGPTなど話題のAIサービスの使い方やニュースを、わかりやすく紹介しています。">
   <meta name="twitter:image" content="assets/img/ogp-default.svg">
 
   <!-- パフォーマンス最適化 -->
@@ -41,91 +41,50 @@
       <h1>AI情報ブログについて</h1>
 
       <section class="about-intro">
-        <p>AI情報ブログは、AI・機械学習分野の最新動向を専門的な視点で解説する技術情報メディアです。YouTubeの技術系コンテンツから注目トピックを自動収集し、Google検索上位の信頼できる情報源をもとに、深掘りした記事を毎日自動生成・配信しています。</p>
+        <p>AI情報ブログは、AIに関する最新情報を毎日お届けするメディアです。話題のAIサービスや便利な使い方、気になるニュースなど、信頼できる情報源から厳選してわかりやすくお届けしています。</p>
       </section>
 
-      <h2>読者対象</h2>
-      <p>本ブログは、<strong>高度な技術背景を持ち、YouTubeのテック系コンテンツを日常的に視聴する読者層</strong>を対象としています。基本的なIT用語の説明は省略し、専門用語を積極的に使用して、技術的な詳細や実用的な洞察を提供します。</p>
-
-      <div class="info-box">
-        <p><strong>想定読者：</strong>エンジニア、研究者、技術リーダー、AI/ML実務者、技術系スタートアップ関係者など</p>
-      </div>
-
-      <h2>自動化パイプラインの仕組み</h2>
-      <p>記事生成は完全自動化された4ステージのパイプラインで運用されています。</p>
-
-      <h3>1. Collector（情報収集）</h3>
-      <p>YouTube Data API v3を活用し、AI・機械学習分野の主要チャンネルから最新動画を自動取得。7日以内の動画をチャンネルごとに最大2件まで収集し、重複を排除します。</p>
-
-      <h3>2. Researcher（リサーチ）</h3>
-      <p>OpenAI API（gpt-4o-mini）で動画メタデータから検索意図を抽出し、Google Custom Search APIで関連記事をリサーチ。SEO上位3件の記事本文を取得後、OpenAI API（gpt-4o）で500〜800文字の技術要約を生成します。</p>
-
-      <div class="technical-detail">
-        <p><strong>要約の必須要素：</strong></p>
-        <ul>
-          <li>主要な技術的発見または事実</li>
-          <li>具体的な数値、比較結果、性能指標</li>
-          <li>実装上の制約または注意点</li>
-          <li>今後の展望または応用シーン</li>
-        </ul>
-      </div>
-
-      <h3>3. Generator（記事生成）</h3>
-      <p>OpenAI API（gpt-4o）を使用し、リサーチデータをもとに2,000〜4,000文字の専門記事を生成。E-E-A-T（Experience, Expertise, Authoritativeness, Trustworthiness）を重視したSEO最適化記事として構成され、重複トピック判定（5日以内）も実施します。</p>
-
-      <h3>4. Publisher（公開）</h3>
-      <p>生成された記事をHTMLファイルとして出力し、メタデータを更新。GitHub Actionsによる自動コミット・プッシュで、1日2回（09:00 JST / 21:00 JST）の定期公開を実現しています。</p>
-
-      <h2>技術スタック</h2>
-      <div class="tech-stack">
-        <dl>
-          <dt>言語・ランタイム</dt>
-          <dd>Node.js 20</dd>
-
-          <dt>AI/LLMプロバイダ</dt>
-          <dd>OpenAI API（gpt-4o, gpt-4o-mini）</dd>
-
-          <dt>外部API</dt>
-          <dd>YouTube Data API v3、Google Custom Search API</dd>
-
-          <dt>自動化基盤</dt>
-          <dd>GitHub Actions（cron + workflow_dispatch）</dd>
-
-          <dt>ホスティング</dt>
-          <dd>GitHub Pages（静的HTML）</dd>
-
-          <dt>構成管理</dt>
-          <dd><code>automation/config/</code>（constants.js, models.js, prompts.js）で一元管理</dd>
-        </dl>
-      </div>
-
-      <h2>データ管理と透明性</h2>
-      <p>パイプラインの実行ステータスは<code>automation/output/pipeline-status.json</code>で公開され、各ステージのメトリクス（処理件数、成功率、平均処理時間）も記録されています。候補記事のステータス遷移（collected → researched → generated → published）は<code>data/candidates.json</code>で管理されます。</p>
-
-      <h2>記事品質の方針</h2>
+      <h2>このブログで得られること</h2>
       <ul>
-        <li><strong>事実ベース：</strong> Google検索上位記事の専門的な情報を深掘り、憶測や水増し表現を排除</li>
-        <li><strong>技術的詳細：</strong> アルゴリズム、実装パターン、具体的な数値を含む専門性の高い内容</li>
-        <li><strong>実用性：</strong> 応用シーンや使用例、実際のプロダクト事例を提示</li>
-        <li><strong>業界動向：</strong> 競争分析、技術トレンド、今後の展望を明示</li>
+        <li><strong>最新のAI情報：</strong> ChatGPTやGeminiなど、話題のAIサービスの最新アップデート</li>
+        <li><strong>便利な使い方：</strong> AIを上手に活用するためのコツやテクニック</li>
+        <li><strong>気になるニュース：</strong> AI関連のニュースやトレンド、話題の事例</li>
+        <li><strong>わかりやすい解説：</strong> 新しいAI技術の仕組みや特徴を、できるだけわかりやすく紹介</li>
       </ul>
 
-      <h2>扱う主要トピック</h2>
+      <h2>こんな方におすすめ</h2>
       <ul>
-        <li>大規模言語モデル（LLM）の最新アーキテクチャと性能比較</li>
-        <li>ChatGPT、Claude、Gemini、Llama等の主要AIサービス</li>
-        <li>プロンプトエンジニアリング、RAG、ファインチューニング技術</li>
-        <li>AI活用事例（エンタープライズ導入、プロダクト開発）</li>
-        <li>機械学習・深層学習の新技術（アルゴリズム、フレームワーク）</li>
-        <li>AI業界のニュース・政策動向・ビジネストレンド</li>
+        <li>ChatGPTなどのAIサービスを使っている、または興味がある方</li>
+        <li>AIの最新情報を手軽にチェックしたい方</li>
+        <li>AIをもっと便利に使いこなしたい方</li>
+        <li>仕事や勉強でAIを活用したい方</li>
       </ul>
 
-      <h2>運用とメンテナンス</h2>
-      <p>システムは完全自動化されており、人的介入なしで運用されています。設定変更や機能改善は<code>automation/config/</code>ディレクトリで集中管理され、GitHub Actionsを通じて即座に反映されます。</p>
+      <h2>扱っている主なトピック</h2>
+      <ul>
+        <li>ChatGPT、Claude、Gemini、Copilotなど主要なAIサービスの情報</li>
+        <li>AIの便利な使い方や活用事例</li>
+        <li>新しく登場したAIツールやサービスの紹介</li>
+        <li>AI関連のニュースやビジネス動向</li>
+        <li>AIに関する知っておきたい基礎知識</li>
+      </ul>
+
+      <h2>情報の信頼性について</h2>
+      <p>記事は、YouTubeで話題になっているトピックをもとに、Google検索で上位に表示される信頼できる情報源から情報を収集・編集しています。</p>
+
+      <ul>
+        <li><strong>事実ベースの情報：</strong> 確認された情報のみを掲載</li>
+        <li><strong>わかりやすさ重視：</strong> できるだけ専門用語を避けた説明</li>
+        <li><strong>実用的な内容：</strong> 実際の使い方や活用例を紹介</li>
+        <li><strong>こまめな更新：</strong> 毎日2回（朝・夜）更新で、最新情報をお届け</li>
+      </ul>
+
+      <h2>記事の更新頻度</h2>
+      <p>毎日2回（午前9時・午後9時頃）、新しい記事を公開しています。定期的にチェックすることで、AIの最新情報を見逃さずキャッチアップできます。</p>
 
       <div class="cta-box">
-        <p><strong>定期的なチェックをおすすめします：</strong><br>
-        最新のAI技術動向を見逃さないよう、本ブログをブックマークしてご活用ください。</p>
+        <p><strong>最新情報をお見逃しなく：</strong><br>
+        ブックマークしておくと、AIの最新情報を定期的にチェックできて便利です。</p>
       </div>
     </article>
   </main>
