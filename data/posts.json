@@ -1,5 +1,44 @@
 [
   {
+    "title": "AI時代に淘汰されない人材になるための5つのステップ",
+    "date": "2025-11-18",
+    "summary": "この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。",
+    "tags": [
+      {
+        "slug": "ai",
+        "label": "AI失業",
+        "category": "その他",
+        "style": "accent-neutral"
+      },
+      {
+        "slug": "tag-2",
+        "label": "労働市場",
+        "category": "その他",
+        "style": "accent-neutral"
+      },
+      {
+        "slug": "tag-3",
+        "label": "キャリア戦略",
+        "category": "その他",
+        "style": "accent-neutral"
+      },
+      {
+        "slug": "automation",
+        "label": "業務自動化",
+        "category": "ユースケース",
+        "style": "accent-teal"
+      },
+      {
+        "slug": "ai-5",
+        "label": "AI適応",
+        "category": "その他",
+        "style": "accent-neutral"
+      }
+    ],
+    "url": "posts/2025-11-18-ai5.html",
+    "slug": "2025-11-18-ai5"
+  },
+  {
     "title": "AI活用を0から学ぶ4つのステップ：初心者向け完全ガイド",
     "date": "2025-11-17",
     "summary": "この記事を読むと、AI初心者がどのようにAIを活用し始めるかを具体的に理解できます。4つのステップでわかりやすく解説します。",

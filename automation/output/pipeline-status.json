@@ -1,315 +1,250 @@
 {
   "status": "success",
-  "generatedFile": "posts/2025-11-17-chatgpt.html",
-  "executedAt": "2025-11-17T12:12:33.683Z",
+  "generatedFile": "posts/2025-11-18-ai5.html",
+  "executedAt": "2025-11-18T00:16:52.668Z",
   "collector": {
     "source": "YouTube",
     "checkedSources": 17,
-    "newCandidates": 21,
-    "totalCandidates": 37,
+    "newCandidates": 7,
+    "totalCandidates": 39,
     "errors": [],
     "metrics": {
       "totalVideosFound": 45,
-      "newVideosAdded": 21,
-      "duplicatesSkipped": 8
+      "newVideosAdded": 7,
+      "duplicatesSkipped": 35
     }
   },
   "researcher": {
-    "processed": 21,
-    "succeeded": 21,
+    "processed": 7,
+    "succeeded": 7,
     "failed": 0,
     "errors": [
       {
-        "candidateId": "yt-LSYpUMvUE78",
-        "videoTitle": "【ChatGPT新機能】グループチャット機能搭載 #chatgpt #ai #チャエン #仕事効率化 #業務効率化 #line",
+        "candidateId": "yt-DjLwfacFbx8",
+        "videoTitle": "【開発効率爆UP】AI駆動の並列開発が楽になる神ツール『gtr』が登場！痒い所に手が届くgit worktreeの活用ツール",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-p6xraf9z234",
-        "videoTitle": "【AIで社員が半分クビ？】AI失業の最前線に迫る。AI時代に淘汰されない人材になるための「5つのステップ」を徹底解説。《専門家が緊急提言》",
+        "candidateId": "yt-xjJ8bhO873w",
+        "videoTitle": "【必見技術】CLAUDE公式の語るSKILLを活用してAI臭を避ける方法を徹底解説！",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-eCmXCWYGloU",
-        "videoTitle": "「**」←これ消す方法 #chatgpt",
+        "candidateId": "yt-PVxO5V1PchQ",
+        "videoTitle": "【速報】ChatGPTから「GPT-5.1」公開。GPT-5と徹底比較 #chatgpt #仕事効率化 #チャエン #ai #最新ai #ビジネス #業務効率化",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-ZNiRzCS8afI",
-        "videoTitle": "【AI動画の常識が変わる】面倒な&quot;音付け&quot;も&quot;キャラ固定&quot;もAI任せ！制作フローを根底から変える『Pollo AI 2.0』速報レビュー【1週間限定50%OFF】",
+        "candidateId": "yt-iEVEnnyOnOc",
+        "videoTitle": "【無料AI】Google Mixboardが凄く良い！画像生成ツールの理想形！",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-IZHsLovznUQ",
-        "videoTitle": "【賛否両論？】Googleフォーム、回答時に「プレビュー機能」あったら便利？",
+        "candidateId": "yt-VFQFtTbQpgQ",
+        "videoTitle": "【AI活用】今、最もオススメな無料AIツール「NotebookLM」が進化してたので改めて解説【Geminiとの組み合わせ方も】",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-qYHW5sTK_6I",
-        "videoTitle": "JSONよりも約40%のトークンを削減？！AI時代のファイル形式『TOON』について解説します！ #vibecoding #ai",
+        "candidateId": "yt-2yZLQr2Y6iw",
+        "videoTitle": "【仕事が5倍速くなる魔法】タイピングはもう古い？音声入力AI「Aqua Voice」で生産性を爆上げ。#生産性向上 #AI #仕事術 #AquaVoice #音声入力 #時短 #ビジネス",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       },
       {
-        "candidateId": "yt-3R-YTWdg0zw",
-        "videoTitle": "【最新版】今週のAIニュース厳選9選！GPT5.1にWorkspace Flowsなど、盛りだくさんでした",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-qIePtei1ipY",
-        "videoTitle": "【週刊最新AIツール&amp;ニュース】テキストや画像から3D空間を構築できるAI「Marble」/温かみのある会話のできるAIモデル「GPT-5.1」/NotebookLMに4つの新機能実装",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-sySmsCeVIZE",
-        "videoTitle": "注目AIニュース24選～ChatGPTグループチャット、Google Flows、Claude for Excel、全業務を可視化するScribe optimizeなど",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-SGnV6SP1Hgg",
-        "videoTitle": "ChatGPT-5.1が素晴らしい！なぜ好評？何がどう変わったのか解説",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-sn9U_mcWq3M",
-        "videoTitle": "【アプデ‼️】ChatGPT最新モデル「GPT-5.1」爆誕！進化した最強モデルを徹底解説（vs Gemini 2.5）",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-Vj3TGwyltV8",
-        "videoTitle": "Windows11を限界までカスタマイズして超オシャレな新Windows作ったった【ウィンドウズカスタマイズ術】",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-yr-7lcESGDo",
-        "videoTitle": "Nano BananaでLINEスタンプを作る実況RTA",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-URxwCd8t8xU",
-        "videoTitle": "LLMの次はワールドモデル？「空間知能」AI　画像・動画から世界をつくる",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-bSwwWGAEf7g",
-        "videoTitle": "【複数画像で展開を操る】設定2つだけ！新Wan2.2ノード『FMLF2V』で、始点・中間・終点を完全コントロールする方法を徹底解説｜ComfyUI",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-FUAwo7cJFEA",
-        "videoTitle": "今話題のGoogle Workspace Flowsを&quot;弱点&quot;も含め、徹底解説します！（AIワークフロー／n8n）",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-n6Z3hdLgWk0",
-        "videoTitle": "【待望アプデ‼️】Google最強AI「NotebookLM」でスプシ&amp;データ分析機能が神！使えるワークフローも解説",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-ZZ_4IfLMXCk",
-        "videoTitle": "【GPT-5.1最速解説】冷たいAIがフレンドリーで賢いAIに進化したGPT-5.1の概要と使い方！ ～ChatGPTの新機能も～",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-gQ5oQ5WOj2w",
-        "videoTitle": "Nano BananaでLINEスタンプを作るChrome拡張",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-_8sj8xmxjkE",
-        "videoTitle": "OpenAIの新しいモデル「GPT-5.1」登場！",
-        "step": "keyword-extraction",
-        "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
-      },
-      {
-        "candidateId": "yt-K2M4PAOSfEE",
-        "videoTitle": "【また進化！】NotebookLMの動画解説がまた進化！「Kawaii」が遂にリリースされました",
+        "candidateId": "yt-v0ugbT1wq78",
+        "videoTitle": "【2025最新】超時短‼️Canva×ChatGPTを使ってInstagram投稿・リールを一瞬で自動生成する方法",
         "step": "keyword-extraction",
         "message": "OpenAI API error: 403 {\n    \"error\": {\n        \"message\": \"Project `proj_Dp5YUVtPzRS9YS8EYSlI7e8T` does not have access to model `gpt-4o-mini`\",\n        \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\": \"model_not_found\"\n    }\n}\n"
       }
     ],
     "metrics": {
-      "totalProcessed": 21,
+      "totalProcessed": 7,
       "keywordExtraction": {
         "success": 0,
-        "failure": 21,
-        "fallbackUsed": 21,
+        "failure": 7,
+        "fallbackUsed": 7,
         "successRate": 0
       },
       "googleSearch": {
-        "success": 21,
+        "success": 7,
         "failure": 0,
-        "totalResults": 50,
+        "totalResults": 16,
         "successRate": 100,
         "avgResultsPerSearch": 2
       },
       "performance": {
-        "avgKeywordExtractionTimeMs": 439,
-        "avgGoogleSearchTimeMs": 28713
+        "avgKeywordExtractionTimeMs": 601,
+        "avgGoogleSearchTimeMs": 30990
       }
     }
   },
   "generator": {
     "generated": true,
-    "candidateId": "yt-LSYpUMvUE78",
+    "candidateId": "yt-p6xraf9z234",
     "postEntry": {
-      "title": "ChatGPTのグループチャット機能がもたらす業務効率化の新潮流",
-      "date": "2025-11-17",
-      "summary": "この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。",
+      "title": "AI時代に淘汰されない人材になるための5つのステップ",
+      "date": "2025-11-18",
+      "summary": "この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。",
       "tags": [
         {
-          "slug": "chatgpt",
-          "label": "ChatGPT",
-          "category": "ツール",
-          "style": "accent-purple"
-        },
-        {
           "slug": "ai",
-          "label": "AI",
+          "label": "AI失業",
           "category": "その他",
           "style": "accent-neutral"
         },
         {
-          "slug": "productivity",
-          "label": "業務効率化",
+          "slug": "tag-2",
+          "label": "労働市場",
+          "category": "その他",
+          "style": "accent-neutral"
+        },
+        {
+          "slug": "tag-3",
+          "label": "キャリア戦略",
+          "category": "その他",
+          "style": "accent-neutral"
+        },
+        {
+          "slug": "automation",
+          "label": "業務自動化",
           "category": "ユースケース",
-          "style": "accent-lime"
+          "style": "accent-teal"
         },
         {
-          "slug": "tag-4",
-          "label": "グループチャット",
-          "category": "その他",
-          "style": "accent-neutral"
-        },
-        {
-          "slug": "tag-5",
-          "label": "テクノロジー",
+          "slug": "ai-5",
+          "label": "AI適応",
           "category": "その他",
           "style": "accent-neutral"
         }
       ],
-      "url": "posts/2025-11-17-chatgpt.html",
-      "slug": "2025-11-17-chatgpt"
+      "url": "posts/2025-11-18-ai5.html",
+      "slug": "2025-11-18-ai5"
     },
-    "draftUrl": "posts/2025-11-17-chatgpt.html",
-    "topicKey": "chatgpt-chatgpt-ai-line",
+    "draftUrl": "posts/2025-11-18-ai5.html",
+    "topicKey": "aiaiai5",
     "article": {
-      "title": "ChatGPTのグループチャット機能がもたらす業務効率化の新潮流",
-      "summary": "この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。",
-      "intro": "AI技術の進化は、私たちの働き方に大きな変革をもたらしています。その中でも、OpenAIが提供するChatGPTの新機能であるグループチャットは、特に注目されています。この機能は、AIが単なる情報提供者から、よりインタラクティブで協力的なパートナーへと進化することを示しています。この記事では、ChatGPTのグループチャット機能がどのように業務効率化を実現するのか、その技術的背景と実践的な応用例を深掘りします。",
-      "conclusion": "ChatGPTのグループチャット機能は、AI技術の進化を象徴するものであり、業務効率化に大きな影響を与えると考えられます。今後、AIがより多くの業務プロセスに組み込まれることで、働き方はさらに変革を遂げるでしょう。導入を検討する企業は、まずは小規模なプロジェクトで試験運用を行い、AIの効果を実感することをお勧めします。また、技術的な課題に対しては、常に最新の情報をキャッチアップし、適切な対策を講じることが重要です。",
+      "title": "AI時代に淘汰されない人材になるための5つのステップ",
+      "summary": "この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。",
+      "intro": "AI技術の進化は、労働市場に大きな変革をもたらしています。特に、AIによる自動化が進む中で、多くの職種がその影響を受け、従来の業務がAIによって代替されるリスクが高まっています。この記事では、AI時代において淘汰されないための具体的なステップを探ります。これにより、読者は自身のキャリアをAI時代に適応させるための実践的な方法を理解できるでしょう。",
+      "conclusion": "AI時代において淘汰されないためには、継続的な学習とスキルアップが不可欠です。デジタルリテラシーを向上させ、クリエイティブ思考を磨くことで、AIと共存しながら新たな価値を創出することができます。具体的なステップとして、オンラインコースでの学習や業界ネットワークの活用を推奨します。これにより、労働市場での競争力を維持し、AI時代においても活躍できる人材となることが可能です。",
       "tags": [
         {
-          "slug": "chatgpt",
-          "label": "ChatGPT",
-          "category": "ツール",
-          "style": "accent-purple"
-        },
-        {
           "slug": "ai",
-          "label": "AI",
+          "label": "AI失業",
           "category": "その他",
           "style": "accent-neutral"
         },
         {
-          "slug": "productivity",
-          "label": "業務効率化",
+          "slug": "tag-2",
+          "label": "労働市場",
+          "category": "その他",
+          "style": "accent-neutral"
+        },
+        {
+          "slug": "tag-3",
+          "label": "キャリア戦略",
+          "category": "その他",
+          "style": "accent-neutral"
+        },
+        {
+          "slug": "automation",
+          "label": "業務自動化",
           "category": "ユースケース",
-          "style": "accent-lime"
+          "style": "accent-teal"
         },
         {
-          "slug": "tag-4",
-          "label": "グループチャット",
-          "category": "その他",
-          "style": "accent-neutral"
-        },
-        {
-          "slug": "tag-5",
-          "label": "テクノロジー",
+          "slug": "ai-5",
+          "label": "AI適応",
           "category": "その他",
           "style": "accent-neutral"
         }
       ],
       "sections": [
         {
-          "heading": "ChatGPTグループチャット機能の技術的背景",
-          "overview": "このセクションでは、ChatGPTのグループチャット機能がどのように構築されているか、その技術的な基盤を探ります。",
+          "heading": "AIによる労働市場の変革",
+          "overview": "AI技術の進化がどのように労働市場を変革しているのか、その現状と未来を探ります。",
           "subSections": [
             {
-              "heading": "自然言語処理の進化",
-              "body": "ChatGPTのグループチャット機能は、自然言語処理（NLP）の進化に大きく依存しています。特に、Transformerアーキテクチャの改良により、複数のユーザーからの入力を同時に処理し、適切な応答を生成する能力が向上しています。これにより、AIが複数のコンテキストを同時に理解し、より一貫した会話を提供できるようになりました。"
+              "heading": "AIの自動化がもたらす影響",
+              "body": "AIの進化により、多くの業務が自動化されるようになりました。特に、製造業やサービス業など、ルーチンワークが多い分野では、AIの導入が進んでいます。これにより、従来の業務がAIに代替されるリスクが高まっており、労働者は新たなスキルを習得する必要に迫られています。"
             },
             {
-              "heading": "リアルタイムデータ処理",
-              "body": "グループチャット機能では、リアルタイムでのデータ処理が不可欠です。ChatGPTは、分散システムを活用してデータを迅速に処理し、遅延を最小限に抑えています。これにより、ユーザーはストレスなくスムーズに会話を進められ、業務の効率化に寄与します。"
+              "heading": "AI時代の新しい職種の台頭",
+              "body": "AIの進化は新しい職種を生み出しています。データサイエンティストやAIエンジニアなど、AI技術を活用する職種が増加しています。これらの職種は、AIの専門知識を持つ人材が求められており、今後も需要が高まると予想されます。"
             }
           ]
         },
         {
-          "heading": "業務効率化への具体的な応用例",
-          "overview": "ここでは、ChatGPTのグループチャット機能が実際にどのように業務効率化を実現するか、具体的な応用例を紹介します。",
+          "heading": "AI時代に必要なスキルセット",
+          "overview": "AI時代において求められるスキルセットを具体的に解説し、どのように習得するかを示します。",
           "subSections": [
             {
-              "heading": "プロジェクト管理の改善",
-              "body": "ChatGPTのグループチャット機能は、プロジェクト管理ツールと連携することで、タスクの進捗管理やメンバー間のコミュニケーションを効率化します。例えば、TrelloやAsanaといったツールと統合することで、タスクの更新やリマインダーを自動化し、プロジェクトの透明性を高めます。"
+              "heading": "デジタルリテラシーの向上",
+              "body": "AI時代においては、デジタルリテラシーの向上が不可欠です。基本的なプログラミングスキルやデータ分析能力はもちろん、AIの仕組みを理解することが求められます。これにより、AIを活用した業務改善や新しいビジネスモデルの構築が可能になります。"
             },
             {
-              "heading": "カスタマーサポートの強化",
-              "body": "カスタマーサポートにおいても、グループチャット機能は大いに役立ちます。複数のサポートエージェントが同時に顧客の問い合わせに対応できるため、応答時間を短縮し、顧客満足度を向上させることが可能です。また、AIが過去の問い合わせ履歴を参照し、より的確な回答を提供することもできます。"
+              "heading": "クリエイティブ思考と問題解決能力",
+              "body": "AIが得意とするのはデータ処理や分析ですが、創造性や問題解決能力は人間にしかできない領域です。これらのスキルを磨くことで、AIと共存しながら新しい価値を創出することができます。"
             }
           ]
         },
         {
-          "heading": "AI技術の進化と今後の展望",
-          "overview": "AI技術の進化がもたらす未来の働き方について考察し、ChatGPTのグループチャット機能がどのようにその一端を担うかを探ります。",
+          "heading": "AI時代におけるキャリア戦略",
+          "overview": "AI時代においてどのようにキャリアを構築するか、その戦略を解説します。",
           "subSections": [
             {
-              "heading": "AIと人間の協働の未来",
-              "body": "ChatGPTのようなAIは、単なるツールとしての役割を超え、チームの一員として機能することが期待されています。AIが人間の意思決定をサポートし、より高度な業務を担うことで、人間は創造的なタスクに集中できるようになります。"
+              "heading": "継続的な学習とスキルアップ",
+              "body": "AI時代においては、継続的な学習が重要です。新しい技術やトレンドを常にキャッチアップし、自身のスキルセットをアップデートすることで、労働市場での競争力を維持できます。オンラインコースや専門書を活用し、自己研鑽を続けることが求められます。"
             },
             {
-              "heading": "技術的な課題と解決策",
-              "body": "AIの導入に伴う技術的な課題も存在します。データプライバシーの確保や、AIのバイアスを排除するためのアルゴリズムの改善が求められています。これらの課題に対処することで、AIの信頼性と安全性を高め、より広範な導入が可能となるでしょう。"
+              "heading": "ネットワークの構築と活用",
+              "body": "業界内でのネットワークを構築し、活用することも重要です。AI関連のイベントやコミュニティに参加し、最新情報を入手するとともに、同じ志を持つ人々との交流を深めることで、新たなビジネスチャンスを掴むことができます。"
             }
           ]
         }
       ],
-      "slug": "2025-11-17-chatgpt",
-      "date": "2025-11-17",
-      "htmlContent": "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>ChatGPTのグループチャット機能がもたらす業務効率化の新潮流 | AI情報ブログ</title>\n  <meta name=\"description\" content=\"この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。\">\n\n  <script src=\"../assets/js/analytics.js\"></script>\n\n  <!-- ファビコン -->\n  <link rel=\"icon\" type=\"image/svg+xml\" href=\"../assets/img/logo.svg\">\n  <link rel=\"apple-touch-icon\" href=\"../assets/img/logo.svg\">\n\n  <!-- Open Graph / SNS共有 -->\n  <meta property=\"og:type\" content=\"article\">\n  <meta property=\"og:title\" content=\"ChatGPTのグループチャット機能がもたらす業務効率化の新潮流 | AI情報ブログ\">\n  <meta property=\"og:description\" content=\"この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。\">\n  <meta property=\"og:image\" content=\"../assets/img/ogp-default.svg\">\n  <meta property=\"og:site_name\" content=\"AI情報ブログ\">\n  <meta property=\"og:locale\" content=\"ja_JP\">\n  <meta property=\"article:published_time\" content=\"2025.11.17T00:00:00+09:00\">\n\n  <!-- Twitter Card -->\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:title\" content=\"ChatGPTのグループチャット機能がもたらす業務効率化の新潮流 | AI情報ブログ\">\n  <meta name=\"twitter:description\" content=\"この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。\">\n  <meta name=\"twitter:image\" content=\"../assets/img/ogp-default.svg\">\n\n  <link rel=\"stylesheet\" href=\"../assets/css/style.css\">\n</head>\n<body class=\"article-page\">\n  <!-- ヘッダーはcomponents.jsで動的に挿入されます -->\n\n  <main>\n    <article class=\"article-detail\">\n      <section class=\"inner article-hero\">\n        <p class=\"article-eyebrow\">Daily Briefing</p>\n        <div class=\"article-hero-main\">\n          <p class=\"post-meta\">2025.11.17</p>\n          <h1>ChatGPTのグループチャット機能がもたらす業務効率化の新潮流</h1>\n          <p class=\"article-summary\">この記事を読むと、ChatGPTの新たなグループチャット機能がどのように業務効率化を促進し、AIの活用を次のレベルに引き上げるかを理解できます。</p>\n        </div>\n\n        <ul class=\"article-tags\">\n          <li class=\"tag\" data-tag-slug=\"chatgpt\" data-tag-category=\"ツール\" data-tag-style=\"accent-purple\">ChatGPT</li>\n          <li class=\"tag\" data-tag-slug=\"ai\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">AI</li>\n          <li class=\"tag\" data-tag-slug=\"productivity\" data-tag-category=\"ユースケース\" data-tag-style=\"accent-lime\">業務効率化</li>\n          <li class=\"tag\" data-tag-slug=\"tag-4\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">グループチャット</li>\n          <li class=\"tag\" data-tag-slug=\"tag-5\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">テクノロジー</li>\n        </ul>\n      </section>\n\n      <div class=\"inner article-grid\">\n        <div class=\"article-main-column\">\n          <article class=\"post-article article-content\">\n\n        <section class=\"article-intro-block\">\n          <div class=\"intro-content\">\n<p>AI技術の進化は、私たちの働き方に大きな変革をもたらしています。その中でも、OpenAIが提供するChatGPTの新機能であるグループチャットは、特に注目されています。この機能は、AIが単なる情報提供者から、よりインタラクティブで協力的なパートナーへと進化することを示しています。この記事では、ChatGPTのグループチャット機能がどのように業務効率化を実現するのか、その技術的背景と実践的な応用例を深掘りします。</p>\n          </div>\n        </section>\n\n            <section class=\"article-section\" id=\"chatgpt\">\n              <h2 class=\"section-heading\">ChatGPTグループチャット機能の技術的背景</h2>\n              <div class=\"section-overview\"><p>このセクションでは、ChatGPTのグループチャット機能がどのように構築されているか、その技術的な基盤を探ります。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">自然言語処理の進化</h3>\n                <div class=\"subsection-body\">\n                  <p>ChatGPTのグループチャット機能は、自然言語処理（NLP）の進化に大きく依存しています。特に、Transformerアーキテクチャの改良により、複数のユーザーからの入力を同時に処理し、適切な応答を生成する能力が向上しています。これにより、AIが複数のコンテキストを同時に理解し、より一貫した会話を提供できるようになりました。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">リアルタイムデータ処理</h3>\n                <div class=\"subsection-body\">\n                  <p>グループチャット機能では、リアルタイムでのデータ処理が不可欠です。ChatGPTは、分散システムを活用してデータを迅速に処理し、遅延を最小限に抑えています。これにより、ユーザーはストレスなくスムーズに会話を進められ、業務の効率化に寄与します。</p>\n                </div>\n              </div>\n            </section>\n\n            <section class=\"article-section\" id=\"section-2\">\n              <h2 class=\"section-heading\">業務効率化への具体的な応用例</h2>\n              <div class=\"section-overview\"><p>ここでは、ChatGPTのグループチャット機能が実際にどのように業務効率化を実現するか、具体的な応用例を紹介します。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">プロジェクト管理の改善</h3>\n                <div class=\"subsection-body\">\n                  <p>ChatGPTのグループチャット機能は、プロジェクト管理ツールと連携することで、タスクの進捗管理やメンバー間のコミュニケーションを効率化します。例えば、TrelloやAsanaといったツールと統合することで、タスクの更新やリマインダーを自動化し、プロジェクトの透明性を高めます。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">カスタマーサポートの強化</h3>\n                <div class=\"subsection-body\">\n                  <p>カスタマーサポートにおいても、グループチャット機能は大いに役立ちます。複数のサポートエージェントが同時に顧客の問い合わせに対応できるため、応答時間を短縮し、顧客満足度を向上させることが可能です。また、AIが過去の問い合わせ履歴を参照し、より的確な回答を提供することもできます。</p>\n                </div>\n              </div>\n            </section>\n\n            <section class=\"article-section\" id=\"ai\">\n              <h2 class=\"section-heading\">AI技術の進化と今後の展望</h2>\n              <div class=\"section-overview\"><p>AI技術の進化がもたらす未来の働き方について考察し、ChatGPTのグループチャット機能がどのようにその一端を担うかを探ります。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">AIと人間の協働の未来</h3>\n                <div class=\"subsection-body\">\n                  <p>ChatGPTのようなAIは、単なるツールとしての役割を超え、チームの一員として機能することが期待されています。AIが人間の意思決定をサポートし、より高度な業務を担うことで、人間は創造的なタスクに集中できるようになります。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">技術的な課題と解決策</h3>\n                <div class=\"subsection-body\">\n                  <p>AIの導入に伴う技術的な課題も存在します。データプライバシーの確保や、AIのバイアスを排除するためのアルゴリズムの改善が求められています。これらの課題に対処することで、AIの信頼性と安全性を高め、より広範な導入が可能となるでしょう。</p>\n                </div>\n              </div>\n            </section>\n          </article>\n        </div>\n\n        <aside class=\"article-sidebar\" aria-label=\"補足情報\">\n          <section class=\"article-card article-toc\">\n            <p class=\"article-card-label\">目次</p>\n            <ol class=\"toc-list\" data-toc-list aria-live=\"polite\"></ol>\n          </section>\n        </aside>\n      </div>\n\n      \n      <section class=\"article-conclusion inner\">\n        <h2 class=\"conclusion-heading\">まとめ</h2>\n        <div class=\"conclusion-content\">\n<p>ChatGPTのグループチャット機能は、AI技術の進化を象徴するものであり、業務効率化に大きな影響を与えると考えられます。今後、AIがより多くの業務プロセスに組み込まれることで、働き方はさらに変革を遂げるでしょう。導入を検討する企業は、まずは小規模なプロジェクトで試験運用を行い、AIの効果を実感することをお勧めします。また、技術的な課題に対しては、常に最新の情報をキャッチアップし、適切な対策を講じることが重要です。</p>\n        </div>\n      </section>\n    </article>\n  </main>\n\n  <!-- フッターはcomponents.jsで動的に挿入されます -->\n\n  <script src=\"../assets/js/components.js\"></script>\n  <script src=\"../assets/js/main.js\" defer></script>\n  <script src=\"../assets/js/article.js\" defer></script>\n</body>\n</html>",
-      "relativePath": "posts/2025-11-17-chatgpt.html",
+      "slug": "2025-11-18-ai5",
+      "date": "2025-11-18",
+      "htmlContent": "<!DOCTYPE html>\n<html lang=\"ja\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>AI時代に淘汰されない人材になるための5つのステップ | AI情報ブログ</title>\n  <meta name=\"description\" content=\"この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。\">\n\n  <script src=\"../assets/js/analytics.js\"></script>\n\n  <!-- ファビコン -->\n  <link rel=\"icon\" type=\"image/svg+xml\" href=\"../assets/img/logo.svg\">\n  <link rel=\"apple-touch-icon\" href=\"../assets/img/logo.svg\">\n\n  <!-- Open Graph / SNS共有 -->\n  <meta property=\"og:type\" content=\"article\">\n  <meta property=\"og:title\" content=\"AI時代に淘汰されない人材になるための5つのステップ | AI情報ブログ\">\n  <meta property=\"og:description\" content=\"この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。\">\n  <meta property=\"og:image\" content=\"../assets/img/ogp-default.svg\">\n  <meta property=\"og:site_name\" content=\"AI情報ブログ\">\n  <meta property=\"og:locale\" content=\"ja_JP\">\n  <meta property=\"article:published_time\" content=\"2025.11.18T00:00:00+09:00\">\n\n  <!-- Twitter Card -->\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:title\" content=\"AI時代に淘汰されない人材になるための5つのステップ | AI情報ブログ\">\n  <meta name=\"twitter:description\" content=\"この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。\">\n  <meta name=\"twitter:image\" content=\"../assets/img/ogp-default.svg\">\n\n  <link rel=\"stylesheet\" href=\"../assets/css/style.css\">\n</head>\n<body class=\"article-page\">\n  <!-- ヘッダーはcomponents.jsで動的に挿入されます -->\n\n  <main>\n    <article class=\"article-detail\">\n      <section class=\"inner article-hero\">\n        <p class=\"article-eyebrow\">Daily Briefing</p>\n        <div class=\"article-hero-main\">\n          <p class=\"post-meta\">2025.11.18</p>\n          <h1>AI時代に淘汰されない人材になるための5つのステップ</h1>\n          <p class=\"article-summary\">この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。</p>\n        </div>\n\n        <ul class=\"article-tags\">\n          <li class=\"tag\" data-tag-slug=\"ai\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">AI失業</li>\n          <li class=\"tag\" data-tag-slug=\"tag-2\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">労働市場</li>\n          <li class=\"tag\" data-tag-slug=\"tag-3\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">キャリア戦略</li>\n          <li class=\"tag\" data-tag-slug=\"automation\" data-tag-category=\"ユースケース\" data-tag-style=\"accent-teal\">業務自動化</li>\n          <li class=\"tag\" data-tag-slug=\"ai-5\" data-tag-category=\"その他\" data-tag-style=\"accent-neutral\">AI適応</li>\n        </ul>\n      </section>\n\n      <div class=\"inner article-grid\">\n        <div class=\"article-main-column\">\n          <article class=\"post-article article-content\">\n\n        <section class=\"article-intro-block\">\n          <div class=\"intro-content\">\n<p>AI技術の進化は、労働市場に大きな変革をもたらしています。特に、AIによる自動化が進む中で、多くの職種がその影響を受け、従来の業務がAIによって代替されるリスクが高まっています。この記事では、AI時代において淘汰されないための具体的なステップを探ります。これにより、読者は自身のキャリアをAI時代に適応させるための実践的な方法を理解できるでしょう。</p>\n          </div>\n        </section>\n\n            <section class=\"article-section\" id=\"ai\">\n              <h2 class=\"section-heading\">AIによる労働市場の変革</h2>\n              <div class=\"section-overview\"><p>AI技術の進化がどのように労働市場を変革しているのか、その現状と未来を探ります。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">AIの自動化がもたらす影響</h3>\n                <div class=\"subsection-body\">\n                  <p>AIの進化により、多くの業務が自動化されるようになりました。特に、製造業やサービス業など、ルーチンワークが多い分野では、AIの導入が進んでいます。これにより、従来の業務がAIに代替されるリスクが高まっており、労働者は新たなスキルを習得する必要に迫られています。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">AI時代の新しい職種の台頭</h3>\n                <div class=\"subsection-body\">\n                  <p>AIの進化は新しい職種を生み出しています。データサイエンティストやAIエンジニアなど、AI技術を活用する職種が増加しています。これらの職種は、AIの専門知識を持つ人材が求められており、今後も需要が高まると予想されます。</p>\n                </div>\n              </div>\n            </section>\n\n            <section class=\"article-section\" id=\"ai\">\n              <h2 class=\"section-heading\">AI時代に必要なスキルセット</h2>\n              <div class=\"section-overview\"><p>AI時代において求められるスキルセットを具体的に解説し、どのように習得するかを示します。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">デジタルリテラシーの向上</h3>\n                <div class=\"subsection-body\">\n                  <p>AI時代においては、デジタルリテラシーの向上が不可欠です。基本的なプログラミングスキルやデータ分析能力はもちろん、AIの仕組みを理解することが求められます。これにより、AIを活用した業務改善や新しいビジネスモデルの構築が可能になります。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">クリエイティブ思考と問題解決能力</h3>\n                <div class=\"subsection-body\">\n                  <p>AIが得意とするのはデータ処理や分析ですが、創造性や問題解決能力は人間にしかできない領域です。これらのスキルを磨くことで、AIと共存しながら新しい価値を創出することができます。</p>\n                </div>\n              </div>\n            </section>\n\n            <section class=\"article-section\" id=\"ai\">\n              <h2 class=\"section-heading\">AI時代におけるキャリア戦略</h2>\n              <div class=\"section-overview\"><p>AI時代においてどのようにキャリアを構築するか、その戦略を解説します。</p></div>\n              \n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">継続的な学習とスキルアップ</h3>\n                <div class=\"subsection-body\">\n                  <p>AI時代においては、継続的な学習が重要です。新しい技術やトレンドを常にキャッチアップし、自身のスキルセットをアップデートすることで、労働市場での競争力を維持できます。オンラインコースや専門書を活用し、自己研鑽を続けることが求められます。</p>\n                </div>\n              </div>\n\n              <div class=\"article-subsection\">\n                <h3 class=\"subsection-heading\">ネットワークの構築と活用</h3>\n                <div class=\"subsection-body\">\n                  <p>業界内でのネットワークを構築し、活用することも重要です。AI関連のイベントやコミュニティに参加し、最新情報を入手するとともに、同じ志を持つ人々との交流を深めることで、新たなビジネスチャンスを掴むことができます。</p>\n                </div>\n              </div>\n            </section>\n          </article>\n        </div>\n\n        <aside class=\"article-sidebar\" aria-label=\"補足情報\">\n          <section class=\"article-card article-toc\">\n            <p class=\"article-card-label\">目次</p>\n            <ol class=\"toc-list\" data-toc-list aria-live=\"polite\"></ol>\n          </section>\n        </aside>\n      </div>\n\n      \n      <section class=\"article-conclusion inner\">\n        <h2 class=\"conclusion-heading\">まとめ</h2>\n        <div class=\"conclusion-content\">\n<p>AI時代において淘汰されないためには、継続的な学習とスキルアップが不可欠です。デジタルリテラシーを向上させ、クリエイティブ思考を磨くことで、AIと共存しながら新たな価値を創出することができます。具体的なステップとして、オンラインコースでの学習や業界ネットワークの活用を推奨します。これにより、労働市場での競争力を維持し、AI時代においても活躍できる人材となることが可能です。</p>\n        </div>\n      </section>\n    </article>\n  </main>\n\n  <!-- フッターはcomponents.jsで動的に挿入されます -->\n\n  <script src=\"../assets/js/components.js\"></script>\n  <script src=\"../assets/js/main.js\" defer></script>\n  <script src=\"../assets/js/article.js\" defer></script>\n</body>\n</html>",
+      "relativePath": "posts/2025-11-18-ai5.html",
       "source": {
         "name": "chaen-ai-lab",
         "url": "https://www.youtube.com/@chaen-ai-lab"
       },
       "video": {
-        "title": "【ChatGPT新機能】グループチャット機能搭載 #chatgpt #ai #チャエン #仕事効率化 #業務効率化 #line",
-        "url": "https://www.youtube.com/watch?v=LSYpUMvUE78"
+        "title": "【AIで社員が半分クビ？】AI失業の最前線に迫る。AI時代に淘汰されない人材になるための「5つのステップ」を徹底解説。《専門家が緊急提言》",
+        "url": "https://www.youtube.com/watch?v=p6xraf9z234"
       },
-      "searchSummaries": []
+      "searchSummaries": [
+        {
+          "title": "東京海上の内幕を暴露しよう",
+          "url": "https://egg.5ch.net/test/read.cgi/hoken/1392777304/46-n",
+          "snippet": "5ちゃんねるの保険業界α＠5ch掲示板での議論に参加しましょう：「東京海上の内幕を暴露しよう」。",
+          "summary": "この記事は、東京海上に関する情報を5chの掲示板から集めたもので、特に企業の内部事情や給与に関する議論が中心となっています。主要な技術的発見や事実としては、東京海上の平均年収が1,394万円であることが挙げられます。これは、一般的な日本企業の平均年収と比較して非常に高い水準であり、同社が高収入の職場であることを示しています。\n\n具体的な数値としては、掲示板上での議論において、東京海上の給与が他の企業と比較してどの程度高いかが話題になっています。特に、年収1,394万円という数字は、他の保険業界の企業と比較しても高い水準であることが指摘されています。この数値は、同社が業界内での競争力を維持するために、優秀な人材を引きつけるための戦略の一環であると考えられます。\n\n実装上の制約や注意点としては、掲示板の情報が匿名であり、信憑性に欠ける可能性があることが挙げられます。情報の正確性を確認するためには、他の信頼できる情報源と照らし合わせることが重要です。また、企業の内部情報が外部に漏れることによるリスクも考慮する必要があります。企業としては、情報管理の強化が求められるでしょう。\n\n今後の展望や応用シーンについては、東京海上が高い給与水準を維持することで、優秀な人材を確保し続けることが期待されます。これにより、同社は今後も保険業界での競争力を維持し、さらなる成長を遂げる可能性があります。また、他の企業にとっても、東京海上の給与水準はベンチマークとなり得るため、業界全体の給与水準の引き上げにつながる可能性があります。\n\n総じて、この記事は東京海上の給与水準に関する情報を中心に、企業の内部事情に関する議論を提供していますが、情報の信憑性には注意が必要です。"
+        },
+        {
+          "title": "第一生命セックス族 [無断転載禁止]©2ch.net - 5ちゃんねる掲示板",
+          "url": "https://itest.5ch.net/egg/test/read.cgi/hoken/1461762856/645-n",
+          "snippet": "こういうことになるという実例。 日野OL不倫放火殺人事件（ひのOLふりんほうかさつじんじけん）とは1993年12月14日、東京都日野市で発生した放火殺人事件であり、幼児2人が焼 ...",
+          "summary": "保険業界板のスレッド | itest.5ch.net news/1654610717 news4plus/1650072491 poverty/1666940197 */9245000000 保険業界 5ちゃんねる 閉じる この画像を開く このIDのレスを非表示 この名前のレスを非表示 トップページ 保険業界 全て見る 1-100 最新50 1 全て 戻る スレッド一覧 戻る メニュー 表示 中 文字サイズの変更 投稿フォーム 機能 レス検索 ページの上へ移動 ページの下へ移動 ページ移動 トップ スレッド一覧 スレッド検索 設定 PC版 戻る 返信 --> コメントを投稿する 最新コメを読み込む 全て見る 1-100 最新50 1 全て --> 書き込み 書き込み 閉じる sageる クリア ＊書き込み反映には時間が掛かる場合があります＊ ＊ ＵＰＬＩＦＴ しています＊ ＵＰＬＩＦＴを利用して書き込む ＵＰＬＩＦＴにログイン --> 関連スレッド一覧 過去ログ 保険業界スレッド一覧 --> --> &times; --> &times; --> こういうことになるという実例。 日野OL不倫放火殺人事件（ひのOLふりんほうかさつじんじけん）とは1993年12月14日、東京都日野市で発生した放火殺人事件であり、幼児2人が焼 ..."
+        },
+        {
+          "title": "第一生命セックス族 [無断転載禁止]©2ch.net",
+          "url": "https://egg.5ch.net/test/read.cgi/hoken/1461762856",
+          "snippet": "5ちゃんねるの保険業界α＠5ch掲示板での議論に参加しましょう：「○○○○第一生命セックス族○○○○ [無断転載禁止]©2ch.net」。",
+          "summary": "����������ꐶ���Z�b�N�X���������� [���f�]�ڋ֎~]&#169;2ch.net �T�����˂� �� �ی��ƊE����5ch�f���� UPLIFT ���O�C�� 1002�R�����g 507KB ����������ꐶ���Z�b�N�X���������� [���f�]�ڋ֎~]&#169;2ch.net �X�����܂Ƃ߂� 5ch����p �� gzo.ai �S�� �O100 ��100 �ŐV50 ���X����1000�𒴂��Ă��܂��B����ȏ㏑�����݂͂ł��܂���B 1 �������ׂ̖̈��������� �C�� | ��C 2016/04/27(��) 22:14:16.05 ���ۃi���o�[�����͑�ꐶ�������I 2 �������ׂ̖̈��������� �C�� | ��C 2016/04/27(��) 23:10:25.40 �ی������Ă�(T_T) 3 �������ׂ̖̈��������� �C�� | ��C 2016/04/27(��) 23:20:06.69 ���c�Ƃ̘b�𕷂���������( �G�L�D�M) 4 �������ׂ̖̈��������� �C�� | ��C 2016/04/27(��) 23:29:55.14 �O�E�̖��c�ƂŎq��R�Ȗ^ 5 �������ׂ̖̈��������� �C�� | ��C 2016/04/28(��) 12:17:11.32 ���{�ڂ����b�ŗL���ɂȂ����Ⴂ�܂����ˁB�B�B�B 6 �������ׂ̖̈��������� �C�� | ��C 2016/04/30(�y) 19:54:32.54 ���{�����ɐ�񂶂ăZ�b�N�"
+        }
+      ]
     }
   },
   "publisher": {
     "addedPost": true,
-    "totalPosts": 7,
-    "outputFile": "posts/2025-11-17-chatgpt.html"
+    "totalPosts": 8,
+    "outputFile": "posts/2025-11-18-ai5.html"
   }
 }
