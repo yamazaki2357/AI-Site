@@ -242,6 +242,7 @@ YouTube動画 → Collector → Researcher → Generator → Publisher → 公�
 - フィールド追加時は `posts/` 内の実ページと `index.html` のレンダリングに影響するので schema を必ず更新
 - パイプラインサマリーは `automation/output/pipeline-status.json` に保存し、静的サイトが直接読み出す
 - キー名の変更は `index.html` 側のフェッチ処理も要修正
+- 手動で `posts/` にHTML記事を追加した場合は、同じSlugとURLで `data/posts.json` にエントリを必ず追加する。Publisherは `posts/` を検証し、未登録ファイルがあると `pipeline-status.json` の `validation.warnings` とコンソールログで警告を出す。
 
 **実装**: `automation/publisher/index.js`
 

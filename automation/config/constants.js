@@ -35,9 +35,16 @@ const RATE_LIMITS = {
   SEARCH_RESULT_WAIT_MS: 500,
 };
 
+// 検証関連
+const VALIDATION = {
+  ORPHAN_POST_CHECK_ENABLED: true,
+  ORPHAN_POST_IGNORE: ['article-template.html'],
+};
+
 module.exports = {
   COLLECTOR,
   RESEARCHER,
   GENERATOR,
   RATE_LIMITS,
+  VALIDATION,
 };

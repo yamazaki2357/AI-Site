@@ -1,5 +1,45 @@
 [
   {
+    "title": "AI駆動開発とは？開発者の生産性を劇的に向上させる新しい開発手法",
+    "date": "2025-11-18",
+    "summary": "GitHub Copilot、ChatGPT、Claude Codeなど、AIツールを活用した「AI駆動開発」の考え方と導入手順、現場での実践ポイントをまとめました。",
+    "tags": [
+      {
+        "slug": "ai-development",
+        "label": "AI駆動開発",
+        "category": "開発",
+        "style": "accent-blue"
+      },
+      {
+        "slug": "github-copilot",
+        "label": "GitHub Copilot",
+        "category": "ツール",
+        "style": "accent-purple"
+      },
+      {
+        "slug": "productivity",
+        "label": "生産性向上",
+        "category": "ビジネス",
+        "style": "accent-teal"
+      },
+      {
+        "slug": "coding-assistant",
+        "label": "コーディング支援",
+        "category": "ツール",
+        "style": "accent-purple"
+      },
+      {
+        "slug": "developer-tools",
+        "label": "開発ツール",
+        "category": "開発",
+        "style": "accent-blue"
+      }
+    ],
+    "url": "posts/2025-11-18-ai-driven-development.html",
+    "slug": "2025-11-18-ai-driven-development",
+    "publishedAt": "2025-11-17T15:00:00.000Z"
+  },
+  {
     "title": "AI時代に淘汰されない人材になるための5つのステップ",
     "date": "2025-11-18",
     "summary": "この記事では、AIの進化が労働市場に与える影響と、AI時代において淘汰されないための具体的なステップを解説します。",

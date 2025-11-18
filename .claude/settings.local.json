@@ -15,6 +15,7 @@
       "Bash(git commit:*)",
       "Bash(git config:*)",
       "Bash(node automation/generator/index.js:*)",
+      "Bash(node automation/publisher/index.js:*)",
       "Bash(python3:*)",
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",

@@ -8,6 +8,8 @@
 const fs = require('fs');
 const path = require('path');
 const { readJson, writeJson, ensureDir } = require('../lib/io');
+const { VALIDATION } = require('../config/constants');
+const { findOrphanPosts } = require('../lib/postValidation');
 
 const root = path.resolve(__dirname, '..', '..');
 const postsDir = path.join(root, 'posts');
@@ -124,6 +126,31 @@ const runPublisher = async ({ collectorResult, researcherResult, generatorResult
     console.log('[publisher] generator出力が無いため、記事作成とposts.json更新をスキップします。');
   }
 
+  const validationWarnings = [];
+  if (VALIDATION?.ORPHAN_POST_CHECK_ENABLED) {
+    try {
+      const orphanPosts = await findOrphanPosts();
+      if (orphanPosts.length > 0) {
+        const missing = orphanPosts.map((entry) => entry.url);
+        validationWarnings.push({
+          type: 'orphan-posts',
+          message: 'posts/ ディレクトリ内に data/posts.json へ登録されていない記事があります。',
+          files: missing,
+        });
+        console.warn(
+          '[publisher] ⚠️  data/posts.json 未登録の記事ファイルを検出しました:',
+          missing.join(', '),
+        );
+      }
+    } catch (error) {
+      validationWarnings.push({
+        type: 'orphan-posts',
+        message: `孤立記事チェックに失敗しました: ${error.message}`,
+      });
+      console.warn('[publisher] ⚠️  孤立記事チェックに失敗しました:', error.message);
+    }
+  }
+
   const status = {
     status: generatedFilePath ? 'success' : 'skipped',
     generatedFile: generatedFilePath,
@@ -137,6 +164,11 @@ const runPublisher = async ({ collectorResult, researcherResult, generatorResult
       outputFile: generatedFilePath,
     },
   };
+  if (validationWarnings.length > 0) {
+    status.validation = {
+      warnings: validationWarnings,
+    };
+  }
 
   return writeStatusSnapshot(status);
 };
