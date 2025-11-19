@@ -1,6 +1,35 @@
 /**
  * @fileoverview テンプレートレンダリングサービス
- * 記事データとHTMLテンプレートを組み合わせて、最終的な記事HTMLを生成する機能を提供します。
+ *
+ * 記事データとHTMLテンプレートを組み合わせて、最終的な記事HTMLファイルを生成する機能を提供します。
+ *
+ * 【主な機能】
+ *
+ * 1. テンプレートの読み込みとキャッシング
+ *    - `automation/templates/article.html` を読み込み、メモリにキャッシュ
+ *    - 2回目以降の呼び出しではキャッシュから取得し、高速化
+ *
+ * 2. プレースホルダーの置換
+ *    - テンプレート内の `{{TITLE}}`, `{{SUMMARY}}` などのプレースホルダーを実際の値に置換
+ *    - 記事タイトル、概要、日付、タグ、セクションなどを動的に埋め込み
+ *
+ * 3. HTMLマークアップの生成
+ *    - タグリスト: 記事に紐づくタグを色分けされたタグ要素として生成
+ *    - セクション: H2見出しと本文、サブセクション（H3）を階層的にマークアップ
+ *    - メタ情報: 公開日、ソース情報、参照動画のカードを生成
+ *    - 共有リンク: X（Twitter）、LinkedIn、ネイティブ共有ボタンを生成
+ *
+ * 4. フォールバック処理
+ *    - テンプレートファイルの読み込みに失敗した場合、最小限のHTMLを自動生成
+ *
+ * 【処理の流れ】
+ * 入力: 記事データ（タイトル、セクション、タグなど）
+ *   ↓
+ * 各パーツをHTMLに変換
+ *   ↓
+ * テンプレートのプレースホルダーに埋め込み
+ *   ↓
+ * 出力: 完成した記事HTMLファイル
  */
 
 const fs = require('fs');
@@ -8,68 +37,154 @@ const slugify = require('../../lib/slugify');
 
 /**
  * 正規表現で使用される特殊文字をエスケープします。
+ *
+ * 正規表現のメタ文字（例: `$`, `*`, `+`, `?`, `.`, `[`, `]`など）を、
+ * リテラル文字として扱うために、バックスラッシュでエスケープします。
+ *
+ * これにより、テンプレート内のプレースホルダー（例: `{{TITLE}}`）を安全に検索・置換できます。
+ * もしエスケープしないと、`{{TITLE}}`の中の `.` や `()` が正規表現として解釈されてしまいます。
+ *
  * @param {string} value - エスケープする文字列
  * @returns {string} エスケープされた文字列
+ *
+ * @example
+ * escapeRegExp('{{TITLE}}')  // => '\\{\\{TITLE\\}\\}'
+ * escapeRegExp('price: $10') // => 'price: \\$10'
  */
-const escapeRegExp = (value) => value.replace(/[-/\\^$*+?.()|[\\]{}]/g, '\\$&');
+const escapeRegExp = (value) => value.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 
 /**
  * プレーンテキストをHTMLの段落（<p>タグ）に変換します。
- * 複数行のテキストは、各行が1つの<p>タグで囲まれます。
- * @param {string} text - 変換するテキスト
+ *
+ * この関数は、OpenAI APIから返された改行を含むテキストを、
+ * HTMLの段落として適切にマークアップする役割を持ちます。
+ *
+ * 【処理の流れ】
+ * 1. 1つ以上の改行で文章を分割
+ * 2. 各行の前後の空白を削除
+ * 3. 空の行を除去
+ * 4. 各行を`<p>タグで囲む
+ * 5. インデント付きで結合（HTMLの可読性向上のため）
+ *
+ * 【具体例】
+ * 入力:
+ *   "AIは急速に発展しています。\n\n多くの分野で活用されています。"
+ *
+ * 出力:
+ *   "<p>AIは急速に発展しています。</p>\n      <p>多くの分野で活用されています。</p>"
+ *
+ * @param {string} text - 変換するプレーンテキスト
  * @returns {string} HTMLの段落文字列
  */
 const toHtmlParagraphs = (text) => {
   if (!text) return '';
   return text
-    .split(/\n+/) // 1つ以上の改行で分割
+    .split(/\n+/)               // 1つ以上の改行で分割
     .map((line) => line.trim()) // 各行の前後の空白を削除
-    .filter(Boolean) // 空の行を除去
+    .filter(Boolean)            // 空の行を除去
     .map((line) => `<p>${line}</p>`) // <p>タグで囲む
-    .join('\n      '); // 整形のためにインデント付きで結合
+    .join('\n      '); // 整形のためにインデント付きで結合（HTML出力が見やすくなる）
 };
 
 /**
- * 日付文字列（'YYYY-MM-DD'）をフォーマットします。
- * @param {string} value - フォーマットする日付文字列
+ * 日付文字列（'YYYY-MM-DD'）を複数のフォーマットに変換します。
+ *
+ * この関数は、ISO形式の日付文字列を受け取り、3つの異なる形式で返します:
+ * 1. dotted: ドット区切り形式（例: 2025.11.19） - 簡潔な表示用
+ * 2. verbose: 日本語形式（例: 2025年11月19日） - 詳細な表示用
+ * 3. year: 年のみ（例: 2025） - フッターのコピーライト表示などに使用
+ *
+ * 【エラーハンドリング】
+ * - 入力がない場合: 空文字列とcurrentYearを返す
+ * - 無効な日付文字列の場合: 元の値をそのまま返す
+ *
+ * 【日付の解釈】
+ * - 入力: "2025-11-19" または "2025/11/19"
+ * - UTC時刻として解釈（タイムゾーンの影響を受けない）
+ *
+ * @param {string} value - フォーマットする日付文字列（YYYY-MM-DD形式）
  * @returns {{dotted: string, verbose: string, year: number}} フォーマットされた日付パーツ
+ *
+ * @example
+ * formatDateParts('2025-11-19')
+ * // => { dotted: '2025.11.19', verbose: '2025年11月19日', year: 2025 }
  */
 const formatDateParts = (value) => {
   const now = new Date();
+
+  // 入力がない場合は空文字列と現在の年を返す
   if (!value) {
     return { dotted: '', verbose: '', year: now.getFullYear() };
   }
+
+  // スラッシュ区切りをハイフンに統一（'2025/11/19' → '2025-11-19'）
   const normalized = value.replace(/\//g, '-');
-  const date = new Date(`${normalized}T00:00:00Z`); // UTCとして解釈
+
+  // UTCタイムゾーンで日付を解釈（タイムゾーンの影響を避ける）
+  const date = new Date(`${normalized}T00:00:00Z`);
+
+  // 日付が無効な場合は元の値をそのまま返す
   if (Number.isNaN(date.getTime())) {
     return { dotted: value, verbose: value, year: now.getFullYear() };
   }
+
+  // 年・月・日を取得
   const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0'); // 月は0始まりなので+1、2桁にゼロパディング
+  const d = String(date.getDate()).padStart(2, '0');      // 日も2桁にゼロパディング
+
   return {
-    dotted: `${y}.${m}.${d}`, // 例: 2023.01.01
-    verbose: `${y}年${m}月${d}日`, // 例: 2023年01月01日
-    year: y,
+    dotted: `${y}.${m}.${d}`,      // ドット区切り形式
+    verbose: `${y}年${m}月${d}日`,  // 日本語形式
+    year: y,                        // 年のみ
   };
 };
 
 /**
- * 見出し文字列をIDとして使用できるスラッグに変換します。
+ * 見出し文字列をHTML要素のID属性として使用できるスラッグに変換します。
+ *
+ * この関数は、記事の見出し（H2, H3）を元に、目次やページ内リンクで使用する
+ * IDを生成します。HTMLのID属性はURL-safeで一意である必要があるため、
+ * 日本語や特殊文字を除去してケバブケース形式に変換します。
+ *
+ * 【処理の流れ】
+ * 1. 見出しがない場合はフォールバック値（section-1など）を使用
+ * 2. 小文字に変換
+ * 3. 日本語の区切り文字（・、。/など）とスペースをハイフンに変換
+ * 4. 英数字とハイフン以外を削除
+ * 5. 連続するハイフンを1つに統合
+ * 6. 先頭と末尾のハイフンを削除
+ * 7. 結果が空の場合はフォールバック値を使用
+ *
+ * 【具体例】
+ * - "AIの活用事例" → "ai-shi-yong-shi-li" （ピンインが残る場合）または空
+ * - "ChatGPT とは？" → "chatgpt"
+ * - "Section 1: はじめに" → "section-1"
+ *
  * @param {string} heading - 見出し文字列
  * @param {number} [index=0] - フォールバック用のインデックス
  * @returns {string} スラッグ化された文字列
+ *
+ * @example
+ * slugifyHeading('AIの活用方法', 0)     // => フォールバック: "section-1"
+ * slugifyHeading('ChatGPT Guide', 1)    // => "chatgpt-guide"
+ * slugifyHeading('', 2)                 // => "section-3"
  */
 const slugifyHeading = (heading, index = 0) => {
+  // 見出しがない場合のフォールバック値
   const base = heading || `section-${index + 1}`;
+
+  // スラグ化処理
   const slug = base
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/[\s\・\、\。/]+/g, '-')
-    .replace(/[^a-z0-9\-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+    .toString()                          // 文字列に変換
+    .trim()                              // 前後の空白を削除
+    .toLowerCase()                       // 小文字化
+    .replace(/[\s\・\、\。/]+/g, '-')   // 日本語の区切り文字とスペースをハイフンに
+    .replace(/[^a-z0-9\-]/g, '')        // 英数字とハイフン以外を削除
+    .replace(/-+/g, '-')                // 連続するハイフンを1つに統合
+    .replace(/^-|-$/g, '');             // 先頭と末尾のハイフンを削除
+
+  // スラグが空になった場合はフォールバック値を返す
   return slug || `section-${index + 1}`;
 };
 
