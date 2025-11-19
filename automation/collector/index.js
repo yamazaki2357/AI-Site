@@ -11,13 +11,17 @@ const { readJson, writeJson, ensureDir } = require('../lib/io');
 const slugify = require('../lib/slugify');
 const { COLLECTOR } = require('../config/constants');
 const { YOUTUBE_API_BASE } = require('../config/models');
+const { readCandidates, writeCandidates } = require('../lib/candidatesRepository');
+const { createLogger } = require('../lib/logger');
+const { createMetricsTracker } = require('../lib/metrics');
 
 const root = path.resolve(__dirname, '..', '..');
 const sourcesPath = path.join(root, 'data', 'sources.json');
-const candidatesPath = path.join(root, 'data', 'candidates.json');
 const outputDir = path.join(root, 'automation', 'output', 'collector');
 
 const { MAX_PER_CHANNEL, VIDEO_LOOKBACK_DAYS, SEARCH_PAGE_SIZE, CLEANUP_PROCESSED_DAYS, MAX_PENDING_CANDIDATES } = COLLECTOR;
+const logger = createLogger('collector');
+const metricsTracker = createMetricsTracker('collector');
 
 const createChannelUrl = (channelId) =>
   channelId ? `https://www.youtube.com/channel/${channelId}` : null;
@@ -89,7 +93,7 @@ const fetchChannelVideos = async (channelId, apiKey) => {
       // ignore JSON parse errors and fall back to raw text
     }
     if (response.status === 403 && quotaExceeded) {
-      console.warn(`[collector] quota exceeded: スキップします (channel=${channelId})`);
+      logger.warn(`quota exceeded: スキップします (channel=${channelId})`);
       return null;
     }
     throw new Error(`YouTube API error ${response.status}: ${errorMessage}`);
@@ -102,8 +106,7 @@ const fetchChannelVideos = async (channelId, apiKey) => {
 };
 
 const runCollector = async () => {
-  console.log('[collector] ステージ開始: YouTube Data APIで最新動画を取得します。');
-  ensureDir(path.dirname(candidatesPath));
+  logger.info('ステージ開始: YouTube Data APIで最新動画を取得します。');
 
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
@@ -111,7 +114,7 @@ const runCollector = async () => {
   }
 
   const sources = readJson(sourcesPath, []);
-  const existingCandidates = readJson(candidatesPath, []);
+  const existingCandidates = readCandidates();
 
   if (!Array.isArray(sources) || sources.length === 0) {
     throw new Error('data/sources.json に監視対象が設定されていません。');
@@ -121,23 +124,12 @@ const runCollector = async () => {
   const errors = [];
   let newCandidatesCount = 0;
 
-  // メトリクス
-  const metrics = {
-    totalVideosFound: 0,
-    newVideosAdded: 0,
-    duplicatesSkipped: 0,
-  };
-
   for (const [index, source] of sources.entries()) {
     const normalizedSource = normalizeSource(source);
-    console.log(
-      `[collector] (${index + 1}/${sources.length}) ${normalizedSource.name} の最新動画を取得します`,
-    );
+    logger.info(`(${index + 1}/${sources.length}) ${normalizedSource.name} の最新動画を取得します`);
 
     if (!normalizedSource.channelId) {
-      console.warn(
-        `[collector] ${normalizedSource.name}: channelId が設定されていないためスキップします。`,
-      );
+      logger.warn(`${normalizedSource.name}: channelId が設定されていないためスキップします。`);
       errors.push({
         source: normalizedSource.name,
         message: 'channelId is missing',
@@ -148,20 +140,18 @@ const runCollector = async () => {
     try {
       const videos = await fetchChannelVideos(normalizedSource.channelId, apiKey);
       if (!Array.isArray(videos)) {
-        console.log(
-          `[collector] ${normalizedSource.name}: YouTube API制限によりこのチャンネルの処理をスキップしました。`,
-        );
+        logger.warn(`${normalizedSource.name}: YouTube API制限によりこのチャンネルの処理をスキップしました。`);
         continue;
       }
       const freshVideos = videos
         .filter((video) => withinWindow(video.publishedAt))
         .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
-      console.log(
-        `[collector] ${normalizedSource.name}: API取得 ${videos.length}件 / フィルタ後 ${freshVideos.length}件`,
+      logger.info(
+        `${normalizedSource.name}: API取得 ${videos.length}件 / フィルタ後 ${freshVideos.length}件`,
       );
 
-      metrics.totalVideosFound += freshVideos.length;
+      metricsTracker.increment('videos.total', freshVideos.length);
 
       let addedForChannel = 0;
       for (const video of freshVideos) {
@@ -170,7 +160,7 @@ const runCollector = async () => {
         const alreadyExists = updatedCandidates.some((candidate) => candidate.id === candidateId);
 
         if (alreadyExists) {
-          metrics.duplicatesSkipped += 1;
+          metricsTracker.increment('videos.duplicates');
           continue;
         }
 
@@ -197,18 +187,18 @@ const runCollector = async () => {
 
         newCandidatesCount += 1;
         addedForChannel += 1;
-        metrics.newVideosAdded += 1;
+        metricsTracker.increment('videos.new');
 
-        console.log(
-          `[collector] 新規候補を追加: ${normalizedSource.name} / ${video.title} (candidateId: ${candidateId})`,
+        logger.info(
+          `新規候補を追加: ${normalizedSource.name} / ${video.title} (candidateId: ${candidateId})`,
         );
       }
 
       if (addedForChannel === 0) {
-        console.log(`[collector] ${normalizedSource.name}: 新規候補はありませんでした。`);
+        logger.info(`${normalizedSource.name}: 新規候補はありませんでした。`);
       }
     } catch (error) {
-      console.warn(`[collector] ${normalizedSource.name} でエラー: ${error.message}`);
+      logger.warn(`${normalizedSource.name} でエラー: ${error.message}`);
       errors.push({
         source: normalizedSource.name,
         message: error.message,
@@ -237,7 +227,7 @@ const runCollector = async () => {
 
   const cleanedCount = beforeCleanup - updatedCandidates.length;
   if (cleanedCount > 0) {
-    console.log(`[collector] 処理済み候補を${cleanedCount}件削除しました（${CLEANUP_PROCESSED_DAYS}日以上経過）。`);
+    logger.info(`処理済み候補を${cleanedCount}件削除しました（${CLEANUP_PROCESSED_DAYS}日以上経過）。`);
   }
 
   // クリーンアップ: collected + researched 候補を30件に制限
@@ -260,20 +250,25 @@ const runCollector = async () => {
       return bTime - aTime;
     });
     const limitedCount = beforeLimit - limitedActive.length;
-    console.log(`[collector] active候補を${limitedCount}件削除しました（上限${MAX_PENDING_CANDIDATES}件を超過）。`);
+    logger.info(`active候補を${limitedCount}件削除しました（上限${MAX_PENDING_CANDIDATES}件を超過）。`);
   }
 
-  writeJson(candidatesPath, updatedCandidates);
+  writeCandidates(updatedCandidates);
 
   // 成果物を保存
   ensureDir(outputDir);
   const timestamp = new Date().toISOString();
+  const metricsSummary = {
+    totalVideosFound: metricsTracker.getCounter('videos.total'),
+    newVideosAdded: metricsTracker.getCounter('videos.new'),
+    duplicatesSkipped: metricsTracker.getCounter('videos.duplicates'),
+  };
   const outputData = {
     timestamp,
     checkedSources: sources.length,
     newCandidates: newCandidatesCount,
     totalCandidates: updatedCandidates.length,
-    metrics,
+    metrics: metricsSummary,
     errors,
     newVideos: updatedCandidates
       .filter((c) => c.status === 'collected' && new Date(c.createdAt).getTime() > Date.now() - 3600000)
@@ -288,30 +283,28 @@ const runCollector = async () => {
 
   const outputPath = path.join(outputDir, `collector-${timestamp.split('T')[0]}.json`);
   writeJson(outputPath, outputData);
-  console.log(`[collector] 成果物を保存しました: ${outputPath}`);
+  logger.info(`成果物を保存しました: ${outputPath}`);
 
   // メトリクスサマリー
-  console.log('\n=== Collector メトリクスサマリー ===');
-  console.log(`チェックしたソース: ${sources.length}件`);
-  console.log(`発見した動画: ${metrics.totalVideosFound}件`);
-  console.log(`新規追加: ${metrics.newVideosAdded}件`);
-  console.log(`重複スキップ: ${metrics.duplicatesSkipped}件`);
-  console.log(`総候補数: ${updatedCandidates.length}件`);
+  logger.info('\n=== Collector メトリクスサマリー ===');
+  logger.info(`チェックしたソース: ${sources.length}件`);
+  logger.info(`発見した動画: ${metricsSummary.totalVideosFound}件`);
+  logger.info(`新規追加: ${metricsSummary.newVideosAdded}件`);
+  logger.info(`重複スキップ: ${metricsSummary.duplicatesSkipped}件`);
+  logger.info(`総候補数: ${updatedCandidates.length}件`);
 
   if (errors.length > 0) {
-    console.log(`\n⚠️  警告: ${errors.length}件のソースでエラーが発生しました`);
+    logger.warn(`\n⚠️  警告: ${errors.length}件のソースでエラーが発生しました`);
     errors.forEach((err) => {
-      console.log(`  - ${err.source}: ${err.message}`);
+      logger.warn(`  - ${err.source}: ${err.message}`);
     });
   }
 
   if (newCandidatesCount === 0) {
-    console.log('\n[collector] 今回は新規候補がありませんでした。');
+    logger.info('\n今回は新規候補がありませんでした。');
   }
 
-  console.log(
-    `\n[collector] 完了: 新規${newCandidatesCount}件 / 総候補${updatedCandidates.length}件`,
-  );
+  logger.success(`\n完了: 新規${newCandidatesCount}件 / 総候補${updatedCandidates.length}件`);
 
   return {
     source: 'YouTube',
@@ -319,17 +312,17 @@ const runCollector = async () => {
     newCandidates: newCandidatesCount,
     totalCandidates: updatedCandidates.length,
     errors,
-    metrics,
+    metrics: metricsSummary,
   };
 };
 
 if (require.main === module) {
   runCollector()
     .then((result) => {
-      console.log('Collector finished:', result);
+      logger.info('Collector finished:', result);
     })
     .catch((error) => {
-      console.error('Collector failed:', error);
+      logger.error('Collector failed:', error);
       process.exit(1);
     });
 }

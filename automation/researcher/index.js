@@ -8,22 +8,23 @@
  */
 
 const path = require('path');
-const { readJson, writeJson } = require('../lib/io');
+const { writeJson, ensureDir } = require('../lib/io');
 const { extractSearchKeywords } = require('../lib/extractKeywords');
 const { searchTopArticles } = require('../lib/googleSearch');
-const { decodeHtmlEntities } = require('../lib/text');
 const slugify = require('../lib/slugify');
 const { RESEARCHER, RATE_LIMITS } = require('../config/constants');
-const { SUMMARY_GENERATION } = require('../config/models');
-const PROMPTS = require('../config/prompts');
-const { callOpenAI, extractContent } = require('../lib/openai');
 const { deriveTopicKey } = require('../lib/topicKey');
+const { readCandidates, writeCandidates } = require('../lib/candidatesRepository');
+const { createLogger } = require('../lib/logger');
+const { createMetricsTracker, average } = require('../lib/metrics');
+const { summarizeSearchResult } = require('./services/summaryBuilder');
 
 const root = path.resolve(__dirname, '..', '..');
-const candidatesPath = path.join(root, 'data', 'candidates.json');
 const outputDir = path.join(root, 'automation', 'output', 'researcher');
 
-const { GOOGLE_TOP_LIMIT, ARTICLE_FETCH_TIMEOUT_MS, ARTICLE_TEXT_MAX_LENGTH, SUMMARY_MIN_LENGTH, SUMMARY_MAX_LENGTH, USER_AGENT } = RESEARCHER;
+const { GOOGLE_TOP_LIMIT } = RESEARCHER;
+const logger = createLogger('researcher');
+const metricsTracker = createMetricsTracker('researcher');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -38,171 +39,6 @@ const BLOCKED_DOMAINS = [
   'm.youtube.com',
 ];
 
-const stripHtmlTags = (html) => {
-  if (!html) return '';
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, ' ')
-    .replace(/<svg[\s\S]*?<\/svg>/gi, ' ')
-    .replace(/<\/?head[\s\S]*?>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ');
-};
-
-const normalizePlainText = (html) => {
-  const stripped = stripHtmlTags(html);
-  return decodeHtmlEntities(stripped).replace(/\s+/g, ' ').trim();
-};
-
-const fetchArticleText = async (url) => {
-  if (!url) return '';
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), ARTICLE_FETCH_TIMEOUT_MS);
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'User-Agent': USER_AGENT,
-        Accept: 'text/html,application/xhtml+xml',
-      },
-      signal: controller.signal,
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    const body = await response.text();
-    return normalizePlainText(body).slice(0, ARTICLE_TEXT_MAX_LENGTH);
-  } catch (error) {
-    console.warn(`[researcher] ${url} の本文取得に失敗しました: ${error.message}`);
-    return '';
-  } finally {
-    clearTimeout(timeout);
-  }
-};
-
-const generateAISummary = async (articleText, title, snippet, apiKey) => {
-  if (!articleText || articleText.length < 200) {
-    return '';
-  }
-
-  try {
-    const messages = [
-      {
-        role: 'system',
-        content: PROMPTS.SUMMARY_GENERATION.system,
-      },
-      {
-        role: 'user',
-        content: PROMPTS.SUMMARY_GENERATION.user(title, articleText),
-      },
-    ];
-
-    const completion = await callOpenAI({
-      apiKey,
-      messages,
-      model: SUMMARY_GENERATION.model,
-      temperature: SUMMARY_GENERATION.temperature,
-      maxTokens: SUMMARY_GENERATION.max_tokens,
-    });
-
-    const summary = extractContent(completion);
-
-    if (summary.length >= SUMMARY_MIN_LENGTH) {
-      return summary;
-    }
-  } catch (error) {
-    console.warn(`[researcher] AI要約生成に失敗: ${error.message}`);
-  }
-
-  return '';
-};
-
-const buildSummaryWithinRange = (text, fallback = '') => {
-  const normalize = (value) => (value || '').replace(/\s+/g, ' ').trim();
-  const baseText = normalize(text);
-  const fallbackText = normalize(fallback);
-  const source = baseText || fallbackText;
-  if (!source) return '';
-
-  const sentences = source
-    .split(/(?<=[。\.\!?？!])\s+/)
-    .map((sentence) => sentence.trim())
-    .filter(Boolean);
-
-  let summary = '';
-  for (const sentence of sentences) {
-    const next = summary ? `${summary}${sentence}` : sentence;
-    if (next.length > SUMMARY_MAX_LENGTH) {
-      if (summary.length < SUMMARY_MIN_LENGTH) {
-        summary = next.slice(0, SUMMARY_MAX_LENGTH);
-      }
-      break;
-    }
-    summary = next;
-    if (summary.length >= SUMMARY_MAX_LENGTH) break;
-  }
-
-  if (!summary) {
-    summary = source.slice(0, SUMMARY_MAX_LENGTH);
-  }
-
-  if (summary.length < SUMMARY_MIN_LENGTH && source.length > summary.length) {
-    summary = source.slice(0, Math.max(SUMMARY_MIN_LENGTH, Math.min(SUMMARY_MAX_LENGTH, source.length)));
-  }
-
-  if (summary.length < SUMMARY_MIN_LENGTH && fallbackText && source !== fallbackText) {
-    const combined = `${summary} ${fallbackText}`.trim();
-    summary = combined.slice(0, Math.max(SUMMARY_MIN_LENGTH, Math.min(SUMMARY_MAX_LENGTH, combined.length)));
-  }
-
-  if (summary.length > SUMMARY_MAX_LENGTH) {
-    summary = summary.slice(0, SUMMARY_MAX_LENGTH);
-  }
-
-  return summary.trim();
-};
-
-const summarizeSearchResult = async (item, index, apiKey) => {
-  const title = item.title || `検索結果${index + 1}`;
-  const url = item.link;
-  const snippet = item.snippet || '';
-  let bodyText = '';
-
-  if (url) {
-    bodyText = await fetchArticleText(url);
-  }
-
-  // 品質チェック: 低品質コンテンツは早期リターン
-  if (!isQualityContent(bodyText)) {
-    console.warn(`[researcher] 低品質コンテンツをスキップ: ${url} (日本語率が低いか、メタデータが多い)`);
-    return {
-      title,
-      url,
-      snippet,
-      summary: snippet, // フォールバックとしてスニペットを使用
-      quality: 'low',
-    };
-  }
-
-  // まずAI要約を試行
-  let summary = '';
-  if (bodyText && bodyText.length >= 200 && apiKey) {
-    summary = await generateAISummary(bodyText, title, snippet, apiKey);
-  }
-
-  // AI要約が失敗した場合はフォールバック
-  if (!summary || summary.length < SUMMARY_MIN_LENGTH) {
-    summary = buildSummaryWithinRange(bodyText, snippet);
-  }
-
-  return {
-    title,
-    url,
-    snippet,
-    summary,
-    quality: 'high',
-  };
-};
-
 const shouldSkipResult = (url) => {
   if (!url) return true;
   try {
@@ -213,35 +49,6 @@ const shouldSkipResult = (url) => {
   } catch {
     return true;
   }
-};
-
-/**
- * 検索結果の品質チェック
- * @param {string} text - チェック対象のテキスト
- * @returns {boolean} - 品質が十分ならtrue
- */
-const isQualityContent = (text) => {
-  if (!text || text.length < 100) {
-    return false;
-  }
-
-  // 日本語文字の割合をチェック（文字化け検出）
-  const japaneseChars = text.match(/[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF]/g);
-  const japaneseRatio = japaneseChars ? japaneseChars.length / text.length : 0;
-
-  // 日本語が30%未満なら低品質と判定
-  if (japaneseRatio < 0.3) {
-    return false;
-  }
-
-  // 著作権表示など、メタデータが多い場合は低品質
-  const metaKeywords = ['Copyright', 'Press', 'Privacy Policy', 'Terms', 'NFL Sunday Ticket'];
-  const hasMetaKeywords = metaKeywords.some((keyword) => text.includes(keyword));
-  if (hasMetaKeywords && text.length < 500) {
-    return false;
-  }
-
-  return true;
 };
 
 const fetchSearchSummaries = async (query, googleApiKey, googleCx, openaiApiKey) => {
@@ -259,7 +66,7 @@ const fetchSearchSummaries = async (query, googleApiKey, googleCx, openaiApiKey)
     const filteredItems = items.filter((item) => {
       const skip = shouldSkipResult(item.link);
       if (skip && item?.link) {
-        console.log(`[researcher] SNS結果をスキップ: ${item.link}`);
+        logger.info(`SNS結果をスキップ: ${item.link}`);
       }
       return !skip;
     });
@@ -271,12 +78,12 @@ const fetchSearchSummaries = async (query, googleApiKey, googleCx, openaiApiKey)
       try {
         const summaryEntry = await summarizeSearchResult(item, index, openaiApiKey);
         summaries.push(summaryEntry);
-        console.log(
-          `[researcher] 要約完了 (${index + 1}/${limitedItems.length}): ${summaryEntry.title} - ${summaryEntry.summary.length}文字`,
+        logger.info(
+          `要約完了 (${index + 1}/${limitedItems.length}): ${summaryEntry.title} - ${summaryEntry.summary.length}文字`,
         );
       } catch (error) {
-        console.warn(
-          `[researcher] Google検索結果の要約作成に失敗 (${item?.link || 'unknown'}): ${error.message}`,
+        logger.warn(
+          `Google検索結果の要約作成に失敗 (${item?.link || 'unknown'}): ${error.message}`,
         );
         summaries.push({
           title: item.title || `検索結果${index + 1}`,
@@ -289,13 +96,13 @@ const fetchSearchSummaries = async (query, googleApiKey, googleCx, openaiApiKey)
     }
     return summaries;
   } catch (error) {
-    console.warn(`[researcher] Google Search API 呼び出しに失敗: ${error.message}`);
+    logger.warn(`Google Search API 呼び出しに失敗: ${error.message}`);
     return [];
   }
 };
 
 const runResearcher = async () => {
-  console.log('[researcher] ステージ開始: pending候補のリサーチを実行します。');
+  logger.info('ステージ開始: pending候補のリサーチを実行します。');
 
   const openaiApiKey = process.env.OPENAI_API_KEY;
   if (!openaiApiKey) {
@@ -308,13 +115,13 @@ const runResearcher = async () => {
     throw new Error('GOOGLE_SEARCH_API_KEY と GOOGLE_SEARCH_CX が設定されていません。GitHub Secrets に登録してください。');
   }
 
-  const candidates = readJson(candidatesPath, []);
+  const candidates = readCandidates();
 
   // リサーチが必要な候補を抽出（status=collected）
   const candidatesToResearch = candidates.filter((c) => c.status === 'collected');
 
   if (candidatesToResearch.length === 0) {
-    console.log('[researcher] リサーチが必要な候補がありません（status=collected の候補が0件）。');
+    logger.info('リサーチが必要な候補がありません（status=collected の候補が0件）。');
     return {
       processed: 0,
       succeeded: 0,
@@ -323,36 +130,17 @@ const runResearcher = async () => {
     };
   }
 
-  console.log(`[researcher] リサーチ対象: ${candidatesToResearch.length}件`);
-
-  // メトリクス収集
-  const metrics = {
-    totalProcessed: 0,
-    keywordExtraction: {
-      success: 0,
-      failure: 0,
-      fallbackUsed: 0,
-    },
-    googleSearch: {
-      success: 0,
-      failure: 0,
-      totalResults: 0,
-    },
-    performance: {
-      keywordExtractionTimeMs: [],
-      googleSearchTimeMs: [],
-    },
-  };
+  logger.info(`リサーチ対象: ${candidatesToResearch.length}件`);
 
   const errors = [];
   let successCount = 0;
   let failureCount = 0;
 
   for (const candidate of candidatesToResearch) {
-    metrics.totalProcessed += 1;
+    metricsTracker.increment('candidates.processed');
     const video = candidate.video;
 
-    console.log(`[researcher] 処理中: ${video.title}`);
+    logger.info(`処理中: ${video.title}`);
 
     // キーワード抽出
     let searchQuery = video.title;
@@ -360,32 +148,33 @@ const runResearcher = async () => {
     const keywordStartTime = Date.now();
 
     try {
-      console.log(`[researcher] キーワード抽出開始: "${video.title}"`);
+      logger.info(`キーワード抽出開始: "${video.title}"`);
       searchQuery = await extractSearchKeywords(
         openaiApiKey,
         video.title,
         video.description,
       );
       const keywordEndTime = Date.now();
-      metrics.performance.keywordExtractionTimeMs.push(keywordEndTime - keywordStartTime);
+      metricsTracker.recordDuration('keywordExtraction.timeMs', keywordEndTime - keywordStartTime);
 
       // 抽出されたキーワードが元のタイトルと同じ場合は警告
       if (searchQuery === video.title) {
-        console.warn(`[researcher] ⚠️ キーワード抽出が元のタイトルと同じです: "${searchQuery}"`);
+        logger.warn(`⚠️ キーワード抽出が元のタイトルと同じです: "${searchQuery}"`);
       }
 
-      metrics.keywordExtraction.success += 1;
+      metricsTracker.increment('keywordExtraction.success');
       keywordExtractionMethod = 'openai';
-      console.log(`[researcher] ✓ 抽出キーワード: "${searchQuery}" (元: "${video.title.substring(0, 30)}...", ${keywordEndTime - keywordStartTime}ms)`);
+      logger.info(
+        `✓ 抽出キーワード: "${searchQuery}" (元: "${video.title.substring(0, 30)}...", ${keywordEndTime - keywordStartTime}ms)`,
+      );
     } catch (error) {
       const keywordEndTime = Date.now();
-      metrics.performance.keywordExtractionTimeMs.push(keywordEndTime - keywordStartTime);
-      metrics.keywordExtraction.failure += 1;
-      metrics.keywordExtraction.fallbackUsed += 1;
+      metricsTracker.increment('keywordExtraction.failure');
+      metricsTracker.increment('keywordExtraction.fallback');
 
-      console.error(`[researcher] ⚠️ キーワード抽出失敗: ${error.message}`);
-      console.error(`[researcher]   - エラー詳細: ${error.stack || 'スタックトレースなし'}`);
-      console.error(`[researcher]   - 対象タイトル: "${video.title}"`);
+      logger.error(`⚠️ キーワード抽出失敗: ${error.message}`);
+      logger.error(`  - エラー詳細: ${error.stack || 'スタックトレースなし'}`);
+      logger.error(`  - 対象タイトル: "${video.title}"`);
       searchQuery = video.title;
       keywordExtractionMethod = 'fallback';
 
@@ -413,11 +202,9 @@ const runResearcher = async () => {
         typeof topicKeyInfo.confidence === 'number'
           ? topicKeyInfo.confidence.toFixed(2)
           : 'n/a';
-      console.log(
-        `[researcher] トピックキー抽出: ${topicKeyInfo.topicKey} (confidence: ${confidenceText})`,
-      );
+      logger.info(`トピックキー抽出: ${topicKeyInfo.topicKey} (confidence: ${confidenceText})`);
     } catch (error) {
-      console.warn(`[researcher] トピックキー抽出に失敗: ${error.message}`);
+      logger.warn(`トピックキー抽出に失敗: ${error.message}`);
       topicKeyInfo = {
         topicKey: slugify(video.title, 'ai-topic'),
         method: 'fallback',
@@ -428,25 +215,23 @@ const runResearcher = async () => {
 
     // Google検索
     let searchSummaries = [];
-    const searchStartTime = Date.now();
+    const stopSearchTimer = metricsTracker.startTimer('googleSearch.timeMs');
 
     try {
-      console.log(`[researcher] Google検索: "${searchQuery}"`);
+      logger.info(`Google検索: "${searchQuery}"`);
       searchSummaries = await fetchSearchSummaries(searchQuery, googleApiKey, googleCx, openaiApiKey);
-      const searchEndTime = Date.now();
-      metrics.performance.googleSearchTimeMs.push(searchEndTime - searchStartTime);
+      const elapsed = stopSearchTimer();
 
-      metrics.googleSearch.success += 1;
-      metrics.googleSearch.totalResults += searchSummaries.length;
-      console.log(`[researcher] 検索完了: ${searchSummaries.length}件 (${searchEndTime - searchStartTime}ms)`);
+      metricsTracker.increment('googleSearch.success');
+      metricsTracker.increment('googleSearch.totalResults', searchSummaries.length);
+      logger.info(`検索完了: ${searchSummaries.length}件 (${elapsed}ms)`);
     } catch (error) {
-      const searchEndTime = Date.now();
-      metrics.performance.googleSearchTimeMs.push(searchEndTime - searchStartTime);
-      metrics.googleSearch.failure += 1;
+      const elapsed = stopSearchTimer();
+      metricsTracker.increment('googleSearch.failure');
 
-      console.error(`[researcher] ⚠️ Google検索失敗: ${error.message}`);
-      console.error(`[researcher]   - エラー詳細: ${error.stack || 'スタックトレースなし'}`);
-      console.error(`[researcher]   - 検索クエリ: "${searchQuery}"`);
+      logger.error(`⚠️ Google検索失敗: ${error.message}`);
+      logger.error(`  - エラー詳細: ${error.stack || 'スタックトレースなし'}`);
+      logger.error(`  - 検索クエリ: "${searchQuery}" (elapsed ${elapsed}ms)`);
       searchSummaries = [];
 
       errors.push({
@@ -492,7 +277,7 @@ const runResearcher = async () => {
       successCount += 1;
     } else {
       failureCount += 1;
-      console.error(`[researcher] ⚠️ 候補が見つかりません: ${candidate.id}`);
+      logger.error(`⚠️ 候補が見つかりません: ${candidate.id}`);
     }
 
     // レート制限対策
@@ -500,18 +285,53 @@ const runResearcher = async () => {
   }
 
   // 更新されたcandidatesを保存
-  writeJson(candidatesPath, candidates);
+  writeCandidates(candidates);
 
   // 成果物を保存
-  const { ensureDir } = require('../lib/io');
   ensureDir(outputDir);
   const timestamp = new Date().toISOString();
+  // メトリクスサマリー
+  const keywordDurations = metricsTracker.getTimings('keywordExtraction.timeMs');
+  const googleDurations = metricsTracker.getTimings('googleSearch.timeMs');
+  const avgKeywordTime = average(keywordDurations);
+  const avgSearchTime = average(googleDurations);
+  const totalProcessed = metricsTracker.getCounter('candidates.processed');
+  const keywordSuccess = metricsTracker.getCounter('keywordExtraction.success');
+  const keywordFailure = metricsTracker.getCounter('keywordExtraction.failure');
+  const fallbackUsed = metricsTracker.getCounter('keywordExtraction.fallback');
+  const googleSuccess = metricsTracker.getCounter('googleSearch.success');
+  const googleFailure = metricsTracker.getCounter('googleSearch.failure');
+  const totalSearches = googleSuccess + googleFailure;
+  const totalResults = metricsTracker.getCounter('googleSearch.totalResults');
+  const avgResultsPerSearch = googleSuccess > 0 ? Math.round(totalResults / googleSuccess) : 0;
+
+  const metricsReport = {
+    totalProcessed,
+    keywordExtraction: {
+      success: keywordSuccess,
+      failure: keywordFailure,
+      fallbackUsed,
+      successRate: totalProcessed > 0 ? Math.round((keywordSuccess / totalProcessed) * 100) : 0,
+    },
+    googleSearch: {
+      success: googleSuccess,
+      failure: googleFailure,
+      totalResults,
+      successRate: totalSearches > 0 ? Math.round((googleSuccess / totalSearches) * 100) : 0,
+      avgResultsPerSearch,
+    },
+    performance: {
+      avgKeywordExtractionTimeMs: avgKeywordTime,
+      avgGoogleSearchTimeMs: avgSearchTime,
+    },
+  };
+
   const outputData = {
     timestamp,
-    processed: metrics.totalProcessed,
+    processed: totalProcessed,
     succeeded: successCount,
     failed: failureCount,
-    metrics,
+    metrics: metricsReport,
     errors,
     researchedCandidates: candidates
       .filter((c) => c.status === 'researched' && c.researchedAt && new Date(c.researchedAt).getTime() > Date.now() - 3600000)
@@ -526,73 +346,48 @@ const runResearcher = async () => {
 
   const outputPath = path.join(outputDir, `researcher-${timestamp.split('T')[0]}.json`);
   writeJson(outputPath, outputData);
-  console.log(`[researcher] 成果物を保存しました: ${outputPath}`);
+  logger.info(`成果物を保存しました: ${outputPath}`);
 
-  // メトリクスサマリー
-  const avgKeywordTime = metrics.performance.keywordExtractionTimeMs.length > 0
-    ? Math.round(metrics.performance.keywordExtractionTimeMs.reduce((a, b) => a + b, 0) / metrics.performance.keywordExtractionTimeMs.length)
-    : 0;
-  const avgSearchTime = metrics.performance.googleSearchTimeMs.length > 0
-    ? Math.round(metrics.performance.googleSearchTimeMs.reduce((a, b) => a + b, 0) / metrics.performance.googleSearchTimeMs.length)
-    : 0;
-
-  console.log('\n=== Researcher メトリクスサマリー ===');
-  console.log(`処理候補数: ${metrics.totalProcessed}件`);
-  console.log(`成功: ${successCount}件 / 失敗: ${failureCount}件`);
-  console.log(`キーワード抽出: 成功 ${metrics.keywordExtraction.success}件 / 失敗 ${metrics.keywordExtraction.failure}件 (フォールバック: ${metrics.keywordExtraction.fallbackUsed}件)`);
-  console.log(`Google検索: 成功 ${metrics.googleSearch.success}件 / 失敗 ${metrics.googleSearch.failure}件 (平均 ${metrics.googleSearch.totalResults / Math.max(metrics.googleSearch.success, 1) | 0}件/検索)`);
-  console.log(`平均処理時間: キーワード抽出 ${avgKeywordTime}ms / Google検索 ${avgSearchTime}ms`);
+  logger.info('\n=== Researcher メトリクスサマリー ===');
+  logger.info(`処理候補数: ${totalProcessed}件`);
+  logger.info(`成功: ${successCount}件 / 失敗: ${failureCount}件`);
+  logger.info(
+    `キーワード抽出: 成功 ${keywordSuccess}件 / 失敗 ${keywordFailure}件 (フォールバック: ${fallbackUsed}件)`,
+  );
+  logger.info(
+    `Google検索: 成功 ${googleSuccess}件 / 失敗 ${googleFailure}件 (平均 ${avgResultsPerSearch}件/検索)`,
+  );
+  logger.info(`平均処理時間: キーワード抽出 ${avgKeywordTime}ms / Google検索 ${avgSearchTime}ms`);
 
   if (errors.length > 0) {
-    console.log(`\n⚠️  警告: ${errors.length}件のエラーが発生しました`);
+    logger.warn(`\n⚠️  警告: ${errors.length}件のエラーが発生しました`);
     const errorsByStep = errors.reduce((acc, err) => {
       acc[err.step] = (acc[err.step] || 0) + 1;
       return acc;
     }, {});
     Object.entries(errorsByStep).forEach(([step, count]) => {
-      console.log(`  - ${step}: ${count}件`);
+      logger.warn(`  - ${step}: ${count}件`);
     });
   }
 
-  console.log(`\n[researcher] 完了: ${successCount}件のリサーチが完了しました。`);
+  logger.success(`\n完了: ${successCount}件のリサーチが完了しました。`);
 
   return {
     processed: metrics.totalProcessed,
     succeeded: successCount,
     failed: failureCount,
     errors,
-    metrics: {
-      totalProcessed: metrics.totalProcessed,
-      keywordExtraction: {
-        ...metrics.keywordExtraction,
-        successRate: metrics.totalProcessed > 0
-          ? Math.round((metrics.keywordExtraction.success / metrics.totalProcessed) * 100)
-          : 0,
-      },
-      googleSearch: {
-        ...metrics.googleSearch,
-        successRate: (metrics.googleSearch.success + metrics.googleSearch.failure) > 0
-          ? Math.round((metrics.googleSearch.success / (metrics.googleSearch.success + metrics.googleSearch.failure)) * 100)
-          : 0,
-        avgResultsPerSearch: metrics.googleSearch.success > 0
-          ? Math.round(metrics.googleSearch.totalResults / metrics.googleSearch.success)
-          : 0,
-      },
-      performance: {
-        avgKeywordExtractionTimeMs: avgKeywordTime,
-        avgGoogleSearchTimeMs: avgSearchTime,
-      },
-    },
+    metrics: metricsReport,
   };
 };
 
 if (require.main === module) {
   runResearcher()
     .then((result) => {
-      console.log('Researcher finished:', result);
+      logger.info('Researcher finished:', result);
     })
     .catch((error) => {
-      console.error('Researcher failed:', error);
+      logger.error('Researcher failed:', error);
       process.exit(1);
     });
 }
