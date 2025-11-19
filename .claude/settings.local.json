@@ -42,7 +42,9 @@
       "Bash(\"/Users/yamazaki/Development/AI情報ブログ/assets/css/components/misc.css\")",
       "Bash(\"/Users/yamazaki/Development/AI情報ブログ/assets/css/components/buttons.css\")",
       "Bash(wc:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(for file in blog-image-*.png)",
+      "Bash(do basename=\"$file%.png\" ffmpeg -i \"$file\" -vf \"scale=''''min(1200,iw)'''':''''min(1200,iw)*ih/iw''''\" -q:v 85 \"$basename.webp\" -y)"
     ],
     "deny": [],
     "ask": []

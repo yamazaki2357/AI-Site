@@ -1,15 +1,29 @@
-/* === 情報パネル === */
+/**
+ * @fileoverview その他のコンポーネントスタイル
+ * 他のカテゴリに分類されない汎用的なUI要素や、特定のセクションのスタイルを定義します。
+ * - 情報パネル
+ * - ワークフローカード
+ * - ソースカード
+ * - 記事コンテンツの基本スタイル
+ */
+
+/* === 情報パネル (.info-panel) === */
 .info-panel {
-  margin-top: var(--space-3xl);
+  margin-top: var(--space-3xl); /* 上部の大きな余白 */
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 240, 245, 0.9) 45%, rgba(255, 248, 228, 0.88) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.6);
-  border-radius: var(--radius-2xl);
-  padding: clamp(2rem, 4vw, 3rem);
-  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 190, 210, 0.6); /* ボーダー */
+  border-radius: var(--radius-2xl); /* 大きめの角丸 */
+  padding: clamp(2rem, 4vw, 3rem); /* レスポンシブな内側余白 */
+  box-shadow: var(--shadow-lg); /* 影 */
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* 疑似要素がはみ出さないように */
 }
 
+/*
+ * 情報パネル内の装飾的な疑似要素 (.info-panel::before)
+ * 柔らかい円形のグラデーションで背景にアクセントを加えます。
+ */
 .info-panel::before {
   content: '';
   position: absolute;
@@ -18,33 +32,45 @@
   width: 400px;
   height: 400px;
   background: radial-gradient(circle, rgba(255, 214, 235, 0.35) 0%, rgba(183, 225, 247, 0.25) 45%, transparent 70%);
-  pointer-events: none;
+  pointer-events: none; /* クリックイベントを透過 */
 }
 
+/*
+ * 情報パネル内の見出し (h2)
+ */
 .info-panel h2 {
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-xl); /* 下部の余白 */
 }
 
-/* === ワークフローグリッド === */
+/* === ワークフローグリッド (.workflow-grid) === */
 .workflow-grid {
   display: grid;
+  /* 最小250px、最大1frの幅で自動的にカラムを配置 */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-xl);
+  gap: var(--space-xl); /* グリッドアイテム間の余白 */
 }
 
+/*
+ * ワークフローカード (.workflow-card) の基本スタイル
+ */
 .workflow-card {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 245, 238, 0.92) 100%);
   border: 1px solid rgba(255, 190, 210, 0.5);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
-  min-height: 200px;
+  min-height: 200px; /* 最小の高さ */
   position: relative;
-  transition: all var(--transition-base);
+  transition: all var(--transition-base); /* 全ての変化をアニメーション */
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
 }
 
+/*
+ * ワークフローカードの上部ボーダーアニメーション (.workflow-card::before)
+ * ホバー時に左から右へ伸びるグラデーションボーダー。
+ */
 .workflow-card::before {
   content: '';
   position: absolute;
@@ -55,55 +81,75 @@
   background: linear-gradient(90deg,
     var(--color-primary) 0%,
     var(--color-accent-secondary) 50%,
-    var(--color-accent) 100%);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--transition-spring);
+    var(--color-accent) 100%); /* アクセントカラーのグラデーション */
+  transform: scaleX(0); /* デフォルトでは非表示 */
+  transform-origin: left; /* 左端を基準に変形 */
+  transition: transform var(--transition-spring); /* バネのようなアニメーション */
 }
 
+/*
+ * ワークフローカードのホバー時のスタイル
+ */
 .workflow-card:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 235, 0.95) 100%);
-  border-color: var(--border-strong);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 235, 0.95) 100%); /* 背景を少し明るく */
+  border-color: var(--border-strong); /* ボーダーを濃くする */
+  transform: translateY(-4px); /* 少し上に浮き上がる */
+  box-shadow: var(--shadow-lg); /* 影を強調 */
 }
 
+/*
+ * ホバー時に上部ボーダーを表示
+ */
 .workflow-card:hover::before {
   transform: scaleX(1);
 }
 
+/*
+ * ワークフローステップのラベル (.workflow-step)
+ */
 .workflow-step {
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--color-primary);
+  letter-spacing: 0.15em; /* 文字間を広げる */
+  text-transform: uppercase; /* 大文字にする */
+  color: var(--color-primary); /* プライマリカラー */
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * ワークフローカード内の見出し (h3)
+ */
 .workflow-card h3 {
   margin: 0 0 var(--space-sm);
   color: var(--text-primary);
   font-size: 1.2rem;
 }
 
+/*
+ * ワークフローカード内の段落 (p)
+ */
 .workflow-card p {
   margin: 0;
   color: var(--text-tertiary);
   line-height: 1.6;
 }
 
-/* === ソースグリッド === */
+/* === ソースグリッド (.source-grid) === */
 .source-grid {
-  list-style: none;
+  list-style: none; /* リストのデフォルトスタイルを削除 */
   margin: 0;
   padding: 0;
   display: grid;
+  /* 最小280px、最大1frの幅で自動的にカラムを配置 */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--space-lg);
 }
 
+/*
+ * ソースカード (.source-card) の基本スタイル
+ */
 .source-card {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 245, 238, 0.92) 100%);
   border: 1px solid rgba(255, 190, 210, 0.5);
   border-radius: var(--radius-lg);
@@ -113,36 +159,52 @@
   position: relative;
 }
 
+/*
+ * ソースカード内の矢印アイコン (.source-card::after)
+ * ホバー時に表示される。
+ */
 .source-card::after {
-  content: '→';
+  content: '→'; /* 矢印の絵文字 */
   position: absolute;
   top: var(--space-lg);
   right: var(--space-lg);
   font-size: 1.5rem;
   color: var(--color-primary);
-  opacity: 0;
-  transform: translateX(-10px);
+  opacity: 0; /* デフォルトでは非表示 */
+  transform: translateX(-10px); /* 少し左にずらしておく */
   transition: all var(--transition-base);
 }
 
+/*
+ * ソースカードのホバー時のスタイル
+ */
 .source-card:hover {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 236, 0.95) 100%);
   border-color: var(--border-strong);
-  transform: translateX(4px);
+  transform: translateX(4px); /* 少し右に移動 */
   box-shadow: var(--shadow-md);
 }
 
+/*
+ * ホバー時に矢印アイコンを表示
+ */
 .source-card:hover::after {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0); /* 元の位置に戻す */
 }
 
+/*
+ * ソースカード内の見出し (h3)
+ */
 .source-card h3 {
   margin: 0 0 var(--space-xs);
   font-size: 1.1rem;
   color: var(--text-primary);
 }
 
+/*
+ * ソースカード内のリンク (a)
+ */
 .source-card a {
   color: var(--color-primary-bright);
   text-decoration: none;
@@ -151,33 +213,46 @@
   transition: color var(--transition-fast);
 }
 
+/*
+ * ソースカード内のリンクのホバー時
+ */
 .source-card a:hover {
   color: var(--color-accent);
 }
 
+/*
+ * ソースメタ情報 (.source-meta)
+ */
 .source-meta {
   margin-top: var(--space-sm);
   font-size: 0.8rem;
   color: var(--text-muted);
 }
 
-/* === 記事コンテンツ === */
+/* === 記事コンテンツ (.post-article) === */
 .post-article {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(170deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 239, 0.92) 100%);
   border: 1px solid rgba(255, 190, 210, 0.6);
   border-radius: var(--radius-2xl);
-  padding: clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 4vw, 3.5rem); /* レスポンシブな内側余白 */
   box-shadow: var(--shadow-lg);
-  max-width: 850px;
-  margin: 0 auto;
+  max-width: 850px; /* 最大幅 */
+  margin: 0 auto; /* 中央揃え */
 }
 
+/*
+ * 記事コンテンツ内の見出し (h1)
+ */
 .post-article h1 {
   margin-top: 0;
   margin-bottom: var(--space-xl);
   color: var(--text-primary);
 }
 
+/*
+ * 記事コンテンツ内の見出し (h2, h3)
+ */
 .post-article h2,
 .post-article h3 {
   color: var(--text-primary);
@@ -185,30 +260,45 @@
   margin-bottom: var(--space-lg);
 }
 
+/*
+ * 記事コンテンツ内のリスト (ul, ol)
+ */
 .post-article ul,
 .post-article ol {
-  padding-left: var(--space-xl);
+  padding-left: var(--space-xl); /* 左側のインデント */
   margin-bottom: var(--space-lg);
 }
 
+/*
+ * 記事コンテンツ内のリストアイテム (li)
+ */
 .post-article li {
   margin-bottom: var(--space-sm);
   color: var(--text-secondary);
 }
 
+/*
+ * 記事コンテンツ内のリンク (a)
+ */
 .post-article a {
   color: var(--color-primary-bright);
-  text-decoration: underline;
-  text-decoration-color: rgba(91, 158, 255, 0.3);
-  text-underline-offset: 3px;
+  text-decoration: underline; /* 下線 */
+  text-decoration-color: rgba(91, 158, 255, 0.3); /* 下線の色 */
+  text-underline-offset: 3px; /* 下線とテキストの距離 */
   transition: all var(--transition-fast);
 }
 
+/*
+ * 記事コンテンツ内のリンクのホバー時
+ */
 .post-article a:hover {
   color: var(--color-accent);
   text-decoration-color: var(--color-accent);
 }
 
+/*
+ * 記事コンテンツ内の画像 (img)
+ */
 .post-article img {
   max-width: 100%;
   height: auto;
@@ -217,6 +307,9 @@
   box-shadow: var(--shadow-md);
 }
 
+/*
+ * 記事コンテンツ内のインラインコード (code)
+ */
 .post-article code {
   background: var(--surface-tertiary);
   padding: 0.2em 0.5em;
@@ -226,18 +319,24 @@
   border: 1px solid var(--border-subtle);
 }
 
+/*
+ * 記事コンテンツ内のコードブロック (pre)
+ */
 .post-article pre {
   background: var(--surface-secondary);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
-  overflow-x: auto;
+  overflow-x: auto; /* 横にはみ出す場合にスクロールバーを表示 */
   margin: var(--space-lg) 0;
 }
 
+/*
+ * コードブロック内のインラインコード (pre code)
+ * 親要素のスタイルをリセット
+ */
 .post-article pre code {
   background: none;
   border: none;
   padding: 0;
 }
-

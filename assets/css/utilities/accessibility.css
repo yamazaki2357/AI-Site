@@ -1,15 +1,32 @@
+/**
+ * @fileoverview アクセシビリティ & ユーティリティスタイル
+ * ユーザーのアクセシビリティ設定（動きを抑える、ダークモードなど）や、
+ * パフォーマンス最適化、印刷時のスタイル調整など、
+ * サイト全体の体験を向上させるための補助的なスタイルを定義します。
+ */
+
 /* === アクセシビリティ - 動きを抑える設定 === */
+/*
+ * ユーザーがシステム設定で「動きを減らす」を有効にしている場合、
+ * アニメーションやトランジションの時間を最小限に抑えます。
+ * これにより、視覚的な刺激に敏感なユーザーへの配慮を行います。
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important; /* アニメーション時間をほぼゼロに */
+    animation-iteration-count: 1 !important; /* アニメーションの繰り返しを1回に */
+    transition-duration: 0.01ms !important; /* トランジション時間をほぼゼロに */
   }
 }
 
 /* === ダークモード対応（将来の拡張用） === */
+/*
+ * ユーザーがシステム設定で「ダークモード」を有効にしている場合のスタイルを定義するメディアクエリです。
+ * 現在はライトモードのみ対応していますが、将来的にダークモード用の変数をここに追加することで、
+ * 容易にダークモードを実装できます。
+ */
 @media (prefers-color-scheme: dark) {
   /* 現在はライトモードのみ対応 */
   /* 将来的にダークモード変数をここに追加可能 */
@@ -17,24 +34,40 @@
 
 /* === パフォーマンス最適化 === */
 
-/* GPU アクセラレーション */
+/*
+ * GPU アクセラレーションの適用
+ * アニメーションや変形が頻繁に発生する要素に `will-change` プロパティを設定し、
+ * ブラウザに事前にGPUリソースを準備させることで、アニメーションのパフォーマンスを向上させます。
+ * `transform: translateZ(0)` や `backface-visibility: hidden` は、
+ * 要素を3Dレイヤーに昇格させるためのハックとして使用されることがあります。
+ */
 .post-card,
 .workflow-card,
 .source-card,
 .button,
 .site-header {
-  will-change: transform;
-  transform: translateZ(0);
-  backface-visibility: hidden;
+  will-change: transform; /* transformプロパティが変更されることをブラウザに伝える */
+  transform: translateZ(0); /* GPUアクセラレーションを強制的に有効にするハック */
+  backface-visibility: hidden; /* 同上 */
 }
 
-/* レイアウトシフト防止 */
+/*
+ * レイアウトシフト防止 (CLS: Cumulative Layout Shift 対策)
+ * 画像の読み込みによるレイアウトのずれを防ぐために、
+ * `aspect-ratio` プロパティを使用して、画像が読み込まれる前に領域を確保します。
+ * `attr(width) / attr(height)` は、HTMLのwidth/height属性からアスペクト比を計算します。
+ */
 .logo,
 .post-card img {
   aspect-ratio: attr(width) / attr(height);
 }
 
-/* フォント読み込み最適化 */
+/*
+ * フォント読み込み最適化
+ * `font-display: swap` をサポートするブラウザでは、カスタムフォントの読み込み中に
+ * 代替フォントを表示し、読み込み完了後にカスタムフォントに切り替えることで、
+ * テキストの表示遅延を防ぎます (FOIT/FOUT対策)。
+ */
 @supports (font-display: swap) {
   @font-face {
     font-display: swap;
@@ -42,20 +75,29 @@
 }
 
 /* === 高解像度ディスプレイ対応 === */
+/*
+ * Retinaディスプレイなどの高解像度ディスプレイで、
+ * ロゴなどの画像が鮮明に表示されるように最適化します。
+ */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .logo {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast; /* WebKit系ブラウザでの画像レンダリング最適化 */
+    image-rendering: crisp-edges; /* ピクセルパーフェクトなレンダリングを試みる */
   }
 }
 
 /* === 印刷スタイル === */
+/*
+ * ページが印刷される際のスタイルを定義します。
+ * 不要な要素を非表示にし、印刷に適したレイアウトに調整します。
+ */
 @media print {
   body {
-    background: white;
-    color: black;
+    background: white; /* 背景を白に */
+    color: black; /* 文字色を黒に */
   }
 
+  /* 印刷時に不要なUI要素を非表示にする */
   .site-header,
   .site-footer,
   .ad-container,
@@ -64,16 +106,17 @@
     display: none;
   }
 
+  /* 記事コンテンツの影やボーダーを調整し、印刷に適した見た目にする */
   .article-content,
   .post-article {
     box-shadow: none;
     border: 1px solid #ddd;
   }
 
+  /* 外部リンクのURLをテキストとして表示する */
   a[href^="http"]::after {
-    content: " (" attr(href) ")";
+    content: " (" attr(href) ")"; /* リンクの後にURLを表示 */
     font-size: 0.8em;
     color: #666;
   }
 }
-

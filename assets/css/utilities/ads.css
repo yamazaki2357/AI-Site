@@ -1,82 +1,119 @@
-/* === Google AdSense 広告枠 === */
+/**
+ * @fileoverview 広告表示関連のスタイル
+ * Google AdSense広告の表示領域（広告枠）のレイアウトとデザインを定義します。
+ * 広告の配置場所に応じたサイズや、レスポンシブな調整が含まれます。
+ */
+
+/* === Google AdSense 広告枠 (.ad-container) === */
 .ad-container {
-  margin: var(--space-2xl) auto;
-  padding: var(--space-lg);
+  margin: var(--space-2xl) auto; /* 上下の余白と中央揃え */
+  padding: var(--space-lg); /* 内側の余白 */
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 247, 240, 0.92) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.5);
-  border-radius: var(--radius-lg);
-  text-align: center;
-  min-height: 100px;
+  border: 1px solid rgba(255, 190, 210, 0.5); /* ボーダー */
+  border-radius: var(--radius-lg); /* 角丸 */
+  text-align: center; /* コンテンツを中央揃え */
+  min-height: 100px; /* 最小の高さ */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* 垂直方向中央揃え */
+  justify-content: center; /* 水平方向中央揃え */
 }
 
+/*
+ * ヘッダー下の広告枠 (.ad-container.ad-header)
+ */
 .ad-container.ad-header {
   margin: var(--space-xl) 0;
-  min-height: 90px; /* レスポンシブ広告用 */
+  min-height: 90px; /* レスポンシブ広告の一般的な高さ */
 }
 
+/*
+ * サイドバーの広告枠 (.ad-container.ad-sidebar)
+ */
 .ad-container.ad-sidebar {
-  position: sticky;
-  top: 100px;
-  min-height: 600px;
+  position: sticky; /* スクロールに追従 */
+  top: 100px; /* ヘッダーの下に配置 */
+  min-height: 600px; /* 縦長の広告用 */
   margin: 0;
 }
 
+/*
+ * 記事上部の広告枠 (.ad-container.ad-article-top)
+ */
 .ad-container.ad-article-top {
   margin: var(--space-xl) 0 var(--space-2xl);
-  min-height: 250px; /* レクタングル広告用 */
+  min-height: 250px; /* レクタングル広告の一般的な高さ */
 }
 
+/*
+ * 記事中間の広告枠 (.ad-container.ad-article-middle)
+ */
 .ad-container.ad-article-middle {
   margin: var(--space-2xl) 0;
   min-height: 250px;
 }
 
+/*
+ * 記事下部の広告枠 (.ad-container.ad-article-bottom)
+ */
 .ad-container.ad-article-bottom {
   margin: var(--space-2xl) 0 var(--space-xl);
   min-height: 250px;
 }
 
+/*
+ * インフィード広告枠 (.ad-container.ad-infeed)
+ * 記事リストなどに自然に溶け込む広告。
+ */
 .ad-container.ad-infeed {
   margin: var(--space-lg) 0;
   min-height: 150px;
-  background: transparent;
-  border: none;
+  background: transparent; /* 背景なし */
+  border: none; /* ボーダーなし */
   padding: 0;
 }
 
-/* 広告ラベル */
+/*
+ * 広告ラベル (.ad-label)
+ * 「広告」と表示される小さなラベル。
+ */
 .ad-label {
   position: absolute;
   top: var(--space-xs);
   right: var(--space-xs);
   font-size: 0.7rem;
   color: var(--text-muted);
-  text-transform: uppercase;
+  text-transform: uppercase; /* 大文字に変換 */
   letter-spacing: 0.05em;
-  background: rgba(255, 212, 82, 0.15);
+  background: rgba(255, 212, 82, 0.15); /* 薄い黄色の背景 */
   padding: 0.2rem 0.5rem;
   border-radius: var(--radius-sm);
 }
 
-/* 広告プレースホルダー（開発時用） */
+/*
+ * 広告プレースホルダー（開発時用） (.ad-placeholder)
+ */
 .ad-placeholder {
   color: var(--text-tertiary);
   font-size: 0.9rem;
   font-style: italic;
 }
 
-/* タブレット向け広告調整 */
+/* === レスポンシブ対応 === */
+
+/*
+ * タブレット向け広告調整 (画面幅1024px以下)
+ */
 @media (max-width: 1024px) {
   .ad-container.ad-sidebar {
-    position: static; /* stickyを解除 */
+    position: static; /* stickyを解除し、通常の配置に戻す */
     min-height: 400px;
   }
 }
 
-/* モバイルでの広告調整 */
+/*
+ * モバイルでの広告調整 (画面幅768px以下)
+ */
 @media (max-width: 768px) {
   .ad-container.ad-sidebar {
     display: none; /* モバイルではサイドバー広告を非表示 */
@@ -91,38 +128,47 @@
   .ad-container.ad-article-top,
   .ad-container.ad-article-middle,
   .ad-container.ad-article-bottom {
-    min-height: 200px;
+    min-height: 200px; /* 記事内の広告の高さを調整 */
   }
 
   .ad-container.ad-header {
-    min-height: 50px; /* モバイルではより小さく */
+    min-height: 50px; /* モバイルではヘッダー広告をより小さく */
   }
 }
 
-/* サイドバーレイアウト（広告用） */
+/* === サイドバーレイアウト（広告用） === */
 .content-with-sidebar {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 300px; /* メインコンテンツとサイドバーの2カラム */
   gap: var(--space-2xl);
   max-width: 1400px;
   margin: 0 auto;
 }
 
+/*
+ * メインコンテンツエリア (.main-content)
+ */
 .main-content {
-  min-width: 0;
+  min-width: 0; /* Flex/Gridアイテムの最小幅をリセット */
 }
 
+/*
+ * サイドバーエリア (.sidebar)
+ */
 .sidebar {
   position: relative;
 }
 
+/*
+ * 画面幅1024px以下の場合のサイドバーレイアウト
+ * サイドバーを非表示にし、メインコンテンツを1カラムにする。
+ */
 @media (max-width: 1024px) {
   .content-with-sidebar {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* 1カラムレイアウト */
   }
 
   .sidebar {
-    display: none;
+    display: none; /* サイドバーを非表示 */
   }
 }
-

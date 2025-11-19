@@ -1,44 +1,66 @@
-/* === 記事詳細ページ === */
+/**
+ * @fileoverview 記事詳細ページのスタイル
+ * 記事のヒーローセクション、本文、目次、サイドバー、結論など、
+ * 記事詳細ページ固有のレイアウトとデザインを定義します。
+ */
+
+/*
+ * 記事ページ (`body.article-page`) のメインコンテンツのパディング調整
+ */
 body.article-page main {
   padding-top: var(--space-2xl);
 }
 
+/*
+ * 記事詳細コンテナ (.article-detail)
+ * 記事の主要なセクションを縦に並べるためのFlexコンテナ。
+ */
 .article-detail {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-2xl); /* セクション間の余白 */
 }
 
-/* 読み進捗インジケーター */
+/* === 読み進捗インジケーター (.reading-progress) === */
 .reading-progress {
-  position: fixed;
+  position: fixed; /* 画面上部に固定 */
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
-  background: rgba(255, 190, 210, 0.2);
-  z-index: 1002;
-  pointer-events: none;
+  height: 4px; /* バーの高さ */
+  background: rgba(255, 190, 210, 0.2); /* バーの背景色 */
+  z-index: 1002; /* 他の要素より手前に表示 */
+  pointer-events: none; /* クリックイベントを透過 */
 }
 
+/*
+ * 読み進捗バー本体 (.reading-progress-bar)
+ * JavaScriptによって幅が変化し、進捗を示す。
+ */
 .reading-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent-secondary));
-  width: 0%;
-  transition: width 150ms ease-out;
-  box-shadow: 0 0 10px rgba(255, 116, 177, 0.5);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent-secondary)); /* グラデーション */
+  width: 0%; /* 初期状態では非表示 */
+  transition: width 150ms ease-out; /* 幅の変化を滑らかにアニメーション */
+  box-shadow: 0 0 10px rgba(255, 116, 177, 0.5); /* 影 */
 }
 
+/* === 記事ヒーローセクション (.article-hero) === */
 .article-hero {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 240, 245, 0.92) 60%, rgba(255, 248, 228, 0.9) 100%);
   border: 1px solid rgba(255, 190, 210, 0.6);
   border-radius: var(--radius-2xl);
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 3rem); /* レスポンシブな内側余白 */
   box-shadow: var(--shadow-lg);
   position: relative;
   overflow: hidden;
 }
 
+/*
+ * 記事ヒーローセクション内の装飾的な疑似要素 (::after)
+ * 右上に配置される円形のグラデーション。
+ */
 .article-hero::after {
   content: '';
   position: absolute;
@@ -48,6 +70,9 @@ body.article-page main {
   z-index: 0;
 }
 
+/*
+ * 記事のアイブロウテキスト (.article-eyebrow)
+ */
 .article-eyebrow {
   font-size: 0.75rem;
   letter-spacing: 0.16em;
@@ -57,15 +82,24 @@ body.article-page main {
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * 記事ヒーローセクションのメインコンテンツ (.article-hero-main)
+ */
 .article-hero-main {
   position: relative;
   z-index: 1;
 }
 
+/*
+ * 記事ヒーローセクション内の見出し (h1)
+ */
 .article-hero-main h1 {
   margin: var(--space-sm) 0;
 }
 
+/*
+ * 記事の概要テキスト (.article-summary)
+ */
 .article-summary {
   font-size: 1.15rem;
   color: var(--text-secondary);
@@ -74,6 +108,10 @@ body.article-page main {
   line-height: 1.7;
 }
 
+/*
+ * 記事ヒーローセクションのレイアウト (.article-hero-layout)
+ * グリッドレイアウトでコンテンツを配置。
+ */
 .article-hero-layout {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -83,6 +121,10 @@ body.article-page main {
   z-index: 1;
 }
 
+/*
+ * 記事メタ情報グリッド (.article-meta-grid)
+ * 公開日やソース情報などを表示するカードのグリッド。
+ */
 .article-meta-grid {
   margin-top: var(--space-xl);
   display: grid;
@@ -92,6 +134,9 @@ body.article-page main {
   z-index: 1;
 }
 
+/*
+ * メタ情報カード (.meta-card)
+ */
 .meta-card {
   background: linear-gradient(165deg, rgba(255, 255, 255, 0.95), rgba(255, 246, 252, 0.9));
   border: 1px solid rgba(255, 190, 210, 0.6);
@@ -100,6 +145,9 @@ body.article-page main {
   box-shadow: var(--shadow-sm);
 }
 
+/*
+ * メタ情報ラベル (.meta-label)
+ */
 .meta-label {
   font-size: 0.8rem;
   font-weight: 600;
@@ -109,6 +157,9 @@ body.article-page main {
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * メタ情報値 (.meta-value)
+ */
 .meta-value {
   font-size: 1.35rem;
   font-weight: 700;
@@ -116,11 +167,17 @@ body.article-page main {
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * メタ情報カード内のリンク (a)
+ */
 .meta-card a {
   color: var(--color-primary);
   font-weight: 600;
 }
 
+/*
+ * 記事タグリスト (.article-tags)
+ */
 .article-tags {
   list-style: none;
   display: flex;
@@ -131,6 +188,9 @@ body.article-page main {
   z-index: 1;
 }
 
+/*
+ * 記事タグリストの各アイテム (li)
+ */
 .article-tags li {
   padding: 0.4rem 1rem;
   border-radius: var(--radius-full);
@@ -141,28 +201,42 @@ body.article-page main {
   transition: all var(--transition-fast);
 }
 
+/*
+ * 記事タグのホバー時
+ */
 .article-tags li:hover {
   background: rgba(255, 241, 247, 1);
   border-color: var(--color-primary);
   transform: translateY(-1px);
 }
 
+/* === 記事グリッド (.article-grid) === */
 .article-grid {
   display: grid;
   gap: var(--space-2xl);
-  align-items: flex-start;
+  align-items: flex-start; /* 上揃え */
 }
 
+/*
+ * 画面幅が1024px以上の場合の記事グリッドレイアウト
+ * メインコンテンツとサイドバーの2カラムレイアウト。
+ */
 @media (min-width: 1024px) {
   .article-grid {
-    grid-template-columns: minmax(0, 2.6fr) minmax(260px, 1fr);
+    grid-template-columns: minmax(0, 2.6fr) minmax(260px, 1fr); /* メインコンテンツが広く、サイドバーが狭い */
   }
 }
 
+/*
+ * 記事メインカラム (.article-main-column)
+ */
 .article-main-column {
-  min-width: 0;
+  min-width: 0; /* Flex/Gridアイテムの最小幅をリセット */
 }
 
+/*
+ * 記事コンテンツ本体 (.article-content)
+ */
 .article-content {
   background: var(--surface-primary);
   border-radius: var(--radius-2xl);
@@ -171,13 +245,16 @@ body.article-page main {
   box-shadow: var(--shadow-md);
 }
 
-/* イントロセクション */
+/* === イントロセクション (.article-intro-block) === */
 .article-intro-block {
   margin-bottom: var(--space-2xl);
   padding-bottom: var(--space-xl);
-  border-bottom: 2px solid rgba(255, 190, 210, 0.3);
+  border-bottom: 2px solid rgba(255, 190, 210, 0.3); /* 下部の区切り線 */
 }
 
+/*
+ * イントロコンテンツ (.intro-content)
+ */
 .intro-content {
   font-size: 1.1rem;
   line-height: 1.9;
@@ -188,17 +265,27 @@ body.article-page main {
   margin-bottom: var(--space-lg);
 }
 
-/* セクション */
-.article-section {
-  scroll-margin-top: 100px; /* スティッキーヘッダー対応 */
+.intro-content p:last-child {
+  margin-bottom: 0;
 }
 
+/* === 記事セクション (.article-section) === */
+.article-section {
+  scroll-margin-top: 100px; /* スティッキーヘッダーの高さ分、スクロール位置を調整 */
+}
+
+/*
+ * 連続する記事セクション間のスタイル
+ */
 .article-section + .article-section {
   margin-top: var(--space-3xl);
   padding-top: var(--space-2xl);
-  border-top: 1px solid rgba(255, 190, 210, 0.25);
+  border-top: 1px solid rgba(255, 190, 210, 0.25); /* 上部の区切り線 */
 }
 
+/*
+ * セクション見出し (.section-heading)
+ */
 .section-heading {
   position: relative;
   margin-bottom: var(--space-xl);
@@ -207,6 +294,9 @@ body.article-page main {
   font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
+/*
+ * セクション見出しの下線装飾 (::after)
+ */
 .section-heading::after {
   content: '';
   position: absolute;
@@ -218,11 +308,14 @@ body.article-page main {
   border-radius: var(--radius-full);
 }
 
+/*
+ * セクション概要 (.section-overview)
+ */
 .section-overview {
   margin-bottom: var(--space-xl);
   padding: var(--space-lg);
   background: rgba(255, 241, 247, 0.5);
-  border-left: 4px solid var(--color-primary);
+  border-left: 4px solid var(--color-primary); /* 左側のアクセントボーダー */
   border-radius: var(--radius-md);
   font-size: 1.05rem;
   line-height: 1.8;
@@ -233,13 +326,16 @@ body.article-page main {
   margin-bottom: 0;
 }
 
-/* サブセクション */
+/* === サブセクション (.article-subsection) === */
 .article-subsection {
   margin-top: var(--space-xl);
   padding-left: var(--space-lg);
-  border-left: 2px solid rgba(255, 190, 210, 0.35);
+  border-left: 2px solid rgba(255, 190, 210, 0.35); /* 左側の区切り線 */
 }
 
+/*
+ * サブセクション見出し (.subsection-heading)
+ */
 .subsection-heading {
   margin-bottom: var(--space-md);
   color: var(--text-primary);
@@ -247,6 +343,9 @@ body.article-page main {
   font-weight: 600;
 }
 
+/*
+ * サブセクション本文 (.subsection-body)
+ */
 .subsection-body {
   font-size: 1.05rem;
   line-height: 1.85;
@@ -261,7 +360,7 @@ body.article-page main {
   margin-bottom: 0;
 }
 
-/* まとめセクション */
+/* === まとめセクション (.article-conclusion) === */
 .article-conclusion {
   margin-top: var(--space-3xl);
   padding: clamp(2rem, 4vw, 3rem);
@@ -271,6 +370,9 @@ body.article-page main {
   box-shadow: var(--shadow-lg);
 }
 
+/*
+ * まとめセクションの見出し (.conclusion-heading)
+ */
 .conclusion-heading {
   margin-bottom: var(--space-lg);
   text-align: center;
@@ -278,6 +380,9 @@ body.article-page main {
   color: var(--text-primary);
 }
 
+/*
+ * まとめセクションのコンテンツ (.conclusion-content)
+ */
 .conclusion-content {
   font-size: 1.08rem;
   line-height: 1.9;
@@ -294,6 +399,9 @@ body.article-page main {
   margin-bottom: 0;
 }
 
+/*
+ * セクションのアイブロウテキスト (.section-eyebrow)
+ */
 .section-eyebrow {
   font-size: 0.8rem;
   letter-spacing: 0.2em;
@@ -302,17 +410,21 @@ body.article-page main {
   margin-bottom: var(--space-xs);
 }
 
+/* === 記事サイドバー (.article-sidebar) === */
 .article-sidebar {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  position: sticky;
-  top: 80px;
-  align-self: flex-start;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
+  position: sticky; /* スクロールに追従 */
+  top: 80px; /* ヘッダーの下に配置 */
+  align-self: flex-start; /* 親のFlexコンテナ内で上揃え */
+  max-height: calc(100vh - 100px); /* ビューポートの高さに合わせて最大高さを制限 */
+  overflow-y: auto; /* 内容がはみ出す場合にスクロールバーを表示 */
 }
 
+/*
+ * サイドバー内のカード (.article-card)
+ */
 .article-card {
   background: var(--surface-secondary);
   border-radius: var(--radius-xl);
@@ -322,11 +434,17 @@ body.article-page main {
   transition: all var(--transition-base);
 }
 
+/*
+ * サイドバーカードのホバー時
+ */
 .article-card:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--border-medium);
 }
 
+/*
+ * サイドバーカードのヘッダー (.article-card-header)
+ */
 .article-card-header {
   display: flex;
   align-items: center;
@@ -335,10 +453,16 @@ body.article-page main {
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * 目次カード内のラベル (.article-card.article-toc .article-card-label)
+ */
 .article-card.article-toc .article-card-label {
   margin-bottom: 0;
 }
 
+/*
+ * サイドバーカードのラベル (.article-card-label)
+ */
 .article-card-label {
   font-size: 0.75rem;
   font-weight: 700;
@@ -348,10 +472,16 @@ body.article-page main {
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * 目次パネル (.toc-panel)
+ */
 .toc-panel {
   margin-top: var(--space-md);
 }
 
+/*
+ * 目次の現在位置表示 (.toc-current-section)
+ */
 .toc-current-section {
   margin: 0 0 var(--space-sm);
   font-size: 0.85rem;
@@ -359,8 +489,12 @@ body.article-page main {
   color: var(--text-tertiary);
 }
 
+/*
+ * 目次トグルボタン (.toc-toggle)
+ * モバイル表示時に目次を折りたたむためのボタン。
+ */
 .toc-toggle {
-  display: none;
+  display: none; /* デスクトップでは非表示 */
   align-items: center;
   gap: 0.35rem;
   border: 1px solid var(--border-medium);
@@ -374,19 +508,31 @@ body.article-page main {
   transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
+/*
+ * 目次トグルボタンのフォーカス時
+ */
 .toc-toggle:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 4px;
 }
 
+/*
+ * 目次トグルボタンのホバー時
+ */
 .toc-toggle:hover {
   box-shadow: var(--shadow-sm);
 }
 
+/*
+ * モバイルで目次が閉じている状態のカード (.article-card.article-toc[data-mobile-collapsed="true"])
+ */
 .article-card.article-toc[data-mobile-collapsed="true"] {
   background: rgba(255, 248, 252, 0.95);
 }
 
+/*
+ * 目次リスト (.toc-list)
+ */
 .toc-list {
   list-style: none;
   display: flex;
@@ -394,19 +540,29 @@ body.article-page main {
   gap: 0.75rem;
 }
 
+/*
+ * 目次リストの各アイテム (li)
+ */
 .toc-list li {
   transition: all var(--transition-fast);
   padding: 0.35rem var(--space-sm);
   border-radius: var(--radius-sm);
 }
 
+/*
+ * アクティブな目次アイテム (li.active)
+ * 現在読んでいるセクションに対応する目次アイテム。
+ */
 .toc-list li.active {
   background: rgba(255, 241, 247, 0.9);
-  border-left: 3px solid var(--color-primary);
+  border-left: 3px solid var(--color-primary); /* 左側にアクセントボーダー */
   padding-left: calc(var(--space-sm) + 3px);
-  transform: translateX(4px);
+  transform: translateX(4px); /* 少し右に移動 */
 }
 
+/*
+ * 目次リスト内のリンク (a)
+ */
 .toc-list a {
   color: var(--text-primary);
   font-weight: 600;
@@ -418,56 +574,89 @@ body.article-page main {
   gap: 0.65rem;
 }
 
+/*
+ * 目次リンクのホバー時
+ */
 .toc-list a:hover {
   color: var(--color-primary);
 }
 
+/*
+ * アクティブな目次リンク
+ */
 .toc-list li.active a {
   color: var(--color-primary);
   font-weight: 700;
 }
 
+/*
+ * 階層が深い目次アイテム (li.is-depth)
+ * H3見出しに対応する目次アイテム。
+ */
 .toc-list li.is-depth {
-  padding-left: calc(var(--space-md) + 0.5rem);
+  padding-left: calc(var(--space-md) + 0.5rem); /* インデントを深くする */
   font-size: 0.9rem;
   color: var(--text-tertiary);
 }
 
+/*
+ * 目次番号 (.toc-index)
+ */
 .toc-index {
   min-width: 2.4rem;
   text-align: right;
   font-size: 0.85rem;
   font-weight: 700;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums; /* 数字の幅を揃える */
   color: var(--text-muted);
   line-height: 1.5;
 }
 
+/*
+ * 階層が深い目次アイテムの番号
+ */
 .toc-list li.is-depth .toc-index {
   min-width: 3rem;
   font-size: 0.8rem;
   color: var(--text-tertiary);
 }
 
+/*
+ * アクティブな目次アイテムの番号
+ */
 .toc-list li.active .toc-index {
   color: var(--color-primary);
 }
 
+/*
+ * 目次テキスト (.toc-text)
+ */
 .toc-text {
-  flex: 1;
+  flex: 1; /* 利用可能なスペースを埋める */
 }
 
+/*
+ * 目次ターゲット (.toc-target)
+ * スクロール時にヘッダーに隠れないように調整。
+ */
 .toc-target {
-  scroll-margin-top: 120px;
+  scroll-margin-top: 120px; /* スティッキーヘッダーの高さ分、スクロール位置を調整 */
 }
 
+/*
+ * アクティブな目次ターゲット (.toc-target.toc-target-active)
+ * 現在表示中のセクションの見出し。
+ */
 .toc-target.toc-target-active {
   position: relative;
-  background: linear-gradient(90deg, rgba(255, 241, 247, 0.6), transparent 75%);
+  background: linear-gradient(90deg, rgba(255, 241, 247, 0.6), transparent 75%); /* 薄い背景グラデーション */
   border-radius: var(--radius-sm);
   padding-left: 0.35rem;
 }
 
+/*
+ * アクティブな目次ターゲットの左側装飾 (::before)
+ */
 .toc-target.toc-target-active::before {
   content: '';
   position: absolute;
@@ -477,26 +666,37 @@ body.article-page main {
   width: 4px;
   border-radius: var(--radius-full);
   background: var(--color-primary);
-  box-shadow: 0 0 12px rgba(255, 116, 177, 0.4);
+  box-shadow: 0 0 12px rgba(255, 116, 177, 0.4); /* グロー効果 */
 }
 
+/*
+ * 記事内の注釈テキスト (.article-note-text)
+ */
 .article-note-text {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.6;
 }
 
+/* === 記事パネル (.article-panels) === */
 .article-panels {
   display: grid;
   gap: var(--space-xl);
 }
 
+/*
+ * 画面幅が960px以上の場合のパネルレイアウト
+ * 2カラムにする。
+ */
 @media (min-width: 960px) {
   .article-panels {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
+/*
+ * 個々の記事パネル (.article-panel)
+ */
 .article-panel {
   background: var(--surface-primary);
   border-radius: var(--radius-2xl);
@@ -505,6 +705,9 @@ body.article-page main {
   box-shadow: var(--shadow-md);
 }
 
+/*
+ * パネル内のラベル (.panel-label)
+ */
 .panel-label {
   display: inline-flex;
   align-items: center;
@@ -517,6 +720,9 @@ body.article-page main {
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * インサイトリスト (.insight-list)
+ */
 .insight-list,
 .reference-list {
   list-style: none;
@@ -526,6 +732,9 @@ body.article-page main {
   gap: var(--space-sm);
 }
 
+/*
+ * インサイトリストの各アイテム (li)
+ */
 .insight-list li {
   padding: var(--space-sm) var(--space-md);
   background: rgba(255, 241, 247, 0.9);
@@ -533,18 +742,24 @@ body.article-page main {
   border: 1px solid rgba(255, 190, 210, 0.5);
 }
 
+/*
+ * 参照リスト (.reference-list) の各アイテム (li)
+ */
 .reference-list li {
   padding: var(--space-sm) 0;
   border-bottom: 1px solid rgba(255, 190, 210, 0.3);
 }
 
+/*
+ * 参照リストの最後のアイテムは下線なし
+ */
 .reference-list li:last-child {
   border-bottom: none;
 }
 
+/*
+ * 参照リスト内のリンク (a)
+ */
 .reference-list a {
   font-weight: 600;
 }
-
-/* 記事ページのモバイル対応（旧スタイルを削除してより詳細な対応を追加） */
-

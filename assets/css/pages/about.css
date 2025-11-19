@@ -1,13 +1,23 @@
-/* === About Page Specific Styles === */
+/**
+ * @fileoverview 「このサイトについて」ページ固有のスタイル
+ * サイトの概要、技術スタック、問い合わせ情報などを表示する
+ * 「このサイトについて」ページのデザインを定義します。
+ */
+
+/* === イントロダクションセクション (.about-intro) === */
 .about-intro {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(135deg, rgba(255, 182, 193, 0.12), rgba(255, 214, 235, 0.15));
-  border-left: 4px solid var(--color-primary);
-  padding: var(--space-lg) var(--space-xl);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--space-2xl);
-  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--color-primary); /* 左側にアクセントボーダー */
+  padding: var(--space-lg) var(--space-xl); /* 内側の余白 */
+  border-radius: var(--radius-md); /* 角丸 */
+  margin-bottom: var(--space-2xl); /* 下部の余白 */
+  box-shadow: var(--shadow-sm); /* 影 */
 }
 
+/*
+ * イントロダクションセクション内の段落 (p)
+ */
 .about-intro p {
   font-size: 1.1rem;
   line-height: 1.8;
@@ -16,6 +26,7 @@
   max-width: 100%;
 }
 
+/* === 汎用情報ボックスの共通スタイル (.info-box, .technical-detail, .cta-box) === */
 .info-box,
 .technical-detail,
 .cta-box {
@@ -23,41 +34,60 @@
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
-  margin: var(--space-xl) 0;
+  margin: var(--space-xl) 0; /* 上下の余白 */
   box-shadow: var(--shadow-sm);
 }
 
+/*
+ * 情報ボックス (.info-box) - 黄色系のアクセント
+ */
 .info-box {
   background: linear-gradient(135deg, rgba(255, 248, 196, 0.3), rgba(255, 247, 243, 0.6));
-  border-left: 3px solid var(--color-accent);
+  border-left: 3px solid var(--color-accent); /* 左側にアクセントボーダー */
 }
 
+/*
+ * 技術詳細ボックス (.technical-detail) - 青系のアクセント
+ */
 .technical-detail {
   background: linear-gradient(135deg, rgba(183, 225, 247, 0.2), rgba(255, 247, 243, 0.5));
-  border-left: 3px solid var(--color-primary-bright);
+  border-left: 3px solid var(--color-primary-bright); /* 左側にアクセントボーダー */
 }
 
+/*
+ * 技術詳細ボックス内の段落 (p)
+ */
 .technical-detail p {
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * 技術詳細ボックス内のリスト (ul)
+ */
 .technical-detail ul {
   margin-top: var(--space-sm);
   margin-bottom: 0;
 }
 
+/*
+ * CTA (Call To Action) ボックス (.cta-box) - ピンク系のアクセント
+ */
 .cta-box {
   background: linear-gradient(135deg, rgba(255, 182, 193, 0.15), rgba(255, 214, 235, 0.2));
-  border: 2px solid var(--color-primary);
-  text-align: center;
+  border: 2px solid var(--color-primary); /* 強調されたボーダー */
+  text-align: center; /* テキストを中央揃え */
 }
 
+/*
+ * CTAボックス内の段落 (p)
+ */
 .cta-box p {
   margin: 0;
   max-width: 100%;
   font-size: 1.05rem;
 }
 
+/* === 技術スタックセクション (.tech-stack) === */
 .tech-stack {
   background: var(--surface-primary);
   border: 1px solid var(--border-medium);
@@ -67,43 +97,53 @@
   box-shadow: var(--shadow-md);
 }
 
+/*
+ * 技術スタックの定義リスト (dl)
+ */
 .tech-stack dl {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  grid-template-columns: 1fr; /* 1カラムレイアウト */
+  gap: var(--space-lg); /* アイテム間の余白 */
 }
 
+/*
+ * 技術スタックの定義用語 (dt)
+ */
 .tech-stack dt {
   font-weight: 700;
   color: var(--color-primary);
   font-size: 0.95rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: uppercase; /* 大文字に変換 */
+  letter-spacing: 0.05em; /* 文字間を広げる */
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * 技術スタックの定義説明 (dd)
+ */
 .tech-stack dd {
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.6;
-  padding-left: var(--space-md);
-  border-left: 2px solid var(--border-subtle);
+  padding-left: var(--space-md); /* 左側のパディング */
+  border-left: 2px solid var(--border-subtle); /* 左側に細いボーダー */
 }
 
+/* === レスポンシブ対応 (画面幅768px以下) === */
 @media (max-width: 768px) {
   .about-intro {
-    padding: var(--space-md) var(--space-lg);
+    padding: var(--space-md) var(--space-lg); /* パディングを小さくする */
   }
 
   .about-intro p {
-    font-size: 1rem;
+    font-size: 1rem; /* フォントサイズを小さくする */
   }
 
   .tech-stack {
-    padding: var(--space-lg);
+    padding: var(--space-lg); /* パディングを小さくする */
   }
 
   .tech-stack dd {
-    font-size: 0.95rem;
+    font-size: 0.95rem; /* フォントサイズを小さくする */
   }
 }

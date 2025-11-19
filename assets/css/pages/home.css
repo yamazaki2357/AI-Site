@@ -1,27 +1,39 @@
-/* === ヒーローセクション === */
+/**
+ * @fileoverview ホームページ（記事一覧ページ）のスタイル
+ * ヒーローセクション、統計カード、セクションヘッダー、記事グリッドなど、
+ * トップページ固有のレイアウトとデザインを定義します。
+ */
+
+/* === ヒーローセクション (#hero, .hero-panel) === */
 #hero,
 .hero-panel {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 237, 244, 0.92) 60%, rgba(255, 248, 228, 0.9) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.7);
-  border-radius: var(--radius-2xl);
-  padding: clamp(2rem, 5vw, 3.5rem);
-  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 190, 210, 0.7); /* ボーダー */
+  border-radius: var(--radius-2xl); /* 大きめの角丸 */
+  padding: clamp(2rem, 5vw, 3.5rem); /* レスポンシブな内側余白 */
+  box-shadow: var(--shadow-lg); /* 影 */
   position: relative;
-  overflow: hidden;
-  margin-bottom: var(--space-2xl);
+  overflow: hidden; /* 疑似要素がはみ出さないように */
+  margin-bottom: var(--space-2xl); /* 下部の余白 */
 
   display: grid;
+  /* 2カラムレイアウト: 左側が広く、右側が狭め */
   grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
-  gap: var(--space-2xl);
-  align-items: start;
+  gap: var(--space-2xl); /* グリッドアイテム間の余白 */
+  align-items: start; /* 上揃え */
 }
 
-/* ヒーロー内のコンテンツ中央寄せ */
+/* ヒーロー内のコンテンツ中央寄せにするための調整 */
 #hero > div,
 .hero-panel > div {
   width: 100%;
 }
 
+/*
+ * ヒーローセクション内の装飾的な疑似要素 (::before)
+ * 右上に配置される円形のグラデーション。
+ */
 #hero::before,
 .hero-panel::before {
   content: '';
@@ -32,9 +44,13 @@
   height: 600px;
   background: radial-gradient(circle, rgba(255, 183, 197, 0.35) 0%, rgba(255, 212, 82, 0.18) 50%, transparent 70%);
   pointer-events: none;
-  animation: float 20s ease-in-out infinite;
+  animation: float 20s ease-in-out infinite; /* 浮遊アニメーション */
 }
 
+/*
+ * ヒーローセクション内の装飾的な疑似要素 (::after)
+ * 左下に配置される円形のグラデーション。
+ */
 #hero::after,
 .hero-panel::after {
   content: '';
@@ -47,19 +63,28 @@
   pointer-events: none;
 }
 
+/*
+ * キーフレームアニメーション: float
+ * 要素をゆっくりと浮遊させるアニメーション。
+ */
 @keyframes float {
   0%, 100% { transform: translate(0, 0) rotate(0deg); }
   33% { transform: translate(30px, -30px) rotate(5deg); }
   66% { transform: translate(-20px, 20px) rotate(-3deg); }
 }
 
+/*
+ * アイブロウテキスト (.eyebrow)
+ * 見出しの上にある小さな補助テキスト。
+ */
 .eyebrow {
   display: inline-block;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  text-transform: uppercase; /* 大文字に変換 */
+  letter-spacing: 0.15em; /* 文字間を広げる */
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--color-primary);
+  /* テキストにグラデーションを適用 */
   background: linear-gradient(135deg, var(--color-primary), var(--color-accent-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -67,15 +92,22 @@
   margin-bottom: var(--space-sm);
 }
 
+/*
+ * ヒーローセクション内の見出し (h1)
+ */
 #hero h1,
 .hero-panel h1 {
   margin: 0 0 var(--space-lg);
+  /* テキストにグラデーションを適用 */
   background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/*
+ * ヒーローセクション内の段落 (p)
+ */
 #hero p,
 .hero-panel p {
   margin: 0;
@@ -84,15 +116,19 @@
   color: var(--text-secondary);
 }
 
-/* === ヒーロー統計カード === */
+/* === ヒーロー統計カード (.hero-stats) === */
 .hero-stats {
   list-style: none;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  flex-direction: column; /* 縦に並べる */
+  gap: var(--space-lg); /* カード間の余白 */
 }
 
+/*
+ * ヒーロー統計カードの各アイテム (li)
+ */
 .hero-stats li {
+  /* 柔らかいグラデーション背景 */
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 239, 246, 0.92) 100%);
   border: 1px solid rgba(255, 190, 210, 0.6);
   border-radius: var(--radius-xl);
@@ -103,29 +139,42 @@
   box-shadow: var(--shadow-sm);
 }
 
+/*
+ * ヒーロー統計カードの左側ボーダーアニメーション (li::before)
+ * ホバー時に表示される。
+ */
 .hero-stats li::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 4px; /* ボーダーの幅 */
   height: 100%;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
-  opacity: 0;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent)); /* アクセントカラーのグラデーション */
+  opacity: 0; /* デフォルトでは非表示 */
   transition: opacity var(--transition-base);
 }
 
+/*
+ * ヒーロー統計カードのホバー時のスタイル
+ */
 .hero-stats li:hover {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 235, 0.95) 100%);
   border-color: var(--border-strong);
-  transform: translateX(4px);
+  transform: translateX(4px); /* 少し右に移動 */
   box-shadow: var(--shadow-md);
 }
 
+/*
+ * ホバー時に左側ボーダーを表示
+ */
 .hero-stats li:hover::before {
   opacity: 1;
 }
 
+/*
+ * 統計ラベル (.stat-label)
+ */
 .stat-label {
   display: block;
   font-size: 0.7rem;
@@ -136,10 +185,14 @@
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * 統計の数値 (strong)
+ */
 .hero-stats strong {
   display: block;
   font-size: 2.5rem;
   font-weight: 800;
+  /* テキストにグラデーションを適用 */
   background: linear-gradient(135deg, var(--color-primary-bright), var(--color-accent-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -148,12 +201,15 @@
   margin-bottom: var(--space-xs);
 }
 
+/*
+ * 統計の補足情報 (small)
+ */
 .hero-stats small {
   color: var(--text-tertiary);
   font-size: 0.9rem;
 }
 
-/* === セクションヘッダー === */
+/* === セクションヘッダー (.section-header) === */
 .section-header {
   display: flex;
   align-items: center;
@@ -163,36 +219,45 @@
   margin-bottom: var(--space-2xl);
 }
 
+/*
+ * セクションヘッダー内の見出し (h2)
+ */
 .section-header h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: clamp(1.5rem, 3vw, 2rem); /* レスポンシブなフォントサイズ */
   position: relative;
-  padding-left: var(--space-lg);
+  padding-left: var(--space-lg); /* 左側の装飾のための余白 */
 }
 
+/*
+ * セクションヘッダーの見出し左側の装飾 (h2::before)
+ */
 .section-header h2::before {
   content: '';
   position: absolute;
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  width: 4px;
-  height: 70%;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
-  border-radius: var(--radius-full);
+  width: 4px; /* 装飾の幅 */
+  height: 70%; /* 装飾の高さ */
+  background: linear-gradient(180deg, var(--color-primary), var(--color-accent)); /* グラデーション */
+  border-radius: var(--radius-full); /* 角を丸くする */
 }
 
-/* === 投稿セクション === */
+/* === 投稿セクション (#posts) === */
 #posts {
-  margin-top: var(--space-3xl);
+  margin-top: var(--space-3xl); /* 上部の大きな余白 */
 }
 
+/*
+ * 投稿グリッド (.post-grid)
+ */
 .post-grid {
   list-style: none;
   display: grid;
+  /* 最小300px、最大1frの幅で自動的にカラムを配置 */
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-xl);
+  gap: var(--space-xl); /* グリッドアイテム間の余白 */
   padding: 0;
   margin: 0;
 }
-
