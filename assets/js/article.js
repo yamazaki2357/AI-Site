@@ -26,17 +26,6 @@ window.initArticlePage = () => {
   const currentUrl = window.location.href;
   const title = document.title.replace(/ \| AI情報ブログ$/, '') || 'AI情報ブログ';
 
-  // クリーンアップ用: 以前のイベントリスナーを削除
-  // Barba.jsでページ遷移する際、前のページで登録したイベントリスナーが残っていると
-  // 多重登録されてしまうため、初期化時に前回のクリーンアップ関数を実行
-  if (window.articlePageCleanup) {
-    window.articlePageCleanup();
-    window.articlePageCleanup = null;
-  }
-
-  // 今回の初期化で登録するクリーンアップタスクの配列
-  const cleanupTasks = [];
-
   // --- 2. 目次 (Table of Contents) の自動生成 ---
   const setupTableOfContents = () => {
     const tocList = document.querySelector('[data-toc-list]');
@@ -108,7 +97,6 @@ window.initArticlePage = () => {
       }
     };
     tocList.addEventListener('click', tocClickHandler);
-    // cleanupTasks.push(() => tocList.removeEventListener('click', tocClickHandler)); // 要素ごと消えるので不要かもだが念のため
   };
   setupTableOfContents();
 
@@ -156,11 +144,6 @@ window.initArticlePage = () => {
     window.addEventListener('resize', updateProgress, { passive: true });
     updateProgress();
 
-    cleanupTasks.push(() => {
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
-      if (progressBar.parentNode) progressBar.remove();
-    });
   };
   initReadingProgress();
 
@@ -230,9 +213,7 @@ window.initArticlePage = () => {
     mediaQuery.addEventListener('change', mediaQueryHandler);
     applyState(); // 初期状態を適用
 
-    cleanupTasks.push(() => {
-      mediaQuery.removeEventListener('change', mediaQueryHandler);
-    });
+
 
     // --- スクロール連動ハイライト ---
     // スクロール位置に応じて、現在表示中のセクションを目次上でハイライトする
@@ -273,9 +254,7 @@ window.initArticlePage = () => {
     window.addEventListener('scroll', updateActiveToc, { passive: true });
     updateActiveToc(); // 初期表示
 
-    cleanupTasks.push(() => {
-      window.removeEventListener('scroll', updateActiveToc);
-    });
+
   };
   initResponsiveToc();
 
@@ -301,7 +280,7 @@ window.initArticlePage = () => {
     };
 
     document.addEventListener('click', clickHandler);
-    cleanupTasks.push(() => document.removeEventListener('click', clickHandler));
+
 
     // タグにクリック可能なカーソルスタイルを適用
     const applyTagStyles = () => {
@@ -313,10 +292,7 @@ window.initArticlePage = () => {
   };
   setupTagLinks();
 
-  // クリーンアップ関数を登録
-  window.articlePageCleanup = () => {
-    cleanupTasks.forEach(task => task());
-  };
+
 };
 
 // 初回読み込み時

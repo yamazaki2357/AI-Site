@@ -50,11 +50,11 @@
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 
-<body data-barba="wrapper">
+<body>
   <!-- ヘッダーはcomponents.jsで動的に挿入されます -->
 
-  <!-- メインコンテンツエリア（Barbaページ遷移対応） -->
-  <main data-barba="container" data-barba-namespace="home">
+  <!-- メインコンテンツエリア -->
+  <main>
     <!-- Google AdSense: ヘッダー広告（728x90 or レスポンシブ） -->
     <!--
     <div class="inner">
@@ -205,15 +205,6 @@
   <!-- 共通コンポーネント (ヘッダー・フッター) の動的挿入 -->
   <script src="assets/js/components.js"></script>
 
-  <!-- アニメーションライブラリ -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
-
-  <!-- ページ遷移ライブラリ: Barba.js -->
-  <script src="https://unpkg.com/@barba/core"></script>
-
-  <!-- スムーズスクロールライブラリ: Lenis -->
-  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
-
   <!-- コードハイライトライブラリ: Prism.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
@@ -226,7 +217,6 @@
   <!-- サイト独自スクリプト -->
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/search.js" defer></script>
-  <script src="assets/js/transitions.js" defer></script>
 </body>
 
 </html>
