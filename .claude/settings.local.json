@@ -9,7 +9,11 @@
       "Bash(git add:*)",
       "Bash(find:*)",
       "Bash(git restore:*)",
-      "Bash(node -c:*)"
+      "Bash(node -c:*)",
+      "Bash(cat:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git hash-object:*)"
     ],
     "deny": [],
     "ask": []
