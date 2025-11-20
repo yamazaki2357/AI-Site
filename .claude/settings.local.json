@@ -8,7 +8,8 @@
       "Bash(node -e:*)",
       "Bash(git add:*)",
       "Bash(find:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(node -c:*)"
     ],
     "deny": [],
     "ask": []

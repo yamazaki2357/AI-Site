@@ -65,9 +65,8 @@ const { compileArticleHtml } = createTemplateRenderer({
  * @param {string} channelId - YouTubeチャンネルID
  * @returns {string} チャンネルURL
  */
-const createChannelUrl = (channelId)
-  =>
-    channelId ? `https://www.youtube.com/channel/${channelId}` : '';
+const createChannelUrl = (channelId) =>
+  channelId ? `https://www.youtube.com/channel/${channelId}` : '';
 
 /**
  * 候補のソース情報からURLを解決します。
