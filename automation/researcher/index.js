@@ -210,10 +210,35 @@ const runResearcher = async ({ keyword }) => {
 
 // スクリプトが直接実行された場合
 if (require.main === module) {
-  // コマンドライン引数からキーワードを取得
-  const keyword = process.argv[2];
+  const { parseArgs } = require('util');
+
+  // CLI引数のパース
+  const options = {
+    keyword: {
+      type: 'string',
+      short: 'k',
+    },
+  };
+
+  let keyword;
+  try {
+    const parsed = parseArgs({ options, strict: false });
+    keyword = parsed.values.keyword;
+  } catch (e) {
+    // フォールバック
+    const argv = process.argv.slice(2);
+    for (let i = 0; i < argv.length; i++) {
+      if (argv[i] === '--keyword' || argv[i] === '-k') keyword = argv[i + 1];
+    }
+  }
+
+  // 位置引数のフォールバック (後方互換性)
+  if (!keyword && process.argv[2] && !process.argv[2].startsWith('-')) {
+    keyword = process.argv[2];
+  }
+
   if (!keyword) {
-    console.error('使用方法: node researcher/index.js "検索キーワード"');
+    console.error('使用方法: node researcher/index.js --keyword "検索キーワード"');
     process.exit(1);
   }
 

@@ -4,7 +4,7 @@
  * キーワードベースの記事生成パイプライン
  *
  * 処理フロー:
- * 1. keywords.json から検索キーワードを読み込み
+ * 1. keywords.json から検索キーワードを読み込み (またはCLI引数)
  * 2. Researcher: Google検索による調査（検索1回、要約3件）
  * 3. Generator: 記事を生成
  * 4. Publisher: 生成された記事をサイトに公開
@@ -16,6 +16,7 @@
  */
 
 const path = require('path');
+const { parseArgs } = require('util');
 const { readJson } = require('../lib/io');
 // const { runCollector } = require('../collector'); // Collector は一時的にスキップ
 const { runResearcher } = require('../researcher');
@@ -51,6 +52,33 @@ const loadKeyword = () => {
  * メインのパイプライン処理
  */
 const main = async () => {
+  // CLI引数のパース
+  const options = {
+    keyword: {
+      type: 'string',
+      short: 'k',
+    },
+    stages: {
+      type: 'string',
+      short: 's',
+    },
+  };
+
+  let args;
+  try {
+    const parsed = parseArgs({ options, strict: false });
+    args = parsed.values;
+  } catch (e) {
+    // Node.jsのバージョンによっては parseArgs が利用できない場合や
+    // オプションが異なる場合のフォールバック (簡易実装)
+    args = {};
+    const argv = process.argv.slice(2);
+    for (let i = 0; i < argv.length; i++) {
+      if (argv[i] === '--keyword' || argv[i] === '-k') args.keyword = argv[i + 1];
+      if (argv[i] === '--stages' || argv[i] === '-s') args.stages = argv[i + 1];
+    }
+  }
+
   console.log('[pipeline] 自動記事生成パイプラインを起動します。');
   console.log('[pipeline] 処理フロー: Keyword → Researcher → Generator → Publisher\n');
 
@@ -60,10 +88,16 @@ const main = async () => {
   let generatorResult = null;
 
   try {
-    // Stage 0: キーワード読み込み
+    // Stage 0: キーワード決定
     console.log('[pipeline] === Stage 0: Keyword Loading ===');
-    const keyword = loadKeyword();
-    console.log(`[pipeline] 検索キーワード: "${keyword}"`);
+    let keyword;
+    if (args.keyword) {
+      keyword = args.keyword;
+      console.log(`[pipeline] CLI引数からキーワードを使用: "${keyword}"`);
+    } else {
+      keyword = loadKeyword();
+      console.log(`[pipeline] keywords.jsonからキーワードを使用: "${keyword}"`);
+    }
 
     // Stage 1: Collector (一時的にスキップ)
     // console.log('\n[pipeline] === Stage 1/4: Collector ===');

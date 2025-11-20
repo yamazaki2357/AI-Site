@@ -21,9 +21,15 @@
  * html要素の基本設定
  */
 html {
-  scroll-behavior: smooth; /* ページ内リンクのスクロールを滑らかにする */
-  -webkit-font-smoothing: antialiased; /* フォントのアンチエイリアシングを有効にし、滑らかに表示 (macOS/iOS) */
-  -moz-osx-font-smoothing: grayscale; /* Firefoxでのフォント表示を最適化 */
+  scroll-behavior: smooth;
+  /* ページ内リンクのスクロールを滑らかにする */
+  -webkit-font-smoothing: antialiased;
+  /* フォントのアンチエイリアシングを有効にし、滑らかに表示 (macOS/iOS) */
+  -moz-osx-font-smoothing: grayscale;
+  /* Firefoxでのフォント表示を最適化 */
+  overflow-x: hidden;
+  /* 横スクロールを防止 */
+  width: 100%;
 }
 
 /*
@@ -31,13 +37,20 @@ html {
  * サイト全体のフォントファミリー、文字色、背景色、行間などを定義します。
  */
 body {
-  font-family: var(--font-primary); /* 基本フォントを変数から指定 */
-  color: var(--text-secondary); /* 基本の文字色を変数から指定 */
-  background-color: var(--color-bg-base); /* 基本の背景色を変数から指定 */
-  line-height: 1.7; /* 行の高さをフォントサイズの1.7倍に設定し、読みやすさを確保 */
-  font-size: 16px; /* 基本のフォントサイズ */
-  min-height: 100vh; /* ページの高さが最低でもビューポートの高さと同じになるようにする */
-  overflow-x: hidden; /* 水平方向のスクロールバーを常に非表示にする */
+  font-family: var(--font-primary);
+  /* 基本フォントを変数から指定 */
+  color: var(--text-secondary);
+  /* 基本の文字色を変数から指定 */
+  background-color: var(--color-bg-base);
+  /* 基本の背景色を変数から指定 */
+  line-height: 1.7;
+  /* 行の高さをフォントサイズの1.7倍に設定し、読みやすさを確保 */
+  font-size: 16px;
+  /* 基本のフォントサイズ */
+  min-height: 100vh;
+  /* ページの高さが最低でもビューポートの高さと同じになるようにする */
+  overflow-x: hidden;
+  /* 水平方向のスクロールバーを常に非表示にする */
   max-width: 100vw;
 
   /* 朝焼けのような柔らかいグラデーション背景 */
@@ -46,7 +59,8 @@ body {
     radial-gradient(ellipse at 85% 0%, rgba(255, 248, 196, 0.8) 0%, transparent 40%),
     radial-gradient(ellipse at 40% 90%, rgba(183, 225, 247, 0.6) 0%, transparent 45%),
     linear-gradient(135deg, #fff3f8 0%, #fffef4 100%);
-  background-attachment: fixed; /* 背景画像をビューポートに固定し、スクロールしても動かないようにする */
+  background-attachment: fixed;
+  /* 背景画像をビューポートに固定し、スクロールしても動かないようにする */
 }
 
 /*
@@ -56,7 +70,8 @@ body {
 img {
   max-width: 100%;
   height: auto;
-  display: block; /* 画像の下にできる余分な隙間を取り除く */
+  display: block;
+  /* 画像の下にできる余分な隙間を取り除く */
 }
 
 /*
@@ -77,7 +92,10 @@ p,
 li,
 td,
 th {
-  word-wrap: break-word; /* 古いブラウザ用の互換設定 */
-  overflow-wrap: break-word; /* 標準的な設定 */
-  hyphens: auto; /* 必要に応じてハイフンを自動挿入（言語設定が適切である必要あり） */
+  word-wrap: break-word;
+  /* 古いブラウザ用の互換設定 */
+  overflow-wrap: break-word;
+  /* 標準的な設定 */
+  hyphens: auto;
+  /* 必要に応じてハイフンを自動挿入（言語設定が適切である必要あり） */
 }

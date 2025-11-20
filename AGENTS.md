@@ -260,16 +260,30 @@ YouTube動画 → Collector → Researcher → Generator → Publisher → 公�
 
 ---
 
+## Agentic Workflows
+
+このプロジェクトは AI エージェントによる操作を前提としたワークフロー定義を含んでいます。
+
+- `run_pipeline`: パイプライン全体を実行します。
+- `run_stage`: 各ステージを個別に実行します。
+
+詳細は `.agent/workflows/` ディレクトリ内のファイルを参照してください。
+
+---
+
 ## 参考コマンド
 
 ### パイプライン実行
 ```bash
-# パイプライン全体のローカル実行
+# パイプライン全体のローカル実行（キーワード指定なし：keywords.jsonを使用）
 node automation/pipeline/index.js
+
+# キーワードを指定して実行（keywords.jsonを無視）
+node automation/pipeline/index.js --keyword "最新のAIトレンド"
 
 # 各ステージを個別に実行
 node automation/collector/index.js
-node automation/researcher/index.js
+node automation/researcher/index.js --keyword "検索キーワード"
 node automation/generator/index.js
 node automation/publisher/index.js
 ```

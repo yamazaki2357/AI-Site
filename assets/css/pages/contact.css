@@ -6,13 +6,13 @@
 .contact-info-box {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.03);
+    gap: var(--space-lg);
+    margin-top: var(--space-xl);
+    padding: var(--space-xl);
+    background: var(--surface-secondary);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
 }
 
 .contact-info-box:hover {
@@ -28,7 +28,7 @@
     width: 3.5rem;
     height: 3.5rem;
     background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-    border-radius: 50%;
+    border-radius: var(--radius-full);
     color: white;
     flex-shrink: 0;
 }
@@ -51,7 +51,7 @@
     font-weight: 700;
     color: var(--text-primary);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color var(--transition-base);
     word-break: break-all;
 }
 
@@ -60,7 +60,7 @@
 }
 
 .contact-note {
-    margin-top: 1.5rem;
+    margin-top: var(--space-lg);
     font-size: 0.9rem;
     color: var(--text-muted);
 }
@@ -70,8 +70,8 @@
     .contact-info-box {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
-        padding: 1.5rem;
+        gap: var(--space-md);
+        padding: var(--space-lg);
     }
 
     .contact-email {
