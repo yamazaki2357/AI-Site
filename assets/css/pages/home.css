@@ -6,251 +6,65 @@
 
 /* === ヒーローセクション (#hero, .hero-panel) === */
 /*
- * ヒーローセクションには柔らかく動くグラデーション背景が実装されています。
- *
- * 背景アニメーションの仕組み:
- *
- * 1. background-size: 200% 200%
- *    - グラデーション画像を通常の2倍のサイズで描画
- *    - これにより、background-positionを変更することで
- *      グラデーションを「移動」させることができます
- *    - 100%のサイズでは移動の余地がないため、200%に拡大が必要
- *
- * 2. animation: gentleGradient 30s ease-in-out infinite
- *    - gentleGradientアニメーションを30秒かけて実行
- *    - ease-in-out: 開始と終了がゆっくり、中間が速い自然な動き
- *    - infinite: 無限ループ
- *
- * この組み合わせにより、ピンク→黄色→ブルー系の色が
- * ゆったりと流れるような柔らかい印象を生み出します。
+ * ヒーローセクションにはモダンなテック感のあるグラデーション背景が実装されています。
  */
 #hero,
 .hero-panel {
-  /* 柔らかいグラデーション背景（アニメーション付き） */
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 237, 244, 0.92) 60%, rgba(255, 248, 228, 0.9) 100%);
-  background-size: 200% 200%; /* アニメーション用に背景を拡大 */
-  animation: gentleGradient 30s ease-in-out infinite; /* 柔らかいグラデーションアニメーション */
-  border: 1px solid rgba(255, 190, 210, 0.7); /* ボーダー */
-  border-radius: var(--radius-2xl); /* 大きめの角丸 */
-  padding: clamp(2rem, 5vw, 3.5rem); /* レスポンシブな内側余白 */
-  box-shadow: var(--shadow-lg); /* 影 */
+  /* Modern Tech Gradient */
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.15), transparent 40%),
+    var(--color-bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  padding: clamp(2rem, 5vw, 4rem);
+  box-shadow: var(--shadow-lg);
   position: relative;
-  overflow: hidden; /* 疑似要素がはみ出さないように */
-  margin-bottom: var(--space-2xl); /* 下部の余白 */
+  overflow: hidden;
+  margin-bottom: var(--space-2xl);
 
   display: grid;
-  /* 2カラムレイアウト: 左側が広く、右側が狭め */
+  /* 2カラムレイアウト */
   grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
-  gap: var(--space-2xl); /* グリッドアイテム間の余白 */
-  align-items: start; /* 上揃え */
+  gap: var(--space-2xl);
+  align-items: center;
+  /* Center vertically */
 }
 
 /* ヒーロー内のコンテンツ中央寄せにするための調整 */
-#hero > div,
-.hero-panel > div {
+#hero>div,
+.hero-panel>div {
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 /*
  * ヒーローセクション内の装飾的な疑似要素 (::before)
- * 右上に配置される円形のグラデーション。
- *
- * 装飾要素のアニメーション:
- *
- * 1. animation: float 20s ease-in-out infinite
- *    - floatキーフレームで定義された動きを20秒かけて実行
- *    - 移動、回転、透明度変化を組み合わせた複雑な動き
- *
- * 2. will-change: transform, opacity
- *    - ブラウザに「この要素のtransformとopacityが変化する」と事前通知
- *    - ブラウザが最適化を事前準備し、アニメーションが滑らかになる
- *    - GPUアクセラレーションが有効化され、パフォーマンスが向上
- *
- * 注意: will-changeは控えめに使用すべきプロパティです。
- * 多用するとメモリ消費が増えるため、アニメーション要素にのみ適用します。
+ * Subtle grid pattern overlay
  */
 #hero::before,
 .hero-panel::before {
   content: '';
   position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(255, 183, 197, 0.35) 0%, rgba(255, 212, 82, 0.18) 50%, transparent 70%);
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+  z-index: 0;
   pointer-events: none;
-  animation: float 20s ease-in-out infinite; /* 浮遊アニメーション */
-  will-change: transform, opacity; /* パフォーマンス最適化 */
-}
-
-/*
- * ヒーローセクション内の装飾的な疑似要素 (::after)
- * 左下に配置される円形のグラデーション。
- *
- * この要素は::before要素とは逆方向に動きます:
- * - ::before: 20秒、floatアニメーション（右上から）
- * - ::after: 25秒、floatReverseアニメーション（左下から）
- *
- * 異なる速度と方向により、2つの装飾要素が互いに
- * 「追いかけっこ」するような動的で有機的な動きを生み出します。
- */
-#hero::after,
-.hero-panel::after {
-  content: '';
-  position: absolute;
-  bottom: -150px;
-  left: -150px;
-  width: 480px;
-  height: 480px;
-  background: radial-gradient(circle, rgba(183, 225, 247, 0.35) 0%, transparent 70%);
-  pointer-events: none;
-  animation: floatReverse 25s ease-in-out infinite; /* 逆方向の浮遊アニメーション */
-  will-change: transform, opacity; /* パフォーマンス最適化 */
-}
-
-/*
- * キーフレームアニメーション: float
- * 要素をゆっくりと浮遊させるアニメーション。
- *
- * アニメーションの流れ（20秒間）:
- *
- * 0%（0秒）→ 33%（約6.6秒）:
- *   - 右上方向に移動（30px, -30px）
- *   - 時計回りに5度回転
- *   - 透明度が0.35から0.45に増加（少し濃くなる）
- *
- * 33%（約6.6秒）→ 66%（約13.2秒）:
- *   - 左下方向に移動（-20px, 20px）
- *   - 反時計回りに3度回転
- *   - 透明度が0.45から0.3に減少（少し薄くなる）
- *
- * 66%（約13.2秒）→ 100%（20秒）:
- *   - 元の位置に戻る（0, 0）
- *   - 回転も元に戻る（0deg）
- *   - 透明度も初期値に戻る（0.35）
- *
- * この複雑な動きにより、装飾要素が生き物のように
- * ふわふわと漂う印象を生み出します。
- */
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.35;
-  }
-  33% {
-    transform: translate(30px, -30px) rotate(5deg);
-    opacity: 0.45;
-  }
-  66% {
-    transform: translate(-20px, 20px) rotate(-3deg);
-    opacity: 0.3;
-  }
-}
-
-/*
- * キーフレームアニメーション: gentleGradient
- * 背景のグラデーションが柔らかく変化するアニメーション。
- *
- * background-positionの動き（30秒間）:
- *
- * - 0%（開始）: 左中央（0% 50%）
- *   グラデーションの開始位置が左端に
- *
- * - 25%（7.5秒）: 中央下寄り（50% 75%）
- *   グラデーションが右下方向にシフト
- *
- * - 50%（15秒）: 右中央（100% 50%）
- *   グラデーションが最も右に移動
- *
- * - 75%（22.5秒）: 中央上寄り（50% 25%）
- *   グラデーションが左上方向に戻る
- *
- * - 100%（30秒）: 左中央に戻る（0% 50%）
- *   ループの開始位置に戻り、シームレスに繰り返す
- *
- * この動きにより、グラデーションが円を描くように
- * ゆっくりと回転しているような視覚効果が生まれます。
- */
-@keyframes gentleGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  25% {
-    background-position: 50% 75%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  75% {
-    background-position: 50% 25%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/*
- * キーフレームアニメーション: floatReverse
- * float アニメーションとは逆方向に動く浮遊アニメーション。
- *
- * floatとfloatReverseの比較:
- *
- * float（::before要素、20秒）:
- *   - 右上(30, -30) → 左下(-20, 20) → 原点
- *   - 時計回り5度 → 反時計回り3度
- *
- * floatReverse（::after要素、25秒）:
- *   - 左下(-25, 25) → 右上(20, -20) → 原点
- *   - 反時計回り4度 → 時計回り3度
- *
- * 動きが完全に反対なため、2つの装飾要素が
- * 互いに対称的に動いているように見えます。
- * また、周期が異なる（20秒 vs 25秒）ため、
- * 複雑で予測できないパターンが生まれ、より自然な印象に。
- */
-@keyframes floatReverse {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0.35;
-  }
-  33% {
-    transform: translate(-25px, 25px) rotate(-4deg);
-    opacity: 0.3;
-  }
-  66% {
-    transform: translate(20px, -20px) rotate(3deg);
-    opacity: 0.4;
-  }
 }
 
 /*
  * キーフレームアニメーション: fadeInUp
- * 下から上にフェードインするアニメーション。
- *
- * ページロード時の演出に使用されます:
- *
- * 開始状態（from）:
- *   - opacity: 0（完全に透明）
- *   - translateY(30px)（下方向に30pxずれた位置）
- *
- * 終了状態（to）:
- *   - opacity: 1（完全に不透明）
- *   - translateY(0)（本来の位置）
- *
- * この要素には異なる遅延時間（animation-delay）が設定されています:
- *   - .eyebrow: 0秒（即座に開始）
- *   - h1: 0.2秒（少し遅れて）
- *   - p: 0.4秒（さらに遅れて）
- *   - 統計カード: 0.5秒、0.65秒、0.8秒（順番に）
- *
- * これにより、要素が上から下へ順番に現れる
- * 「カスケード（滝）効果」が生まれます。
  */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -258,56 +72,20 @@
 }
 
 /*
- * キーフレームアニメーション: shimmer
- * グラデーションテキストが微かに光るアニメーション。
- *
- * .eyebrowテキストに適用されています。
- *
- * 動作の仕組み:
- *
- * 1. テキストにグラデーションが適用されています
- *    background: linear-gradient(...)
- *    background-size: 200% auto（通常の2倍のサイズ）
- *
- * 2. background-positionを左（0%）から右（100%）へ移動
- *    - 0%〜50%: 右方向にスライド
- *    - 50%〜100%: 左方向に戻る
- *
- * 3. 8秒かけてゆっくりと実行
- *    animation: shimmer 8s ease-in-out infinite
- *
- * 結果: テキスト内でグラデーションが左右に揺れ動き、
- * まるで光が走っているような微妙な輝きが生まれます。
- * 控えめな動きのため、目立ちすぎず上品な印象を保ちます。
- */
-@keyframes shimmer {
-  0%, 100% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-}
-
-/*
  * アイブロウテキスト (.eyebrow)
- * 見出しの上にある小さな補助テキスト。
  */
 .eyebrow {
   display: inline-block;
-  text-transform: uppercase; /* 大文字に変換 */
-  letter-spacing: 0.15em; /* 文字間を広げる */
-  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
   font-weight: 700;
   color: var(--color-primary);
-  /* テキストにグラデーションを適用 */
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent-secondary));
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: var(--space-sm);
-  animation: fadeInUp 0.8s ease-out, shimmer 8s ease-in-out infinite; /* フェードイン＆シマーアニメーション */
+  background: rgba(99, 102, 241, 0.1);
+  padding: 0.25em 0.75em;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-md);
+  animation: fadeInUp 0.6s ease-out;
 }
 
 /*
@@ -316,12 +94,16 @@
 #hero h1,
 .hero-panel h1 {
   margin: 0 0 var(--space-lg);
-  /* テキストにグラデーションを適用 */
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  /* Subtle gradient text */
+  background: linear-gradient(135deg, var(--text-primary) 30%, var(--color-primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: fadeInUp 1s ease-out 0.2s both; /* フェードインアニメーション（遅延0.2秒） */
+  animation: fadeInUp 0.8s ease-out 0.1s both;
 }
 
 /*
@@ -330,82 +112,60 @@
 #hero p,
 .hero-panel p {
   margin: 0;
-  font-size: 1.1rem;
-  line-height: 1.8;
+  font-size: 1.125rem;
+  line-height: 1.7;
   color: var(--text-secondary);
-  animation: fadeInUp 1s ease-out 0.4s both; /* フェードインアニメーション（遅延0.4秒） */
+  max-width: 600px;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 /* === ヒーロー統計カード (.hero-stats) === */
 .hero-stats {
   list-style: none;
   display: flex;
-  flex-direction: column; /* 縦に並べる */
-  gap: var(--space-lg); /* カード間の余白 */
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
 /*
  * ヒーロー統計カードの各アイテム (li)
  */
 .hero-stats li {
-  /* 柔らかいグラデーション背景 */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 239, 246, 0.92) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.6);
-  border-radius: var(--radius-xl);
-  padding: var(--space-xl);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
   position: relative;
   overflow: hidden;
   transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
-  animation: fadeInUp 1s ease-out both; /* フェードインアニメーション */
+  animation: fadeInUp 0.8s ease-out both;
 }
 
 /*
  * 各統計カードを順番に表示
  */
 .hero-stats li:nth-child(1) {
-  animation-delay: 0.5s;
+  animation-delay: 0.3s;
 }
 
 .hero-stats li:nth-child(2) {
-  animation-delay: 0.65s;
+  animation-delay: 0.4s;
 }
 
 .hero-stats li:nth-child(3) {
-  animation-delay: 0.8s;
-}
-
-/*
- * ヒーロー統計カードの左側ボーダーアニメーション (li::before)
- * ホバー時に表示される。
- */
-.hero-stats li::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px; /* ボーダーの幅 */
-  height: 100%;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-accent)); /* アクセントカラーのグラデーション */
-  opacity: 0; /* デフォルトでは非表示 */
-  transition: opacity var(--transition-base);
+  animation-delay: 0.5s;
 }
 
 /*
  * ヒーロー統計カードのホバー時のスタイル
  */
 .hero-stats li:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 247, 235, 0.95) 100%);
-  border-color: var(--border-strong);
-  transform: translateX(4px); /* 少し右に移動 */
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--color-primary);
+  transform: translateX(4px);
   box-shadow: var(--shadow-md);
-}
-
-/*
- * ホバー時に左側ボーダーを表示
- */
-.hero-stats li:hover::before {
-  opacity: 1;
 }
 
 /*
@@ -413,9 +173,9 @@
  */
 .stat-label {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-muted);
   margin-bottom: var(--space-xs);
@@ -426,15 +186,13 @@
  */
 .hero-stats strong {
   display: block;
-  font-size: 2.5rem;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
   font-weight: 800;
-  /* テキストにグラデーションを適用 */
-  background: linear-gradient(135deg, var(--color-primary-bright), var(--color-accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: var(--space-xs);
+  letter-spacing: -0.02em;
 }
 
 /*
@@ -442,7 +200,8 @@
  */
 .hero-stats small {
   color: var(--text-tertiary);
-  font-size: 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 /* === セクションヘッダー (.section-header) === */
@@ -453,6 +212,8 @@
   flex-wrap: wrap;
   gap: var(--space-md);
   margin-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: var(--space-md);
 }
 
 /*
@@ -460,29 +221,32 @@
  */
 .section-header h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 3vw, 2rem); /* レスポンシブなフォントサイズ */
-  position: relative;
-  padding-left: var(--space-lg); /* 左側の装飾のための余白 */
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 /*
  * セクションヘッダーの見出し左側の装飾 (h2::before)
+ * Removed the pill shape, using a simple dot or nothing for cleaner look
  */
 .section-header h2::before {
   content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px; /* 装飾の幅 */
-  height: 70%; /* 装飾の高さ */
-  background: linear-gradient(180deg, var(--color-primary), var(--color-accent)); /* グラデーション */
-  border-radius: var(--radius-full); /* 角を丸くする */
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: 2px;
 }
 
 /* === 投稿セクション (#posts) === */
 #posts {
-  margin-top: var(--space-3xl); /* 上部の大きな余白 */
+  margin-top: var(--space-3xl);
 }
 
 /*
@@ -491,9 +255,9 @@
 .post-grid {
   list-style: none;
   display: grid;
-  /* 最小300px、最大1frの幅で自動的にカラムを配置 */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-xl); /* グリッドアイテム間の余白 */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  /* Slightly wider cards */
+  gap: var(--space-xl);
   padding: 0;
   margin: 0;
 }

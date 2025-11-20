@@ -8,41 +8,41 @@
  * ヘッダー本体の基本スタイル
  */
 .site-header {
-  position: sticky; /* 画面上部にヘッダーを固定 */
+  position: sticky;
   top: 0;
-  z-index: 100; /* 他の要素より手前に表示 */
-  
-  /* 背景を半透明にし、すりガラス効果（backdrop-filter）を適用 */
-  background: var(--color-bg-overlay);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%); /* Safari向けプレフィックス */
-  
-  border-bottom: 1px solid var(--border-subtle); /* ヘッダー下部の境界線 */
-  transition: all var(--transition-base); /* スクロール時の変化を滑らかにする */
+  z-index: 100;
+
+  /* Glassmorphism effect */
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+
+  border-bottom: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
 }
 
 /*
  * スクロール時にヘッダーに付与される .scrolled クラスのスタイル
- * JavaScriptによって、一定量スクロールされるとこのクラスが追加されます。
  */
 .site-header.scrolled {
-  box-shadow: var(--shadow-md); /* 影を追加して立体感を出す */
-  border-bottom-color: var(--border-medium); /* 境界線を少し濃くする */
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-sm);
+  border-bottom-color: var(--border-medium);
 }
 
 /*
  * ヘッダー内のコンテンツコンテナ (.inner)
- * Flexboxを使って、ロゴとナビゲーションを両端に配置します。
  */
 .site-header .inner {
   display: flex;
-  align-items: center; /* 子要素を垂直方向中央に揃える */
-  justify-content: space-between; /* 子要素を両端に配置 */
-  gap: var(--space-lg); /* 子要素間の余白 */
-  padding-top: var(--space-md);
-  padding-bottom: var(--space-md);
-  flex-wrap: wrap; /* 画面が狭い場合に折り返す */
-  min-height: 60px; /* ヘッダーの最小高さを確保 */
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding-top: var(--space-sm);
+  padding-bottom: var(--space-sm);
+  flex-wrap: wrap;
+  min-height: 64px;
+  /* Slightly taller */
 }
 
 /*
@@ -52,35 +52,39 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
+  font-family: var(--font-display);
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
+  /* Bolder */
   text-decoration: none;
   color: var(--text-primary);
   transition: transform var(--transition-fast);
-  flex-shrink: 0; /* 縮まないようにする */
-  white-space: nowrap; /* 折り返さない */
+  flex-shrink: 0;
+  white-space: nowrap;
   line-height: 1;
-  padding: var(--space-xs) 0; /* 上下のタップ領域を確保 */
+  padding: var(--space-xs) 0;
+  letter-spacing: -0.02em;
 }
 
 .brand:hover {
-  transform: translateY(-2px); /* ホバー時に少し上に浮き上がるアニメーション */
+  transform: translateY(-1px);
 }
 
 /*
  * ロゴ画像 (.logo)
  */
 .logo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain; /* アスペクト比を維持してコンテナに収める */
-  filter: drop-shadow(0 2px 8px rgba(255, 173, 191, 0.35)); /* ロゴに影を付ける */
+  width: 40px;
+  /* Slightly smaller for cleaner look */
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   transition: all var(--transition-base);
 }
 
 .brand:hover .logo {
-  filter: drop-shadow(0 6px 16px rgba(255, 173, 191, 0.5)); /* ホバー時により濃い影にする */
-  transform: scale(1.05); /* ホバー時に少し拡大する */
+  filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.3));
+  transform: scale(1.05);
 }
 
 /*
@@ -88,65 +92,50 @@
  */
 .site-header nav {
   display: flex;
-  gap: var(--space-md);
+  gap: var(--space-xs);
+  /* Tighter gap, using padding on links */
   align-items: center;
   flex-wrap: wrap;
-  justify-content: flex-end; /* 右揃えにする */
+  justify-content: flex-end;
   row-gap: var(--space-xs);
-  flex: 1 1 auto; /* 利用可能なスペースを埋めるように伸縮 */
-  min-width: 0; /* flexアイテムが縮小しすぎるのを防ぐ */
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 /*
  * ナビゲーションリンク (a)
  */
 .site-header nav a {
-  position: relative; /* ::after疑似要素の基準位置 */
+  position: relative;
   font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-tertiary);
-  padding: var(--space-xs) var(--space-md);
-  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  /* Pill shape */
   transition: all var(--transition-fast);
 }
 
 /*
  * ナビゲーションリンクの下線（アクティブインジケーター）
- * 最初は非表示 (scaleX(0)) にしておく。
+ * Removed underline, using background pill instead
  */
 .site-header nav a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) scaleX(0); /* 中央基点で横方向に縮小 */
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
-  border-radius: var(--radius-full);
-  transition: transform var(--transition-base);
+  display: none;
 }
 
 /*
  * ナビゲーションリンクのホバー時
  */
 .site-header nav a:hover {
-  color: var(--text-primary);
-  background: var(--surface-tertiary); /* 背景色を薄く付ける */
+  color: var(--color-primary);
+  background: var(--surface-secondary);
 }
 
 /*
- * 現在のページ、またはホバー時に下線を表示する
- */
-.site-header nav a[aria-current="page"]::after,
-.site-header nav a:hover::after {
-  transform: translateX(-50%) scaleX(1); /* 中央基点で横方向に拡大して表示 */
-}
-
-/*
- * 現在のページのリンクテキストの色
- * `aria-current="page"` はJavaScriptによって付与されます。
+ * 現在のページ
  */
 .site-header nav a[aria-current="page"] {
-  color: var(--color-primary-bright);
+  color: var(--color-primary);
+  background: var(--surface-tertiary);
 }

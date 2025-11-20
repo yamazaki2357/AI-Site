@@ -8,41 +8,42 @@
  * 投稿カード (.post-card) の基本スタイル
  */
 .post-card {
-  /* 背景: 柔らかいグラデーション */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 243, 238, 0.9) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.55); /* 控えめなボーダー */
-  border-radius: var(--radius-xl); /* 大きめの角丸 */
-  padding: var(--space-lg); /* 内側の余白 */
+  /* 背景: Clean White with subtle border */
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  /* Slightly tighter radius */
+  padding: var(--space-lg);
   display: flex;
-  flex-direction: column; /* 子要素を縦に並べる */
-  gap: var(--space-lg); /* 子要素間の余白 */
-  position: relative; /* 疑似要素の基準位置 */
-  overflow: hidden; /* 角丸からはみ出るコンテンツを隠す */
-  box-shadow: var(--shadow-md); /* 影 */
-  transition: all var(--transition-base); /* 全ての変化を滑らかにアニメーション */
-  cursor: pointer; /* カーソルをポインターにする */
+  flex-direction: column;
+  gap: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  cursor: pointer;
 }
 
 /*
  * ホバー時の背景オーバーレイ (.post-card::before)
- * カードにマウスが乗ったときに表示される、薄いグラデーションのオーバーレイ。
+ * Subtle Indigo tint on hover
  */
 .post-card::before {
   content: '';
   position: absolute;
-  inset: 0; /* 親要素いっぱいに広げる */
+  inset: 0;
   background: linear-gradient(135deg,
-    rgba(255, 148, 195, 0.15) 0%, /* ピンク系のグラデーション開始色 */
-    rgba(255, 212, 82, 0.15) 100%); /* 黄色系のグラデーション終了色 */
-  opacity: 0; /* デフォルトでは非表示 */
-  transition: opacity var(--transition-base); /* 透明度の変化をアニメーション */
-  pointer-events: none; /* クリックイベントを透過させる */
-  z-index: 0; /* 他のコンテンツの下に配置 */
+      rgba(99, 102, 241, 0.03) 0%,
+      rgba(6, 182, 212, 0.03) 100%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /*
  * ホバー時の上部ボーダーアニメーション (.post-card::after)
- * カードにマウスが乗ったときに左から右へ伸びるボーダー。
+ * Sharp accent line
  */
 .post-card::after {
   content: '';
@@ -50,21 +51,22 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px; /* ボーダーの高さ */
-  background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); /* アクセントカラーのグラデーション */
-  transform: scaleX(0); /* デフォルトでは横方向に縮小して非表示 */
-  transform-origin: left; /* 左端を基準に変形 */
-  transition: transform var(--transition-spring); /* バネのようなアニメーション */
-  z-index: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-spring);
+  z-index: 2;
 }
 
 /*
  * 投稿カードのホバー時のスタイル
  */
 .post-card:hover {
-  transform: translateY(-8px); /* 少し上に浮き上がる */
-  border-color: var(--border-strong); /* ボーダーを濃くする */
-  box-shadow: var(--shadow-xl), var(--shadow-glow); /* 影を強調し、グロー効果を追加 */
+  transform: translateY(-4px);
+  /* Less floaty, more precise */
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-lg);
 }
 
 /*
@@ -86,34 +88,29 @@
  */
 .post-card h3 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.4;
   position: relative;
-  z-index: 1; /* 他の疑似要素より手前に表示 */
+  z-index: 1;
+  letter-spacing: -0.01em;
+  /* Tighter tracking for modern font */
 }
 
 /*
  * 投稿カード内の見出しリンク (h3 a)
- * テキストにグラデーションを適用し、透明なテキストで背景グラデーションを表示。
  */
 .post-card h3 a {
-  color: var(--text-primary); /* フォールバックの色 */
+  color: var(--text-primary);
   text-decoration: none;
-  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary)); /* テキストのグラデーション */
-  -webkit-background-clip: text; /* テキストの形状で背景をクリップ (WebKit系ブラウザ) */
-  -webkit-text-fill-color: transparent; /* テキストの色を透明にする (WebKit系ブラウザ) */
-  background-clip: text; /* テキストの形状で背景をクリップ (標準) */
-  transition: all var(--transition-base);
+  transition: color var(--transition-base);
 }
 
 /*
- * ホバー時に見出しリンクのグラデーションを変更
+ * ホバー時に見出しリンクの色を変更
  */
 .post-card:hover h3 a {
-  background: linear-gradient(135deg, var(--color-primary-bright), var(--color-accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary);
 }
 
 /*
@@ -132,12 +129,12 @@
  */
 .post-card-cover {
   width: 100%;
-  padding-top: 56.25%; /* 16:9のアスペクト比を維持 */
-  border-radius: var(--radius-lg);
+  padding-top: 56.25%;
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05)); /* プレースホルダー背景 */
+  background: var(--surface-secondary);
   position: relative;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3); /* 内側の影 */
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
   z-index: 1;
 }
 
@@ -146,38 +143,18 @@
  */
 .post-card-cover img {
   position: absolute;
-  inset: 0; /* 親要素いっぱいに広げる */
+  inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 画像がコンテナを覆うように拡大・トリミング */
-  transition: transform var(--transition-spring), filter var(--transition-base);
-}
-
-/*
- * カバー画像のオーバーレイ (.post-card-cover::after)
- * 画像の上に薄いグラデーションを重ねる。
- */
-.post-card-cover::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.15));
-  opacity: 0; /* デフォルトでは非表示 */
-  transition: opacity var(--transition-base);
+  object-fit: cover;
+  transition: transform var(--transition-spring);
 }
 
 /*
  * ホバー時にカバー画像を少し拡大
  */
 .post-card:hover .post-card-cover img {
-  transform: scale(1.04);
-}
-
-/*
- * ホバー時にカバー画像のオーバーレイを表示
- */
-.post-card:hover .post-card-cover::after {
-  opacity: 0.2;
+  transform: scale(1.05);
 }
 
 /*
@@ -188,18 +165,24 @@
   align-items: center;
   gap: var(--space-sm);
   color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 600;
   position: relative;
   z-index: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /*
  * 投稿メタ情報のアイコン（日付アイコン）
  */
 .post-meta::before {
-  content: '📅'; /* 絵文字をアイコンとして使用 */
-  font-size: 1rem;
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
 }
 
 /*
@@ -207,10 +190,10 @@
  */
 .post-summary {
   margin: 0;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 0.95rem;
-  line-height: 1.7;
+  line-height: 1.6;
   position: relative;
   z-index: 1;
-  flex-grow: 1; /* 利用可能なスペースを埋める */
+  flex-grow: 1;
 }

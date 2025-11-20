@@ -1,257 +1,137 @@
 /**
  * @fileoverview タグコンポーネントのスタイル
  * 記事に付与されるタグの表示スタイルを定義します。
- * 様々な色合いのタグを表現するためのスタイルが含まれます。
+ * モダンでテック感のあるデザインを採用しています。
  */
 
 /*
  * タグリスト (.tag-list) の基本スタイル
- * タグを横並びに表示し、適切な間隔を空けます。
  */
 .tag-list {
   display: flex;
-  flex-wrap: wrap; /* 画面幅が狭い場合にタグを折り返す */
-  gap: var(--space-xs); /* タグ間の余白 */
+  flex-wrap: wrap;
+  gap: var(--space-xs);
   margin: 0;
   padding: 0;
-  list-style: none; /* リストのデフォルトスタイルを削除 */
+  list-style: none;
   position: relative;
-  z-index: 1; /* 他の要素より手前に表示 */
+  z-index: 1;
 }
 
 /*
  * 個々のタグ (.tag) の基本スタイル
  */
 .tag {
-  padding: 0.35rem 0.9rem; /* 内側の余白 */
-  border-radius: var(--radius-full); /* 角を完全に丸くしてピル型にする */
-  font-size: 0.75rem; /* フォントサイズを小さくする */
-  font-weight: 600; /* 太字 */
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
 
-  /* デフォルトの背景グラデーション */
-  background: linear-gradient(135deg, rgba(255, 148, 195, 0.25), rgba(255, 212, 82, 0.3));
-  color: var(--color-primary-dim); /* テキストの色 */
-  border: 1px solid rgba(255, 173, 191, 0.45); /* ボーダー */
-  transition: all var(--transition-fast); /* 全ての変化を滑らかにアニメーション */
-  white-space: nowrap; /* タグ内のテキストを折り返さない */
+  /* Default: Slate/Neutral */
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+
+  transition: all var(--transition-fast);
+  white-space: nowrap;
   position: relative;
   overflow: hidden;
-}
-
-/*
- * タグのホバー時の光のエフェクト (::before疑似要素)
- * タグより大きい光の帯を斜めに配置し、ホバー時に左から右へスライドさせることで
- * 光が流れるような視覚効果を生み出します。
- * - 初期状態ではopacity: 0で非表示
- * - ホバー時にshineアニメーションで左から右へ移動
- */
-.tag::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  opacity: 0;
-  transition: all var(--transition-base);
-  transform: rotate(45deg);
+  text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 /*
  * タグのホバー時のスタイル
- * 複数の視覚効果を組み合わせてインタラクティブな印象を強化します:
- * - 背景グラデーションを濃くして目立たせる
- * - 上方向に浮き上がらせて立体感を演出（translateY）
- * - わずかに拡大して注目を集める（scale）
- * - 色付きの影で深みを追加
  */
 .tag:hover {
-  background: linear-gradient(135deg, rgba(255, 148, 195, 0.4), rgba(255, 212, 82, 0.45)); /* 背景グラデーションを濃くする */
-  border-color: var(--border-strong); /* ボーダーを濃くする */
-  transform: translateY(-2px) scale(1.02); /* 少し上に浮き上がり、拡大 */
-  box-shadow: 0 4px 12px rgba(255, 148, 195, 0.3); /* カラフルな影を追加 */
-}
-
-/*
- * ホバー時に光のエフェクトをアニメーション
- * ::before疑似要素を表示し、shineアニメーションを実行します
- */
-.tag:hover::before {
-  opacity: 1;
-  animation: shine 0.6s ease-out;
-}
-
-/*
- * 光のエフェクトのアニメーション定義
- * 0.6秒かけて光の帯を左から右へスライドさせます。
- * - 0%: タグの左外側に配置（left: -50%）
- * - 100%: タグの右外側へ移動（left: 150%）
- * ease-outで最初は速く、終わりに向けて減速する自然な動き
- */
-@keyframes shine {
-  0% { left: -50%; }
-  100% { left: 150%; }
+  background: var(--surface-tertiary);
+  color: var(--color-primary);
+  border-color: var(--color-primary-bright);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
 /*
  * `data-tag-style` 属性によるタグのバリエーション
- * 各タグに異なる色合いを適用します。
- *
- * 各色スタイルには以下の要素が含まれます：
- * - 通常状態: グラデーション背景、ボーダー、テキスト色
- * - ホバー状態: より濃いグラデーション、強調されたボーダー
- *
- * 色の選択は automation/generator/services/tagMapper.js の
- * selectStyleForTag 関数によって自動的に決定されます。
+ * Automationで生成されたスタイルを新しいパレットにマッピング
  */
 
-/*
- * スカイブルー系のタグ
- * 用途: ニュース、学習リソースなどの情報提供系カテゴリに適しています
- */
-.tag[data-tag-style='accent-sky'] {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(125, 211, 252, 0.3));
-  border-color: rgba(2, 132, 199, 0.45);
-  color: #0369a1;
+/* Sky / Blue -> Cyan/Blue */
+.tag[data-tag-style='accent-sky'],
+.tag[data-tag-style='accent-blue'] {
+  background: rgba(6, 182, 212, 0.1);
+  color: #0891b2;
+  border-color: rgba(6, 182, 212, 0.2);
 }
 
-.tag[data-tag-style='accent-sky']:hover {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), rgba(125, 211, 252, 0.45));
-  border-color: rgba(2, 132, 199, 0.65);
+.tag[data-tag-style='accent-sky']:hover,
+.tag[data-tag-style='accent-blue']:hover {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: rgba(6, 182, 212, 0.4);
 }
 
-/*
- * ピンク系のタグ
- * 用途: 技術トピック、生成AIなどの先進的な技術カテゴリに適しています
- */
+/* Pink / Rose -> Pink/Rose (kept as accent) */
 .tag[data-tag-style='accent-pink'] {
-  background: linear-gradient(135deg, rgba(251, 113, 133, 0.25), rgba(244, 114, 182, 0.3));
-  border-color: rgba(244, 63, 94, 0.45);
-  color: #be123c;
+  background: rgba(244, 63, 94, 0.1);
+  color: #e11d48;
+  border-color: rgba(244, 63, 94, 0.2);
 }
 
 .tag[data-tag-style='accent-pink']:hover {
-  background: linear-gradient(135deg, rgba(251, 113, 133, 0.4), rgba(244, 114, 182, 0.45));
-  border-color: rgba(244, 63, 94, 0.65);
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.4);
 }
 
-/*
- * パープル系のタグ
- * 用途: ツール、企業・プロダクトなどのサービス関連カテゴリに適しています
- */
-.tag[data-tag-style='accent-purple'] {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.25), rgba(196, 181, 253, 0.3));
-  border-color: rgba(139, 92, 246, 0.45);
-  color: #6d28d9;
-}
-
-.tag[data-tag-style='accent-purple']:hover {
-  background: linear-gradient(135deg, rgba(167, 139, 250, 0.4), rgba(196, 181, 253, 0.45));
-  border-color: rgba(139, 92, 246, 0.65);
-}
-
-/*
- * ライムグリーン系のタグ
- * 用途: ユースケース、実用例などの応用・活用系カテゴリに適しています
- */
-.tag[data-tag-style='accent-lime'] {
-  background: linear-gradient(135deg, rgba(163, 230, 53, 0.25), rgba(190, 242, 100, 0.3));
-  border-color: rgba(132, 204, 22, 0.45);
-  color: #3f6212;
-}
-
-.tag[data-tag-style='accent-lime']:hover {
-  background: linear-gradient(135deg, rgba(163, 230, 53, 0.4), rgba(190, 242, 100, 0.45));
-  border-color: rgba(132, 204, 22, 0.65);
-}
-
-/*
- * ゴールド系のタグ
- * 用途: スキル、能力などの習得・学習系カテゴリに適しています
- */
-.tag[data-tag-style='accent-gold'] {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(253, 230, 138, 0.35));
-  border-color: rgba(245, 158, 11, 0.5);
-  color: #b45309;
-}
-
-.tag[data-tag-style='accent-gold']:hover {
-  background: linear-gradient(135deg, rgba(251, 191, 36, 0.45), rgba(253, 230, 138, 0.5));
-  border-color: rgba(245, 158, 11, 0.7);
-}
-
-/*
- * ラベンダー系のタグ
- * 用途: ツール機能、機能詳細などの技術仕様系カテゴリに適しています
- */
+/* Purple / Lavender -> Indigo/Violet */
+.tag[data-tag-style='accent-purple'],
 .tag[data-tag-style='accent-lavender'] {
-  background: linear-gradient(135deg, rgba(196, 181, 253, 0.3), rgba(221, 214, 254, 0.35));
-  border-color: rgba(167, 139, 250, 0.5);
-  color: #5b21b6;
+  background: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
+.tag[data-tag-style='accent-purple']:hover,
 .tag[data-tag-style='accent-lavender']:hover {
-  background: linear-gradient(135deg, rgba(196, 181, 253, 0.45), rgba(221, 214, 254, 0.5));
-  border-color: rgba(167, 139, 250, 0.7);
+  background: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
-/*
- * ティール系のタグ
- * 用途: ユースケース、ヘルスケアなどの専門領域カテゴリに適しています
- */
+/* Lime / Green -> Emerald/Teal */
+.tag[data-tag-style='accent-lime'],
 .tag[data-tag-style='accent-teal'] {
-  background: linear-gradient(135deg, rgba(45, 212, 191, 0.25), rgba(94, 234, 212, 0.3));
-  border-color: rgba(20, 184, 166, 0.5);
-  color: #0f766e;
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.2);
 }
 
+.tag[data-tag-style='accent-lime']:hover,
 .tag[data-tag-style='accent-teal']:hover {
-  background: linear-gradient(135deg, rgba(45, 212, 191, 0.4), rgba(94, 234, 212, 0.45));
-  border-color: rgba(20, 184, 166, 0.7);
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
 }
 
-/*
- * オレンジ系のタグ
- * 用途: ガバナンス、セキュリティ、倫理などの重要課題カテゴリに適しています
- */
+/* Gold / Orange -> Amber/Orange */
+.tag[data-tag-style='accent-gold'],
 .tag[data-tag-style='accent-orange'] {
-  background: linear-gradient(135deg, rgba(251, 146, 60, 0.25), rgba(254, 215, 170, 0.3));
-  border-color: rgba(234, 88, 12, 0.5);
-  color: #c2410c;
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border-color: rgba(245, 158, 11, 0.2);
 }
 
+.tag[data-tag-style='accent-gold']:hover,
 .tag[data-tag-style='accent-orange']:hover {
-  background: linear-gradient(135deg, rgba(251, 146, 60, 0.4), rgba(254, 215, 170, 0.45));
-  border-color: rgba(234, 88, 12, 0.7);
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
 }
 
-/*
- * ニュートラル（無彩色）系のタグ
- * 用途: その他、一般的なカテゴリや分類できないタグに適しています
- */
+/* Neutral */
 .tag[data-tag-style='accent-neutral'] {
-  background: linear-gradient(135deg, rgba(226, 232, 240, 0.7), rgba(241, 245, 249, 0.8));
-  border-color: rgba(148, 163, 184, 0.5);
-  color: #334155;
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
 }
 
 .tag[data-tag-style='accent-neutral']:hover {
-  background: linear-gradient(135deg, rgba(203, 213, 225, 0.85), rgba(226, 232, 240, 0.9));
-  border-color: rgba(100, 116, 139, 0.6);
-}
-
-/*
- * ブルー系のタグ
- * 用途: 開発、プログラミングなどの技術開発系カテゴリに適しています
- */
-.tag[data-tag-style='accent-blue'] {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.25));
-  border-color: rgba(37, 99, 235, 0.4);
-  color: #1e40af;
-}
-
-.tag[data-tag-style='accent-blue']:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(96, 165, 250, 0.4));
-  border-color: rgba(37, 99, 235, 0.6);
+  background: var(--surface-tertiary);
+  border-color: var(--border-medium);
 }

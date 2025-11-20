@@ -7,139 +7,95 @@
  * - 記事コンテンツの基本スタイル
  */
 
+/**
+ * @fileoverview その他のコンポーネントスタイル
+ * 他のカテゴリに分類されない汎用的なUI要素や、特定のセクションのスタイルを定義します。
+ * - 情報パネル
+ * - ワークフローカード
+ * - ソースカード
+ * - 記事コンテンツの基本スタイル
+ */
+
 /* === 情報パネル (.info-panel) === */
 .info-panel {
-  margin-top: var(--space-3xl); /* 上部の大きな余白 */
-  /* 柔らかいグラデーション背景 */
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 240, 245, 0.9) 45%, rgba(255, 248, 228, 0.88) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.6); /* ボーダー */
-  border-radius: var(--radius-2xl); /* 大きめの角丸 */
-  padding: clamp(2rem, 4vw, 3rem); /* レスポンシブな内側余白 */
-  box-shadow: var(--shadow-lg); /* 影 */
+  margin-top: var(--space-3xl);
+  /* Modern Tech Gradient */
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent 40%),
+    var(--color-bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  padding: clamp(2rem, 4vw, 3rem);
+  box-shadow: var(--shadow-lg);
   position: relative;
-  overflow: hidden; /* 疑似要素がはみ出さないように */
+  overflow: hidden;
 }
 
 /*
  * 情報パネル内の装飾的な疑似要素 (.info-panel::before)
- * 柔らかい円形のグラデーションで背景にアクセントを加えます。
+ * Subtle grid pattern
  */
 .info-panel::before {
   content: '';
   position: absolute;
-  bottom: -100px;
-  left: -100px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 214, 235, 0.35) 0%, rgba(183, 225, 247, 0.25) 45%, transparent 70%);
-  pointer-events: none; /* クリックイベントを透過 */
+  inset: 0;
+  background-image: radial-gradient(var(--border-medium) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 /*
  * 情報パネル内の見出し (h2)
  */
 .info-panel h2 {
-  margin-bottom: var(--space-xl); /* 下部の余白 */
+  margin-bottom: var(--space-xl);
+  font-family: var(--font-display);
+  color: var(--text-primary);
 }
 
 /* === ワークフローグリッド (.workflow-grid) === */
 .workflow-grid {
   display: grid;
-  /* 最小250px、最大1frの幅で自動的にカラムを配置 */
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-xl); /* グリッドアイテム間の余白 */
-
-  /*
-   * 3D効果のためのパースペクティブを設定
-   * perspective: 1000px は、3D空間の奥行き感を定義します。
-   * 値が小さいほど強い遠近感、大きいほど穏やかな遠近感になります。
-   * この設定により、子要素（.workflow-card）が3D変形した際に
-   * リアルな立体感が生まれます。
-   */
+  gap: var(--space-xl);
   perspective: 1000px;
 }
 
 /*
  * ワークフローカード (.workflow-card) の基本スタイル
- *
- * このカードには3D立体的なホバー効果が実装されています。
- * 以下の3つのプロパティが3D効果の基盤を形成します：
- *
- * 1. transform-style: preserve-3d
- *    - 子要素も3D空間に配置されるようにする
- *    - これにより、カード内の各要素（ラベル、見出し、段落）を
- *      異なる奥行き（Z軸位置）に配置できます
- *
- * 2. backface-visibility: hidden
- *    - 要素の裏面を非表示にし、描画パフォーマンスを最適化
- *    - 3D回転時のちらつきを防止
- *
- * 3. transition: cubic-bezier(0.34, 1.56, 0.64, 1)
- *    - バウンス効果のあるイージング関数
- *    - 1.56 という値が1を超えているため、アニメーションが
- *      目標値を超えて「跳ね返る」ような動きになります
  */
 .workflow-card {
-  /* 柔らかいグラデーション背景 */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 245, 238, 0.92) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.5);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
-  min-height: 200px; /* 最小の高さ */
+  min-height: 200px;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  transition: all var(--transition-spring);
 }
-
-
 
 /*
  * ワークフローカードのホバー時のスタイル
- *
- * 3D立体的な動きの詳細:
- *
- * transform: translateY(-12px) rotateX(5deg) scale(1.02)
- *
- * 1. translateY(-12px)
- *    - カードを上方向に12px移動させて「浮き上がる」効果
- *
- * 2. rotateX(5deg)
- *    - X軸（水平軸）を中心に5度回転
- *    - カードの上部が手前に、下部が奥に傾く
- *    - 視覚的に「こちらを向く」印象を与える
- *
- * 3. scale(1.02)
- *    - カード全体を2%拡大
- *    - 「前に出てくる」感覚を強調
- *
- * 多層の影（box-shadow）:
- * - 第1層: 大きく柔らかいピンクの影（奥行き感）
- * - 第2層: 中程度の暗い影（立体感の基礎）
- * - 第3層: 広範囲の淡いピンクの光（発光効果）
- * これらが組み合わさって、カードが浮いている印象を強めます
  */
 .workflow-card:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 235, 0.95) 100%); /* 背景を少し明るく */
-  border-color: var(--border-strong); /* ボーダーを濃くする */
-}
-
-/*
- * ホバー時に上部ボーダーを表示
- */
-.workflow-card:hover::before {
-  transform: scaleX(1);
+  background: var(--surface-secondary);
+  border-color: var(--color-primary);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
 }
 
 /*
  * ワークフローステップのラベル (.workflow-step)
  */
 .workflow-step {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.15em; /* 文字間を広げる */
-  text-transform: uppercase; /* 大文字にする */
-  color: var(--color-primary); /* プライマリカラー */
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
   margin-bottom: var(--space-xs);
   position: relative;
   z-index: 1;
@@ -151,7 +107,8 @@
 .workflow-card h3 {
   margin: 0 0 var(--space-sm);
   color: var(--text-primary);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
   position: relative;
   z-index: 1;
 }
@@ -161,7 +118,7 @@
  */
 .workflow-card p {
   margin: 0;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   line-height: 1.6;
   position: relative;
   z-index: 1;
@@ -169,11 +126,10 @@
 
 /* === ソースグリッド (.source-grid) === */
 .source-grid {
-  list-style: none; /* リストのデフォルトスタイルを削除 */
+  list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  /* 最小280px、最大1frの幅で自動的にカラムを配置 */
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: var(--space-lg);
 }
@@ -182,9 +138,8 @@
  * ソースカード (.source-card) の基本スタイル
  */
 .source-card {
-  /* 柔らかいグラデーション背景 */
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 245, 238, 0.92) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.5);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   line-height: 1.6;
@@ -194,17 +149,16 @@
 
 /*
  * ソースカード内の矢印アイコン (.source-card::after)
- * ホバー時に表示される。
  */
 .source-card::after {
-  content: '→'; /* 矢印の絵文字 */
+  content: '→';
   position: absolute;
   top: var(--space-lg);
   right: var(--space-lg);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: var(--color-primary);
-  opacity: 0; /* デフォルトでは非表示 */
-  transform: translateX(-10px); /* 少し左にずらしておく */
+  opacity: 0;
+  transform: translateX(-10px);
   transition: all var(--transition-base);
 }
 
@@ -212,9 +166,9 @@
  * ソースカードのホバー時のスタイル
  */
 .source-card:hover {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 248, 236, 0.95) 100%);
-  border-color: var(--border-strong);
-  transform: translateX(4px); /* 少し右に移動 */
+  background: var(--surface-secondary);
+  border-color: var(--color-primary);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
@@ -223,7 +177,7 @@
  */
 .source-card:hover::after {
   opacity: 1;
-  transform: translateX(0); /* 元の位置に戻す */
+  transform: translateX(0);
 }
 
 /*
@@ -232,6 +186,7 @@
 .source-card h3 {
   margin: 0 0 var(--space-xs);
   font-size: 1.1rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -239,10 +194,10 @@
  * ソースカード内のリンク (a)
  */
 .source-card a {
-  color: var(--color-primary-bright);
+  color: var(--color-primary);
   text-decoration: none;
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   transition: color var(--transition-fast);
 }
 
@@ -250,7 +205,7 @@
  * ソースカード内のリンクのホバー時
  */
 .source-card a:hover {
-  color: var(--color-accent);
+  color: var(--color-primary-dim);
 }
 
 /*
@@ -260,18 +215,18 @@
   margin-top: var(--space-sm);
   font-size: 0.8rem;
   color: var(--text-muted);
+  font-weight: 500;
 }
 
 /* === 記事コンテンツ (.post-article) === */
 .post-article {
-  /* 柔らかいグラデーション背景 */
-  background: linear-gradient(170deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 244, 239, 0.92) 100%);
-  border: 1px solid rgba(255, 190, 210, 0.6);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-2xl);
-  padding: clamp(2rem, 4vw, 3.5rem); /* レスポンシブな内側余白 */
+  padding: clamp(2rem, 4vw, 4rem);
   box-shadow: var(--shadow-lg);
-  max-width: 850px; /* 最大幅 */
-  margin: 0 auto; /* 中央揃え */
+  max-width: 850px;
+  margin: 0 auto;
 }
 
 /*
@@ -281,6 +236,9 @@
   margin-top: 0;
   margin-bottom: var(--space-xl);
   color: var(--text-primary);
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 /*
@@ -291,6 +249,9 @@
   color: var(--text-primary);
   margin-top: var(--space-2xl);
   margin-bottom: var(--space-lg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 /*
@@ -298,7 +259,7 @@
  */
 .post-article ul,
 .post-article ol {
-  padding-left: var(--space-xl); /* 左側のインデント */
+  padding-left: var(--space-xl);
   margin-bottom: var(--space-lg);
 }
 
@@ -314,19 +275,20 @@
  * 記事コンテンツ内のリンク (a)
  */
 .post-article a {
-  color: var(--color-primary-bright);
-  text-decoration: underline; /* 下線 */
-  text-decoration-color: rgba(91, 158, 255, 0.3); /* 下線の色 */
-  text-underline-offset: 3px; /* 下線とテキストの距離 */
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--border-medium);
+  text-underline-offset: 3px;
   transition: all var(--transition-fast);
+  font-weight: 500;
 }
 
 /*
  * 記事コンテンツ内のリンクのホバー時
  */
 .post-article a:hover {
-  color: var(--color-accent);
-  text-decoration-color: var(--color-accent);
+  color: var(--color-primary-dim);
+  text-decoration-color: var(--color-primary);
 }
 
 /*
@@ -338,38 +300,43 @@
   border-radius: var(--radius-lg);
   margin: var(--space-xl) 0;
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-subtle);
 }
 
 /*
  * 記事コンテンツ内のインラインコード (code)
  */
 .post-article code {
-  background: var(--surface-tertiary);
+  background: var(--surface-secondary);
   padding: 0.2em 0.5em;
   border-radius: var(--radius-sm);
   font-size: 0.9em;
-  color: var(--color-accent-secondary);
+  color: var(--color-primary);
   border: 1px solid var(--border-subtle);
+  font-family: monospace;
 }
 
 /*
  * 記事コンテンツ内のコードブロック (pre)
  */
 .post-article pre {
-  background: var(--surface-secondary);
+  background: #1e293b;
+  /* Slate 800 for code blocks */
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: var(--space-lg);
-  overflow-x: auto; /* 横にはみ出す場合にスクロールバーを表示 */
+  overflow-x: auto;
   margin: var(--space-lg) 0;
+  color: #f8fafc;
+  /* Light text for code */
 }
 
 /*
  * コードブロック内のインラインコード (pre code)
- * 親要素のスタイルをリセット
  */
 .post-article pre code {
   background: none;
   border: none;
   padding: 0;
+  color: inherit;
 }
