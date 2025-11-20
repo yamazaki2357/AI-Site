@@ -153,7 +153,7 @@
    */
   const filterPostsByTag = (slug) => {
     if (!slug) return [...state.allPosts];
-    return state.allPosts.filter(post => 
+    return state.allPosts.filter(post =>
       (post.tags || []).some(tag => toTagObject(tag).slug === slug)
     );
   };
@@ -165,7 +165,7 @@
    * @returns {string} 記事カードのHTML
    */
   const createPostCardHTML = (post, index) => {
-    const defaultImg = 'assets/img/article-templates/ai-core-01.webp';
+    const defaultImg = 'assets/img/article-templates/new_default.svg';
     const imageSrc = post.image?.src || defaultImg;
     const imageAlt = post.image?.alt || post.title;
     const tagsHTML = (post.tags || []).map(tag => {
@@ -189,7 +189,7 @@
       </li>
     `;
   };
-  
+
   /**
    * 記事一覧をDOMにレンダリング（描画）します。
    * @param {Array<object>} posts - 描画する記事の配列
@@ -258,7 +258,7 @@
     } else {
       elements.filterStatus.textContent = `全${state.allPosts.length}件の記事を表示中`;
     }
-    
+
     // 検索クリアボタンの状態
     elements.tagSearchClear.disabled = !state.searchQuery;
   };
@@ -270,7 +270,7 @@
   const applyTagFilter = (tag) => {
     state.selectedTag = tag;
     state.filteredPosts = filterPostsByTag(tag?.slug);
-    
+
     // URLのクエリパラメータを更新
     const url = new URL(window.location);
     if (tag) {
@@ -279,12 +279,12 @@
       url.searchParams.delete('tag');
     }
     window.history.pushState({}, '', url);
-    
+
     updateUI();
   };
 
   // --- イベントリスナーの設定 ---
-  
+
   // タグ検索入力
   elements.tagSearchInput.addEventListener('input', (e) => {
     state.searchQuery = e.target.value;
@@ -315,7 +315,7 @@
       applyTagFilter(state.selectedTag?.slug === slug ? null : tag);
     }
   });
-  
+
   // 記事カード内のタグクリック（イベント委譲）
   elements.list.addEventListener('click', (e) => {
     const tagEl = e.target.closest('.tag[data-tag-slug]');
@@ -358,7 +358,7 @@
       // URLパラメータから初期タグを読み込む
       const initialTagSlug = new URLSearchParams(window.location.search).get('tag');
       const initialTag = initialTagSlug ? state.allTags.find(t => t.slug === initialTagSlug) : null;
-      
+
       applyTagFilter(initialTag); // 初期フィルタを適用してUIを更新
     })
     .catch(error => {
