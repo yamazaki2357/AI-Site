@@ -18,7 +18,8 @@
   const title = document.title.replace(/ \| AI情報ブログ$/, '') || 'AI情報ブログ';
 
   // --- 1. SNS共有リンクの生成 ---
-  // X, LinkedIn, ネイティブ共有、リンクコピー機能のイベントリスナーを設定します。
+  // 共有リンク機能は削除されました（テンプレートから共有ボタンが削除されたため）
+  /*
   (function setupShareLinks() {
     const encode = (value) => encodeURIComponent(value);
 
@@ -73,6 +74,7 @@
       }
     }
   })();
+  */
 
 
   // --- 2. 目次 (Table of Contents) の自動生成 ---

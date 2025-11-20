@@ -279,50 +279,6 @@ const createTemplateRenderer = ({ templatePath }) => {
     };
     const tagMarkup = renderTagList(tags);
 
-    // 記事メタ情報グリッド（公開日、ソースなど）のHTMLを生成
-    const renderMetaGrid = () => {
-      const cards = [];
-      if (verboseDate || displayDate) {
-        cards.push(`
-          <article class="meta-card">
-            <p class="meta-label">公開日</p>
-            <p class="meta-value">${verboseDate || displayDate}</p>
-            ${displayDate ? `<small>最終更新: ${displayDate}</small>` : ''}
-          </article>`);
-      }
-      if (meta?.sourceName || meta?.sourceUrl) {
-        const label = meta.sourceName || 'リサーチソース';
-        const link = meta.sourceUrl ? `<a href="${meta.sourceUrl}" target="_blank" rel="noopener noreferrer">${label}</a>` : label;
-        cards.push(`
-          <article class="meta-card">
-            <p class="meta-label">リサーチソース</p>
-            <p class="meta-value">${link}</p>
-            ${meta.sourceUrl ? '<small>外部リンク</small>' : ''}
-          </article>`);
-      }
-      if (meta?.videoUrl) {
-        const videoLabel = meta.videoTitle || '参照動画を再生';
-        cards.push(`
-          <article class="meta-card">
-            <p class="meta-label">参照動画</p>
-            <p class="meta-value"><a href="${meta.videoUrl}" target="_blank" rel="noopener noreferrer">${videoLabel}</a></p>
-            <small>YouTube</small>
-          </article>`);
-      }
-      if (!cards.length) return '';
-      return `\n        <div class="article-meta-grid">\n${cards.join('\n')}\n        </div>`;
-    };
-    const metaGridMarkup = renderMetaGrid();
-
-    // 共有リンクのHTML
-    const shareLinksMarkup = `
-        <div class="article-share-links">
-          <a class="share-link" href="#" data-share-target="x" aria-label="Xで共有">Xに共有</a>
-          <a class="share-link" href="#" data-share-target="linkedin" aria-label="LinkedInで共有">LinkedIn</a>
-          <button class="share-link" type="button" data-share-target="native">端末で共有</button>
-          <button class="share-link copy-link" type="button" data-copy-link>リンクをコピー</button>
-        </div>`;
-
     // 広告スロットのHTML（現在はコメントアウト）
     const adTopMarkup = `
       <!-- Google AdSense: 記事上広告 -->
@@ -421,8 +377,6 @@ ${toHtmlParagraphs(article.conclusion)}
       '{{PUBLISHED_AT_ISO}}': publishedTimeIso,
       '{{DISPLAY_DATE}}': displayDate,
       '{{TAG_MARKUP}}': tagMarkup,
-      '{{META_GRID}}': metaGridMarkup,
-      '{{SHARE_LINKS}}': shareLinksMarkup,
       '{{AD_TOP}}': adTopMarkup,
       '{{INTRO_MARKUP}}': introMarkup,
       '{{SECTION_MARKUP}}': sectionMarkup,
