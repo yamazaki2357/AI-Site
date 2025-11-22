@@ -510,16 +510,6 @@ body.article-page main {
 }
 
 /*
- * 目次の現在位置表示 (.toc-current-section)
- */
-.toc-current-section {
-  margin: 0 0 var(--space-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-tertiary);
-}
-
-/*
  * 目次トグルボタン (.toc-toggle)
  * モバイル表示時に目次を折りたたむためのボタン。
  */
@@ -581,19 +571,6 @@ body.article-page main {
 }
 
 /*
- * アクティブな目次アイテム (li.active)
- * 現在読んでいるセクションに対応する目次アイテム。
- */
-.toc-list li.active {
-  background: rgba(255, 241, 247, 0.9);
-  border-left: 3px solid var(--color-primary);
-  /* 左側にアクセントボーダー */
-  padding-left: calc(var(--space-sm) + 3px);
-  transform: translateX(4px);
-  /* 少し右に移動 */
-}
-
-/*
  * 目次リスト内のリンク (a)
  */
 .toc-list a {
@@ -612,14 +589,6 @@ body.article-page main {
  */
 .toc-list a:hover {
   color: var(--color-primary);
-}
-
-/*
- * アクティブな目次リンク
- */
-.toc-list li.active a {
-  color: var(--color-primary);
-  font-weight: 700;
 }
 
 /*
@@ -657,13 +626,6 @@ body.article-page main {
 }
 
 /*
- * アクティブな目次アイテムの番号
- */
-.toc-list li.active .toc-index {
-  color: var(--color-primary);
-}
-
-/*
  * 目次テキスト (.toc-text)
  */
 .toc-text {
@@ -678,34 +640,6 @@ body.article-page main {
 .toc-target {
   scroll-margin-top: 120px;
   /* スティッキーヘッダーの高さ分、スクロール位置を調整 */
-}
-
-/*
- * アクティブな目次ターゲット (.toc-target.toc-target-active)
- * 現在表示中のセクションの見出し。
- */
-.toc-target.toc-target-active {
-  position: relative;
-  background: linear-gradient(90deg, rgba(255, 241, 247, 0.6), transparent 75%);
-  /* 薄い背景グラデーション */
-  border-radius: var(--radius-sm);
-  padding-left: 0.35rem;
-}
-
-/*
- * アクティブな目次ターゲットの左側装飾 (::before)
- */
-.toc-target.toc-target-active::before {
-  content: '';
-  position: absolute;
-  left: -0.75rem;
-  top: 0.4rem;
-  bottom: 0.4rem;
-  width: 4px;
-  border-radius: var(--radius-full);
-  background: var(--color-primary);
-  box-shadow: 0 0 12px rgba(255, 116, 177, 0.4);
-  /* グロー効果 */
 }
 
 /*

@@ -169,11 +169,6 @@ window.initArticlePage = () => {
     panel.id = 'article-toc-panel';
     panel.appendChild(tocList);
 
-    const indicator = document.createElement('p');
-    indicator.className = 'toc-current-section';
-    indicator.setAttribute('data-current-section', 'true');
-    indicator.textContent = '現在位置: -';
-
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'toc-toggle';
@@ -182,7 +177,6 @@ window.initArticlePage = () => {
 
     tocCard.prepend(header);
     tocCard.appendChild(panel);
-    tocCard.insertBefore(indicator, panel);
 
     // --- 状態管理とイベントリスナー ---
     const mediaQuery = window.matchMedia('(max-width: 767px)');
@@ -213,46 +207,6 @@ window.initArticlePage = () => {
     mediaQuery.addEventListener('change', mediaQueryHandler);
     applyState(); // 初期状態を適用
 
-
-
-    // --- スクロール連動ハイライト ---
-    // スクロール位置に応じて、現在表示中のセクションを目次上でハイライトする
-    const tocItems = Array.from(tocList.querySelectorAll('li[data-section-id]'));
-    const sections = Array.from(headings);
-
-    // 現在のスクロール位置に基づいて、アクティブな目次項目を更新
-    const updateActiveToc = () => {
-      const scrollPosition = window.pageYOffset + 120; // ヘッダーオフセット分を加味
-      let activeSection = null;
-      // 上から順に見ていき、スクロール位置を超えている最後のセクションを見つける
-      for (const section of sections) {
-        if (section.offsetTop <= scrollPosition) {
-          activeSection = section;
-        } else {
-          break;
-        }
-      }
-
-      // 全ての目次項目からactiveクラスを削除
-      tocItems.forEach(item => item.classList.remove('active'));
-
-      // アクティブなセクションがある場合、対応する目次項目をハイライト
-      if (activeSection) {
-        const activeItem = tocItems.find(item => item.dataset.sectionId === activeSection.id);
-        if (activeItem) {
-          activeItem.classList.add('active');
-          const index = activeItem.dataset.tocIndex || '';
-          const text = activeItem.querySelector('.toc-text')?.textContent || '';
-          // 現在位置を表示
-          indicator.textContent = `現在位置: ${index} ${text.trim()}`;
-          return;
-        }
-      }
-      indicator.textContent = '現在位置: -';
-    };
-
-    window.addEventListener('scroll', updateActiveToc, { passive: true });
-    updateActiveToc(); // 初期表示
 
 
   };
