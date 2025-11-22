@@ -1,10 +1,51 @@
 {
   "status": "skipped",
   "generatedFile": null,
-  "executedAt": "2025-11-22T02:10:51.497Z",
-  "collector": null,
-  "researcher": null,
-  "generator": null,
+  "executedAt": "2025-11-22T02:57:56.709Z",
+  "collector": {
+    "skipped": true,
+    "reason": "keyword-based-pipeline"
+  },
+  "researcher": {
+    "keyword": "Gemini 3 最新情報",
+    "summaries": [
+      {
+        "title": "Gemini 3 による知性の新時代",
+        "url": "https://blog.google/intl/ja-jp/company-news/technology/gemini-3/",
+        "snippet": "3 days ago ... ウェブ上の情報をより深く理解できるよう、Google 検索 の AI モードでは、Gemini 3 を搭載しました。これにより、没入型な視覚レイアウト、 ...",
+        "summary": "- Gemini 3は、Google DeepMindによる最先端のAIモデルで、マルチモーダル理解と推論能力を強化。\n- LMArenaで1501 Elo、Humanity’s Last Examで37.5%、GPQA Diamondで91.9%のスコアを達成。\n- MathArena Apexで23.4%、MMMU-Proで81%、Video-MMMUで87.6%、SimpleQA Verifiedで72.1%を記録。\n- Gemini 3 Deep Thinkモードは、Humanity’s Last Examで41.0%、GPQA Diamondで93.8%、ARC-AGIで45.1%を達成。\n- 100万トークンのコンテキストウィンドウを持ち、複雑なテキスト、画像、動画、音声、コードを統合。\n- WebDev Arenaで1487 Elo、Terminal-Bench 2.0で54.2%、SWE-bench Verifiedで76.2%を記録。\n- Google Antigravityプラットフォームでエージェント開発を支援。\n- セキュリティ強化：プロンプトインジェクション耐性、サイバー攻撃保護。\n- Google AI Ultraのサブスクリプションユーザー向けに提供開始予定。",
+        "quality": "high"
+      },
+      {
+        "title": "Gemini 3 デベロッパー ガイド | Gemini API | Google AI for Developers",
+        "url": "https://ai.google.dev/gemini-api/docs/gemini-3?hl=ja",
+        "snippet": "2 days ago ... Gemini 3 の新 ... この情報は役に立ちましたか？ フィードバックを送信. Gemini 3 デベロッパー ガイド. content_copy. この ...",
+        "summary": "- **モデル名とバージョン**: Gemini 3 Pro, gemini-3-pro-preview。\n- **APIバージョン**: v1alpha。\n- **コンテキストウィンドウ**: 100万トークン（入力）/ 6万4千トークン（出力）。\n- **ナレッジカットオフ**: 2025年1月。\n- **料金**: $2/$12（<200kトークン）、$4/$18（>200kトークン）。\n- **メディア解像度パラメータ**: media_resolution_low, media_resolution_medium, media_resolution_high。\n  - 画像: 最大1120トークン。\n  - PDF: 最大560トークン。\n  - 動画: フレームごとに70トークン（low/medium）、280トークン（high）。\n- **思考レベルパラメータ**: low, medium（近日提供予定）, high（デフォルト）。\n  - low: レイテンシと費用を最小化。\n  - high: 推論の深さを最大化。\n- **API制約**: thinking_levelとthinking_budgetを同時に使用不可（400エラー発生）。\n- **思考シグネチャ**: API呼び出し全体で推論コンテキストを維持。署名がないと400エラー。\n- **推奨温度**: デフォルト1.0。変更すると予期しない動作の可能性。\n- **コード例**:\n  - Python, JavaScript, REST APIでの実装例が提供。\n- **関数呼び出し**: 厳格な検証が必要。シグネチャを返さないとエラー。\n- **ユースケース**: 高度な推論、自律型コーディング、複雑なマルチモーダルタスク。",
+        "quality": "high"
+      },
+      {
+        "title": "Gemini 3：Gemini アプリにさらに進化したスマートな新機能が登場",
+        "url": "https://blog.google/intl/ja-jp/company-news/technology/gemini-3gemini/",
+        "snippet": "3 days ago ... Gemini 3 を本日発表します。 より鋭い推論、大幅に進化したバイブ コーディングの機能、新しいデザイン、そして実験的なエージェントが導入され ...",
+        "summary": "- 発表日: 2025年11月19日。\n- モデル名: Gemini 3。\n- 特徴: 最先端の推論能力、マルチモーダル能力、生成インターフェース。\n- 新機能: Gemini Agent、ビジュアルレイアウト、動的ビュー。\n- Gemini Agent: 複数の手順を要するタスクを処理。Google WorkspaceやリアルタイムWebブラウジングと連携。\n- 提供開始: 米国のGoogle AI Ultraユーザー向け。\n- 制約: 日本での提供は未定。\n- サブスクリプション: Google AI Plus、Pro、Ultraユーザー向けに提供。米国の大学生にGoogle AI Proを1年間無料提供。\n- ショッピング機能: 500億点以上の商品情報を扱うGoogleショッピンググラフを利用。\n- インターフェース: モダンで洗練されたデザイン、ユーザーのプロンプトに基づくカスタムUI生成。\n- API連携: Gmail、カレンダー、Deep Research、Canvasなどと連携。\n- ユーザー確認: 重要なアクション前にユーザー確認を求める。\n- 開発背景: Project Marinerの知見を基に開発。",
+        "quality": "high"
+      }
+    ]
+  },
+  "generator": {
+    "generated": false,
+    "reason": "duplicate-topic",
+    "candidateId": "manual-1763780276700",
+    "metrics": {
+      "scope": "generator",
+      "counters": {
+        "candidates.total": 1,
+        "candidates.analyzed": 1,
+        "candidates.skipped.duplicate": 1
+      },
+      "timings": {}
+    }
+  },
   "publisher": {
     "addedPost": false,
     "totalPosts": 11,
