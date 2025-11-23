@@ -5,9 +5,21 @@
   <link>https://yamazaki2357.github.io/AI-Site</link>
   <description>AI・機械学習の最新情報を自動収集・分析。YouTubeチャンネルから注目トピックを抽出し、深掘りした記事を毎日2回自動更新。</description>
   <language>ja</language>
-  <lastBuildDate>Sat, 22 Nov 2025 07:09:20 GMT</lastBuildDate>
+  <lastBuildDate>Sun, 23 Nov 2025 01:36:00 GMT</lastBuildDate>
   <atom:link href="https://yamazaki2357.github.io/AI-Site/feed.xml" rel="self" type="application/rss+xml" />
 
+  <item>
+    <title>Stitch 2.0の進化：Gemini3とNanobanana Proの実力を徹底解剖</title>
+    <link>https://yamazaki2357.github.io/AI-Site/posts/2025-11-23-stitch-20gemini3nanobanana-pro.html</link>
+    <guid isPermaLink="true">https://yamazaki2357.github.io/AI-Site/posts/2025-11-23-stitch-20gemini3nanobanana-pro.html</guid>
+    <pubDate>Sun, 23 Nov 2025 01:36:00 GMT</pubDate>
+    <description>Stitch 2.0は、Gemini3とNanobanana Proを搭載し、UIデザインの新たな可能性を切り開きます。本記事では、その技術的特性と実際のユースケースを詳述し、導入のメリットと課題を探ります。</description>
+    <category>AI技術</category>
+    <category>UIデザイン</category>
+    <category>Gemini3</category>
+    <category>Nanobanana Pro</category>
+    <category>技術革新</category>
+  </item>
   <item>
     <title>Canva AIの革新: 資料作成の効率化とその限界</title>
     <link>https://yamazaki2357.github.io/AI-Site/posts/2025-11-22-canva-ai.html</link>

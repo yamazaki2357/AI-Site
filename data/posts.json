@@ -1,5 +1,53 @@
 [
   {
+    "title": "Stitch 2.0の進化：Gemini3とNanobanana Proの実力を徹底解剖",
+    "date": "2025-11-23",
+    "summary": "Stitch 2.0は、Gemini3とNanobanana Proを搭載し、UIデザインの新たな可能性を切り開きます。本記事では、その技術的特性と実際のユースケースを詳述し、導入のメリットと課題を探ります。",
+    "tags": [
+      {
+        "slug": "ai",
+        "label": "AI技術",
+        "category": "その他",
+        "style": "accent-orange"
+      },
+      {
+        "slug": "ui",
+        "label": "UIデザイン",
+        "category": "その他",
+        "style": "accent-sky"
+      },
+      {
+        "slug": "gemini3",
+        "label": "Gemini3",
+        "category": "その他",
+        "style": "accent-orange"
+      },
+      {
+        "slug": "nanobanana-pro",
+        "label": "Nanobanana Pro",
+        "category": "その他",
+        "style": "accent-lavender"
+      },
+      {
+        "slug": "tag-5",
+        "label": "技術革新",
+        "category": "その他",
+        "style": "accent-sky"
+      }
+    ],
+    "url": "posts/2025-11-23-stitch-20gemini3nanobanana-pro.html",
+    "slug": "2025-11-23-stitch-20gemini3nanobanana-pro",
+    "publishedAt": "2025-11-23T01:36:00.323Z",
+    "image": {
+      "key": "ai-core-02",
+      "src": "assets/img/article-templates/ai-core-02.webp",
+      "alt": "AIコアを象徴する抽象的な波形（バリアント2）",
+      "label": "AIコア戦略",
+      "caption": "大規模言語モデルやAI基盤の戦略を示すグラデーションアート。",
+      "category": "ai"
+    }
+  },
+  {
     "title": "Canva AIの革新: 資料作成の効率化とその限界",
     "date": "2025-11-22",
     "summary": "Canva AIは資料作成を劇的に効率化するツールです。AIの力を借りて、デザイン知識がなくてもプロ級の資料を作成可能にします。本記事では、その技術的背景と実用的なユースケース、そして現時点での制約を詳述します。",
